@@ -74,7 +74,16 @@ export interface AssessmentExam {
   created_at?: string
 }
 
-export type PlanTier = 'free' | 'starter' | 'growth' | 'pro' | 'power' | 'elite'
+export type PlanTier =
+  | 'free'
+  | 'starter'
+  | 'growth'
+  | 'pro'
+  | 'power'
+  | 'enterprise'
+  | 'elite'
+  | 'academy'
+
 export type BillingCycle = 'monthly' | 'annual'
 
 export interface PricingPlan {
@@ -87,6 +96,8 @@ export interface PricingPlan {
   annualPrice: number // per year
   annualMonthlyEquivalent: number // e.g. 83 EGP
   annualSaving: number
+  originalMonthlyPrice?: number
+  isCustomMeeting?: boolean
   studentsLimit: number
   studentsLabel: string
   studentsLabelAr: string

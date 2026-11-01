@@ -19,6 +19,10 @@ import {
   Award,
   Globe,
   Sliders,
+  Calendar,
+  PhoneCall,
+  Clock,
+  Flame,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useLanguage } from '@/lib/language-context'
@@ -30,22 +34,22 @@ import { formatPrice } from '@/lib/localization'
 export default function PricingPage() {
   const { lang, toggleLang, isRTL } = useLanguage()
   const [billing, setBilling] = useState<BillingCycle>('annual')
-  const [studentCount, setStudentCount] = useState<number>(50)
+  const [studentCount, setStudentCount] = useState<number>(65)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   // Determine which plan corresponds to the slider
   const recommendedPlanId: PlanTier =
-    studentCount <= 9
+    studentCount <= 10
       ? 'free'
       : studentCount <= 30
       ? 'starter'
-      : studentCount <= 75
+      : studentCount <= 99
       ? 'growth'
-      : studentCount <= 150
+      : studentCount <= 250
       ? 'pro'
-      : studentCount <= 300
+      : studentCount <= 500
       ? 'power'
-      : 'elite'
+      : 'enterprise'
 
   const ArrowIcon = isRTL ? ChevronLeft : ChevronRight
 
@@ -56,8 +60,28 @@ export default function PricingPage() {
         ar: 'كيف تعمل فترة التجربة المجانية لمدة 3 أيام؟',
       },
       a: {
-        en: 'Every paid plan (Starter, Growth, Pro, Power, Elite) includes an instant 3-day full-access trial. You get full access to all features immediately with zero risk, allowing you to test attendance, WhatsApp cards, and payments in your center.',
+        en: 'Every paid plan (Starter, Growth, Pro, Power) includes an instant 3-day full-access trial. You get full access to all features immediately with zero risk, allowing you to test attendance, WhatsApp cards, and payments in your center.',
         ar: 'تتضمن جميع الخطط المدفوعة فترة تجربة مجانية كاملة المزايا لمدة 3 أيام فورية. يمكنك اختبار إدارة الحصص، رسائل الواتساب، والتحصيل في السنتر بدون أي مخاطرة أو التزام مالي مسبق.',
+      },
+    },
+    {
+      q: {
+        en: 'Are these prices really for a limited time?',
+        ar: 'هل هذه الأسعار سارية لفترة محدودة بالفعل؟',
+      },
+      a: {
+        en: 'Yes! These discounted introductory rates are active for the current academic launch window. Once you subscribe, your rate is locked in for the entire active subscription cycle.',
+        ar: 'نعم! هذه الأسعار الترويجية المخفضة متاحة لفترة محدودة بمناسبة انطلاق العام الدراسي. عند اشتراكك الآن، يُثبَّت هذا السعر المخفض لحسابك طوال استمرار اشتراكك.',
+      },
+    },
+    {
+      q: {
+        en: 'How does the Enterprise plan and the 1-on-1 meeting work?',
+        ar: 'كيف تعمل خطة المؤسسات (Enterprise) وجلسة العمل الخاصة؟',
+      },
+      a: {
+        en: 'For educators and centers with over 500 active students, we arrange a dedicated 1-on-1 strategy meeting with Classio leadership. We analyze your center structure, multiple assistants, and tailor custom software workflows for your teaching methodology.',
+        ar: 'لكبار المعلمين والسناتر والمراكز التي تضم أكثر من 500 طالب نشط، نقوم بعقد جلسة عمل خاصة 1-on-1 مع قيادة كلاسيو لمناقشة هيكل السنتر والمساعدين وتخصيص ميزات برمجية مخصصة بالكامل حسب طريقة تدريسك.',
       },
     },
     {
@@ -66,7 +90,7 @@ export default function PricingPage() {
         ar: 'ما هي طرق الدفع المصرية المقبولة للاشتراك؟',
       },
       a: {
-        en: 'We accept all popular Egyptian payment channels: InstaPay direct transfers, Vodafone Cash (and Orange/Etisalat/WE Pay wallets), Fawry payment reference codes, and Visa/Mastercard/Meeza debit & credit cards.',
+        en: 'We accept all popular Egyptian payment channels: InstaPay direct transfers, Vodafone Cash (and Orange/Etisalat/WE wallets), Fawry payment reference codes, and Visa/Mastercard/Meeza debit & credit cards.',
         ar: 'نقبل كافة وسائل الدفع المصرية الشائعة: التحويل المباشر عبر إنستاباي (InstaPay)، محافظ المحمول (فودافون كاش، أورنج كاش، اتصالات كاش، وي باي)، أكواد فوري (Fawry)، والبطاقات البنكية وميزة (Meeza / Visa / Mastercard).',
       },
     },
@@ -76,28 +100,8 @@ export default function PricingPage() {
         ar: 'ما هي ميزة ومقدار التوفير في الاشتراك السنوي؟',
       },
       a: {
-        en: 'With annual billing, you pay for only 10 months and receive 12 months of full access — you save 2 complete months (saving up to 1,998 EGP depending on your plan tier).',
-        ar: 'في الاشتراك السنوي، تدفع قيمة 10 أشهر فقط وتستمتع بـ 12 شهراً كاملاً — أي أنك توفر شهرين كاملين مجاناً (توفير يصل حتى 1,998 ج.م سنوياً حسب خطتك).',
-      },
-    },
-    {
-      q: {
-        en: 'What happens when my student count grows?',
-        ar: 'ماذا يحدث عندما يزداد عدد طلابي وأتجاوز سعة خطتي؟',
-      },
-      a: {
-        en: 'Classio will gently alert you when you approach your student capacity. You can upgrade to the next tier with a single click. We will NEVER delete or freeze student records even if you cross your plan limit.',
-        ar: 'سترسل لك المنصة تنبيهاً ودياً عند اقترابك من الحد الأقصى للطلاب. يمكنك الترقية للخطة التالية بضغطة زر واحدة. نضمن لك عدم حذف أو تجميد أي سجل طالب على الإطلاق حتى لو تجاوزت الحد.',
-      },
-    },
-    {
-      q: {
-        en: 'Can my center assistants / secretaries use my account?',
-        ar: 'هل يمكن للسكرتارية والمساعدين استخدام الحساب معي في السنتر؟',
-      },
-      a: {
-        en: 'Yes! Classio runs on any laptop, tablet, or phone. Your assistants can scan barcodes, take attendance, and log payments at the hall entrance in real time while you teach.',
-        ar: 'نعم بالتأكيد! منصة كلاسيو تعمل على أي لابتوب أو تابلت أو هاتف ذكي. يمكن لمساعديك تسجيل الحضور ومسح الباركود على باب السنتر وتسجيل الاشتراكات بشكل فوري أثناء شرحك للحصة.',
+        en: 'With annual billing, you pay for only 10 months and receive 12 months of full access — you save 2 complete months (saving up to 1,598 EGP on Power plan).',
+        ar: 'في الاشتراك السنوي، تدفع قيمة 10 أشهر فقط وتستمتع بـ 12 شهراً كاملاً — أي أنك توفر شهرين كاملين مجاناً (توفير يصل حتى 1,598 ج.م سنوياً في باقة قوة).',
       },
     },
     {
@@ -106,8 +110,8 @@ export default function PricingPage() {
         ar: 'هل الخطة المجانية (Free) مجانية للأبد بالفعل؟',
       },
       a: {
-        en: 'Yes, 100%. If you manage 1 to 9 active students, Classio is completely free forever with no credit card required and no expiration date.',
-        ar: 'نعم بنسبة 100%. إذا كنت تدير من 1 إلى 9 طلاب نشطين، تظل منصة كلاسيو مجانية تماماً للأبد بدون أي بطاقة بنكية وبدون أي تاريخ انتهاء.',
+        en: 'Yes, 100%. If you manage 1 to 10 active students, Classio is completely free forever with no credit card required and no expiration date.',
+        ar: 'نعم بنسبة 100%. إذا كنت تدير من 1 إلى 10 طلاب نشطين، تظل منصة كلاسيو مجانية تماماً للأبد بدون أي بطاقة بنكية وبدون أي تاريخ انتهاء.',
       },
     },
   ]
@@ -115,7 +119,7 @@ export default function PricingPage() {
   const featureMatrix = [
     {
       title: { en: 'Student Capacity', ar: 'سعة عدد الطلاب' },
-      values: ['1–9', '10–30', '31–75', '76–150', '151–300', '301–600'],
+      values: ['1–10', '11–30', '31–99', '100–250', '251–500', '+500 (Custom)'],
     },
     {
       title: { en: 'Daily Attendance & Absence Tracking', ar: 'تسجيل الحضور والغياب اليومي' },
@@ -155,16 +159,37 @@ export default function PricingPage() {
     },
     {
       title: { en: 'Bulk Student Excel / CSV Import & Export', ar: 'استيراد وتصدير بيانات الطلاب Excel / CSV' },
+      values: [false, false, false, true, true, true],
+    },
+    {
+      title: { en: 'Automated Batch WhatsApp Queue', ar: 'طابور رسائل واتساب الجماعي التلقائي' },
       values: [false, false, false, false, true, true],
     },
     {
-      title: { en: 'VIP Priority Support & Data Migration', ar: 'دعم فني VIP مباشر ومساعدة في نقل البيانات' },
+      title: { en: '1-on-1 Strategy Meeting & Custom Tailoring', ar: 'جلسة عمل خاصة 1-on-1 وتطوير ميزات حسب الطلب' },
+      values: [false, false, false, false, false, true],
+    },
+    {
+      title: { en: 'Dedicated Account Manager & VIP Support', ar: 'مدير حساب مخصص ودعم فني VIP مباشر' },
       values: [false, false, false, false, false, true],
     },
   ]
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Limited-Time Urgency Announcement Bar */}
+      <div className="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white text-xs font-black py-2.5 px-4 text-center shadow-inner relative z-30 flex items-center justify-center gap-2 flex-wrap">
+        <span className="inline-flex items-center gap-1 bg-white/20 px-2 py-0.5 rounded-full text-[11px] tracking-wide uppercase">
+          <Flame className="w-3.5 h-3.5 text-amber-300 fill-amber-300 animate-bounce" />
+          {lang === 'en' ? 'Limited Time Offer' : 'عرض خاص لفترة محدودة'}
+        </span>
+        <span className="font-bold">
+          {lang === 'en'
+            ? '🔥 Special Launch Rates: Free up to 10 students, Starter at 99 EGP, Growth at 299 EGP, Pro at 449 EGP, Power at 799 EGP! Lock in your price today.'
+            : '🔥 خصومات إطلاق كلاسيو لفترة محدودة: مجاني حتى 10 طلاب، بداية 99 ج.م، نمو 299 ج.م، احترافي 449 ج.م، قوة 799 ج.م! ثبّت باقتك الآن.'}
+        </span>
+      </div>
+
       {/* Top Navigation */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -179,23 +204,26 @@ export default function PricingPage() {
             <Link href="/pricing" className="text-[#0f2c59] border-b-2 border-[#0f2c59] pb-1">
               {lang === 'en' ? 'Pricing Plans' : 'خطط الأسعار'}
             </Link>
-            <Link href="/dashboard" className="hover:text-[#0f2c59] transition">
-              {lang === 'en' ? 'Tutor Dashboard' : 'لوحة التحكم'}
+            <Link href="/partnerships" className="hover:text-[#0f2c59] transition">
+              {lang === 'en' ? 'Partnerships' : 'الشراكات'}
+            </Link>
+            <Link href="/login" className="hover:text-[#0f2c59] transition">
+              {lang === 'en' ? 'Sign In' : 'تسجيل الدخول'}
             </Link>
           </nav>
 
           <div className="flex items-center gap-3">
             <button
               onClick={toggleLang}
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-700 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl hover:bg-slate-100 transition cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition cursor-pointer"
             >
-              <Globe className="w-3.5 h-3.5 text-[#0f2c59]" />
+              <Globe className="size-3.5 text-[#0f2c59]" />
               <span>{lang === 'en' ? 'عربي' : 'English'}</span>
             </button>
 
-            <Link href="/login">
-              <Button variant="outline" className="hidden sm:inline-flex text-xs font-bold rounded-xl px-4 cursor-pointer">
-                {lang === 'en' ? 'Sign In' : 'تسجيل الدخول'}
+            <Link href="/login" className="hidden sm:inline-block">
+              <Button variant="outline" className="text-xs font-bold rounded-xl px-4 cursor-pointer">
+                {lang === 'en' ? 'Tutor Sign In' : 'دخول المدرس'}
               </Button>
             </Link>
 
@@ -209,14 +237,14 @@ export default function PricingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative pt-12 pb-10 overflow-hidden bg-linear-to-b from-white via-slate-50 to-slate-100/70 border-b border-slate-200/60">
+      <section className="relative pt-12 pb-10 overflow-hidden bg-gradient-to-b from-white via-slate-50 to-slate-100/70 border-b border-slate-200/60">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-xs font-bold text-[#0f2c59] mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 border border-rose-200 text-xs font-bold text-rose-700 mb-4 shadow-xs">
+            <Clock className="w-3.5 h-3.5 text-rose-600 animate-pulse" />
             <span>
               {lang === 'en'
-                ? 'Egyptian Tutor Pricing • 3-Day Free Trial on All Plans'
-                : 'أسعار مخصصة للمدرس الخصوصي في مصر • تجربة مجانية 3 أيام'}
+                ? '⚡ Limited Time Introductory Pricing • 3-Day Free Trial'
+                : '⚡ أسعار مخفضة لفترة محدودة بمناسبة العام الدراسي • تجربة مجانية 3 أيام'}
             </span>
           </div>
 
@@ -232,7 +260,7 @@ export default function PricingPage() {
               <>
                 خطط اشتراك شفافة ومدروسة مصممة خصيصاً{' '}
                 <span className="text-[#0f2c59] underline decoration-amber-400 decoration-wavy decoration-2">
-                  للمعلم الخصوصي
+                  للمعلم الخصوصي في مصر
                 </span>
               </>
             )}
@@ -240,8 +268,8 @@ export default function PricingPage() {
 
           <p className="mt-4 text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
             {lang === 'en'
-              ? 'Manage attendance, recover overdue center fees, issue digital receipts, and delight parents with progress cards. Free forever for up to 9 students.'
-              : 'تابع الحضور، حصّل اشتراكات السنتر المتأخرة، أصدر إيصالات رقمية معتمدة، وأبهر أولياء الأمور بكروت المتابعة. مجاناً للأبد حتى 9 طلاب.'}
+              ? 'Manage attendance, collect center fees via InstaPay & Vodafone Cash, and delight parents with progress cards. Free forever for up to 10 students.'
+              : 'تابع الحضور، حصّل اشتراكات السنتر عبر إنستاباي وفودافون كاش، وأبهر أولياء الأمور بكروت المتابعة. مجاناً للأبد حتى 10 طلاب.'}
           </p>
 
           {/* Interactive Billing Cycle Toggle */}
@@ -275,7 +303,7 @@ export default function PricingPage() {
           <p className="mt-2.5 text-xs font-bold text-emerald-700">
             {lang === 'en'
               ? '✨ Pay for 10 months and enjoy 12 months of full access on any plan'
-              : '✨ ادفع قيمة 10 شهور فقط واحصل على 12 شهراً كاملاً (وفر حتى 1,998 ج.م)'}
+              : '✨ ادفع قيمة 10 شهور فقط واحصل على 12 شهراً كاملاً (وفر حتى 1,598 ج.م)'}
           </p>
         </div>
       </section>
@@ -299,7 +327,7 @@ export default function PricingPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-2xl font-black text-[#0f2c59]">{studentCount}</span>
+              <span className="font-price text-3xl font-black text-[#0f2c59]">{studentCount > 500 ? '+500' : studentCount}</span>
               <span className="text-xs font-bold text-slate-500">{lang === 'en' ? 'Students' : 'طالباً'}</span>
             </div>
           </div>
@@ -308,18 +336,18 @@ export default function PricingPage() {
             <input
               type="range"
               min="1"
-              max="600"
+              max="550"
               value={studentCount}
               onChange={(e) => setStudentCount(Number(e.target.value))}
               className="w-full accent-[#0f2c59] cursor-pointer h-2 bg-slate-200 rounded-lg"
             />
             <div className="flex justify-between text-[11px] font-bold text-slate-400 mt-1">
-              <span>1</span>
-              <span>30</span>
-              <span>75</span>
-              <span>150</span>
-              <span>300</span>
-              <span>600+</span>
+              <span>1–10 (Free)</span>
+              <span>30 (Starter)</span>
+              <span>99 (Growth)</span>
+              <span>250 (Pro)</span>
+              <span>500 (Power)</span>
+              <span>+500 (Enterprise)</span>
             </div>
           </div>
 
@@ -348,7 +376,7 @@ export default function PricingPage() {
           {PRICING_PLANS.map((plan) => {
             const isRecommended = plan.id === recommendedPlanId
             const isPopular = plan.popular
-            const isElite = plan.id === 'elite'
+            const isEnterprise = plan.id === 'enterprise'
             const isFree = plan.id === 'free'
 
             const price = billing === 'annual' ? plan.annualPrice : plan.monthlyPrice
@@ -363,9 +391,11 @@ export default function PricingPage() {
                 key={plan.id}
                 className={`relative flex flex-col rounded-3xl p-6 transition-all duration-300 ${
                   isPopular
-                    ? 'bg-linear-to-b from-[#0f2c59] to-[#0a1e3f] text-white shadow-xl ring-4 ring-[#0f2c59]/25 scale-[1.02] z-10'
+                    ? 'bg-gradient-to-b from-[#0f2c59] to-[#0a1e3f] text-white shadow-2xl ring-4 ring-[#0f2c59]/25 scale-[1.02] z-10'
                     : isRecommended
                     ? 'bg-white border-2 border-emerald-500 shadow-lg ring-2 ring-emerald-500/20'
+                    : isEnterprise
+                    ? 'bg-gradient-to-b from-purple-950/20 to-slate-900/10 border-2 border-purple-400/40 bg-white shadow-md'
                     : 'bg-white border border-slate-200/90 shadow-xs hover:shadow-md hover:border-slate-300'
                 }`}
               >
@@ -373,18 +403,24 @@ export default function PricingPage() {
                 <div className="flex items-center justify-between min-h-6 mb-2">
                   <div className="flex gap-1.5 flex-wrap">
                     {isPopular && (
-                      <span className="rounded-full bg-amber-400 px-3 py-0.5 text-[11px] font-black text-slate-950">
+                      <span className="rounded-full bg-amber-400 px-3 py-0.5 text-[11px] font-black text-slate-950 shadow-xs">
                         {lang === 'en' ? '★ Most Popular' : '★ الأكثر طلباً'}
                       </span>
                     )}
-                    {isElite && (
+                    {isEnterprise && (
                       <span className="rounded-full bg-purple-100 text-purple-900 border border-purple-300 px-3 py-0.5 text-[11px] font-black">
-                        {lang === 'en' ? '👑 Premium' : '👑 نخبة المراكز'}
+                        {lang === 'en' ? '👑 Custom Meeting' : '👑 جلسة خاصة (+٥٠٠)'}
                       </span>
                     )}
                     {isFree && (
                       <span className="rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 px-3 py-0.5 text-[11px] font-black">
-                        {lang === 'en' ? '🌱 Start Here' : '🌱 ابدأ مجاناً'}
+                        {lang === 'en' ? '🌱 Start Here' : '🌱 ابدأ مجاناً (حتى 10 طلاب)'}
+                      </span>
+                    )}
+                    {!isFree && !isEnterprise && (
+                      <span className="rounded-full bg-rose-500/15 text-rose-600 border border-rose-500/30 px-2.5 py-0.5 text-[10px] font-black flex items-center gap-1">
+                        <Flame className="w-3 h-3 text-rose-500" />
+                        {lang === 'en' ? 'Limited Time' : 'لفترة محدودة'}
                       </span>
                     )}
                     {isRecommended && !isPopular && (
@@ -414,32 +450,68 @@ export default function PricingPage() {
                 </div>
 
                 {/* Price Display */}
-                <div className="my-5 pb-5 border-b border-slate-200/40">
-                  <div className="flex items-baseline gap-1.5">
-                    <span className={`text-4xl font-black tracking-tight ${isPopular ? 'text-white' : 'text-slate-900'}`}>
-                      {price === 0 ? '0' : formatPrice(price, lang).split(' ')[0]}
-                    </span>
-                    <span className={`text-xs font-bold ${isPopular ? 'text-slate-300' : 'text-slate-500'}`}>
-                      {price === 0 ? (lang === 'en' ? 'EGP' : 'ج.م') : formatPrice(price, lang).split(' ')[1]} {periodLabel}
-                    </span>
-                  </div>
-
-                  {billing === 'annual' && plan.annualSaving > 0 && (
-                    <div className="mt-1.5 flex items-center gap-1.5 text-xs font-bold">
-                      <span className="text-amber-400">
-                        {lang === 'en'
-                          ? `Annual: ${plan.annualPrice} EGP (save ${plan.annualSaving} EGP)`
-                          : `السنوي: ${plan.annualPrice} ج.م (وفّر ${plan.annualSaving} ج.م)`}
+                {isEnterprise ? (
+                  <div className="my-5 pb-5 border-b border-slate-200/40">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="font-price text-3xl sm:text-4xl font-black text-purple-700 tracking-tight">
+                        {lang === 'en' ? 'Strategy Meeting' : 'في جلسة عمل خاصة'}
                       </span>
                     </div>
-                  )}
-
-                  {!isFree && (
-                    <p className={`mt-1 text-[11px] font-semibold ${isPopular ? 'text-slate-300' : 'text-slate-400'}`}>
-                      {lang === 'en' ? '3-day full access free trial included' : 'يشمل تجربة مجانية كاملة لمدة 3 أيام'}
+                    <p className="mt-1.5 text-xs font-bold text-purple-900 bg-purple-100/90 px-2.5 py-1 rounded-xl inline-block">
+                      {lang === 'en' ? 'Tailored to your mega center & +500 students' : 'حسب احتياجات المعلم وسعة +500 طالب'}
                     </p>
-                  )}
-                </div>
+                    <p className="mt-1 text-[11px] text-slate-500 font-semibold">
+                      {lang === 'en' ? '1-on-1 consultation with Classio engineering team' : 'جلسة تخطيط وتخصيص ميزات كاملة للمركز'}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="my-5 pb-5 border-b border-slate-200/40">
+                    {/* Crossed-out original price for limited time */}
+                    {!isFree && plan.originalMonthlyPrice && (
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="text-xs line-through text-slate-400 font-bold decoration-rose-500 decoration-2">
+                          {billing === 'annual'
+                            ? `${plan.originalMonthlyPrice * 10} ${lang === 'en' ? 'EGP' : 'ج.م'}`
+                            : `${plan.originalMonthlyPrice} ${lang === 'en' ? 'EGP' : 'ج.م'}`}
+                        </span>
+                        <span className="text-[10px] font-black text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
+                          {lang === 'en' ? 'Limited Discount' : 'خصم خاص مؤقت'}
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="flex items-baseline gap-2">
+                      <span
+                        className={`font-price text-5xl font-black tracking-tight tabular-nums ${
+                          isPopular
+                            ? 'text-amber-400 drop-shadow-[0_2px_12px_rgba(251,191,36,0.3)]'
+                            : 'text-slate-900'
+                        }`}
+                      >
+                        {price === 0 ? '0' : formatPrice(price, lang).split(' ')[0]}
+                      </span>
+                      <span className={`text-xs font-bold ${isPopular ? 'text-slate-300' : 'text-slate-500'}`}>
+                        {price === 0 ? (lang === 'en' ? 'EGP' : 'ج.م') : formatPrice(price, lang).split(' ')[1]} {periodLabel}
+                      </span>
+                    </div>
+
+                    {billing === 'annual' && plan.annualSaving > 0 && (
+                      <div className="mt-2 flex items-center gap-1.5 text-xs font-bold">
+                        <span className="text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                          {lang === 'en'
+                            ? `Annual: ${plan.annualPrice} EGP (save ${plan.annualSaving} EGP)`
+                            : `السنوي: ${plan.annualPrice} ج.م (وفّر ${plan.annualSaving} ج.م)`}
+                        </span>
+                      </div>
+                    )}
+
+                    {!isFree && (
+                      <p className={`mt-2 text-[11px] font-semibold ${isPopular ? 'text-slate-300' : 'text-slate-400'}`}>
+                        {lang === 'en' ? '✓ 3-day full access free trial included' : '✓ يشمل تجربة مجانية كاملة لمدة 3 أيام'}
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 {/* Feature List */}
                 <div className="flex-1 space-y-2.5">
@@ -464,17 +536,34 @@ export default function PricingPage() {
 
                 {/* CTA Button */}
                 <div className="mt-6 pt-2">
-                  <Link href={`/checkout?plan=${plan.id}&billing=${billing}`} className="block w-full">
+                  <Link
+                    href={
+                      isEnterprise
+                        ? `https://wa.me/201012345678?text=${encodeURIComponent(
+                            lang === 'ar'
+                              ? 'مرحباً كلاسيو، أرغب في حجز جلسة عمل خاصة لمناقشة باقة المؤسسات (Enterprise) لعدد طلاب +500 طالب.'
+                              : 'Hello Classio, I want to schedule an Enterprise strategy meeting for +500 students.'
+                          )}`
+                        : `/checkout?plan=${plan.id}&billing=${billing}`
+                    }
+                    className="block w-full"
+                    target={isEnterprise ? '_blank' : undefined}
+                    rel={isEnterprise ? 'noopener noreferrer' : undefined}
+                  >
                     <Button
                       className={`w-full rounded-2xl py-3 text-xs font-black shadow-md transition cursor-pointer ${
                         isPopular
-                          ? 'bg-amber-400 hover:bg-amber-300 text-slate-950'
+                          ? 'bg-amber-400 hover:bg-amber-300 text-slate-950 font-black'
+                          : isEnterprise
+                          ? 'bg-purple-800 hover:bg-purple-700 text-white font-black'
                           : isFree
-                          ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                          : 'bg-[#0f2c59] hover:bg-[#1a3d6d] text-white'
+                          ? 'bg-emerald-600 hover:bg-emerald-700 text-white font-bold'
+                          : 'bg-[#0f2c59] hover:bg-[#1a3d6d] text-white font-bold'
                       }`}
                     >
-                      {isFree
+                      {isEnterprise
+                        ? (lang === 'en' ? 'Schedule Strategy Meeting' : 'احجز جلسة عمل خاصة (1-on-1)')
+                        : isFree
                         ? (lang === 'en' ? 'Get Started Free' : 'ابدأ مجاناً للأبد')
                         : (lang === 'en' ? 'Start 3-Day Free Trial' : 'ابدأ التجربة المجانية (3 أيام)')}
                     </Button>
@@ -486,7 +575,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* The 5 Egyptian Pricing Rules (Guarantees) */}
+      {/* The 5 Egyptian Pricing Commitments */}
       <section className="bg-white py-14 border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10">
@@ -494,7 +583,7 @@ export default function PricingPage() {
               {lang === 'en' ? 'Our Commitments to Tutors' : 'التزاماتنا الصارمة للمعلم'}
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-              {lang === 'en' ? '5 Transparent Pricing Rules' : 'قواعد التسعير وحماية حقوق المعلم'}
+              {lang === 'en' ? 'Transparent Pricing Rules & Guarantees' : 'قواعد التسعير وحماية حقوق المعلم'}
             </h2>
             <p className="text-xs text-slate-500 mt-2">
               {lang === 'en'
@@ -504,6 +593,18 @@ export default function PricingPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="rounded-2xl border border-slate-200 p-5 bg-slate-50/50 hover:bg-white hover:shadow-xs transition">
+              <div className="size-10 rounded-xl bg-rose-100 flex items-center justify-center text-rose-700 mb-3 font-bold">
+                <Flame className="size-5" />
+              </div>
+              <h4 className="text-sm font-bold text-slate-900">
+                {lang === 'en' ? 'Limited Time Launch Pricing' : 'أسعار مخفضة لفترة محدودة'}
+              </h4>
+              <p className="mt-1 text-xs text-slate-600 leading-relaxed">
+                {lang === 'en' ? PRICING_RULES.limitedTime.en : PRICING_RULES.limitedTime.ar}
+              </p>
+            </div>
+
             <div className="rounded-2xl border border-slate-200 p-5 bg-slate-50/50 hover:bg-white hover:shadow-xs transition">
               <div className="size-10 rounded-xl bg-blue-100 flex items-center justify-center text-[#0f2c59] mb-3 font-bold">
                 <Sparkles className="size-5" />
@@ -521,7 +622,7 @@ export default function PricingPage() {
                 <UsersRound className="size-5" />
               </div>
               <h4 className="text-sm font-bold text-slate-900">
-                {lang === 'en' ? 'Free Forever (< 10 Students)' : 'مجاني للأبد (أقل من 10 طلاب)'}
+                {lang === 'en' ? 'Free Forever (Up to 10 Students)' : 'مجاني للأبد (حتى 10 طلاب)'}
               </h4>
               <p className="mt-1 text-xs text-slate-600 leading-relaxed">
                 {lang === 'en' ? PRICING_RULES.freeForever.en : PRICING_RULES.freeForever.ar}
@@ -533,7 +634,7 @@ export default function PricingPage() {
                 <Award className="size-5" />
               </div>
               <h4 className="text-sm font-bold text-slate-900">
-                {lang === 'en' ? 'Annual Subscriptions (Pay 10, Get 12)' : 'الاشتراك السنوي (ادفع 10 واحصل على 12)'}
+                {lang === 'en' ? 'Annual Subscriptions (Save 2 Months)' : 'الاشتراك السنوي (وفّر شهرين)'}
               </h4>
               <p className="mt-1 text-xs text-slate-600 leading-relaxed">
                 {lang === 'en' ? PRICING_RULES.annualSavings.en : PRICING_RULES.annualSavings.ar}
@@ -542,17 +643,17 @@ export default function PricingPage() {
 
             <div className="rounded-2xl border border-slate-200 p-5 bg-slate-50/50 hover:bg-white hover:shadow-xs transition">
               <div className="size-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-700 mb-3 font-bold">
-                <Zap className="size-5" />
+                <Calendar className="size-5" />
               </div>
               <h4 className="text-sm font-bold text-slate-900">
-                {lang === 'en' ? 'Gentle Upgrade Prompts' : 'ترقيات مرنة بدون ضغوط'}
+                {lang === 'en' ? 'Enterprise +500 Students Meeting' : 'جلسة عمل خاصة للمؤسسات (+٥٠٠ طالب)'}
               </h4>
               <p className="mt-1 text-xs text-slate-600 leading-relaxed">
-                {lang === 'en' ? PRICING_RULES.upgrades.en : PRICING_RULES.upgrades.ar}
+                {lang === 'en' ? PRICING_RULES.enterpriseMeeting.en : PRICING_RULES.enterpriseMeeting.ar}
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 p-5 bg-slate-50/50 hover:bg-white hover:shadow-xs transition sm:col-span-2 lg:col-span-2">
+            <div className="rounded-2xl border border-slate-200 p-5 bg-slate-50/50 hover:bg-white hover:shadow-xs transition">
               <div className="size-10 rounded-xl bg-rose-100 flex items-center justify-center text-rose-700 mb-3 font-bold">
                 <ShieldCheck className="size-5" />
               </div>
@@ -612,7 +713,7 @@ export default function PricingPage() {
                           <span className="text-slate-300 font-bold">—</span>
                         )
                       ) : (
-                        <span className="font-mono font-bold text-[#0f2c59]">{val}</span>
+                        <span className="font-price font-bold text-[#0f2c59]">{val}</span>
                       )}
                     </td>
                   ))}
@@ -631,7 +732,7 @@ export default function PricingPage() {
               {lang === 'en' ? 'Got Questions?' : 'الأسئلة الشائعة'}
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-              {lang === 'en' ? 'Frequently Asked Questions' : 'كل ما تحتاج لمعرفته عن خطط كلاسيو'}
+              {lang === 'en' ? 'Frequently Asked Questions' : 'كل ما تحتاج لمعرفته عن خطط وأسعار كلاسيو'}
             </h2>
           </div>
 
@@ -665,10 +766,10 @@ export default function PricingPage() {
       </section>
 
       {/* Bottom CTA Banner */}
-      <section className="bg-linear-to-r from-[#0b192c] via-[#0f2c59] to-[#1e3e62] py-14 text-white text-center">
+      <section className="bg-gradient-to-r from-[#0b192c] via-[#0f2c59] to-[#1e3e62] py-14 text-white text-center">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-            {lang === 'en' ? 'Ready to Elevate Your Teaching Practice?' : 'جاهز لتنظيم وإدارة حصصك واشتراكاتك باحترافية؟'}
+            {lang === 'en' ? 'Ready to Elevate Your Tutoring Practice?' : 'جاهز لتنظيم وإدارة حصصك واشتراكاتك باحترافية؟'}
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-slate-300">
             {lang === 'en'
@@ -683,7 +784,7 @@ export default function PricingPage() {
             </Link>
             <Link href="/checkout?plan=free">
               <Button variant="outline" className="rounded-2xl border-white/20 bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-5 py-3 cursor-pointer">
-                {lang === 'en' ? 'Use Free Forever' : 'ابدأ بالخطة المجانية'}
+                {lang === 'en' ? 'Use Free Forever' : 'ابدأ بالخطة المجانية (حتى 10 طلاب)'}
               </Button>
             </Link>
           </div>

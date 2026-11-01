@@ -1,7 +1,7 @@
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata, Viewport } from 'next'
-import { Cairo } from 'next/font/google'
+import { Cairo, Outfit } from 'next/font/google'
 import './globals.css'
 import { LanguageProvider } from '@/lib/language-context'
 
@@ -9,6 +9,13 @@ const cairo = Cairo({
   subsets: ['arabic', 'latin'],
   weight: ['400', '500', '600', '700', '800', '900'],
   variable: '--font-cairo',
+  display: 'swap',
+})
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  weight: ['600', '700', '800', '900'],
+  variable: '--font-outfit',
   display: 'swap',
 })
 
@@ -46,7 +53,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" dir="ltr" className={cairo.variable} suppressHydrationWarning>
+    <html lang="en" dir="ltr" className={`${cairo.variable} ${outfit.variable}`} suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />

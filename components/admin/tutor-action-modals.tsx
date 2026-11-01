@@ -154,10 +154,12 @@ export function UpgradePlanModal({
   if (!isOpen || !tutor) return null
 
   const plansList: { id: PlanTier; name: string; nameAr: string; defaultLimit: number }[] = [
-    { id: 'free', name: 'Free', nameAr: 'مجاني', defaultLimit: 9 },
+    { id: 'free', name: 'Free', nameAr: 'مجاني', defaultLimit: 10 },
     { id: 'starter', name: 'Starter', nameAr: 'بداية', defaultLimit: 30 },
+    { id: 'growth', name: 'Growth', nameAr: 'نمو', defaultLimit: 99 },
     { id: 'pro', name: 'Pro Professional', nameAr: 'احترافي Pro', defaultLimit: 250 },
-    { id: 'academy', name: 'Academy / Center', nameAr: 'أكاديمية / سنتر', defaultLimit: 1000 },
+    { id: 'power', name: 'Power', nameAr: 'قوة Power', defaultLimit: 500 },
+    { id: 'enterprise', name: 'Enterprise', nameAr: 'مؤسسات Enterprise', defaultLimit: 1000 },
   ]
 
   const handlePlanSelect = (selectedPlan: PlanTier) => {
@@ -461,10 +463,12 @@ export function AddTutorModal({ isOpen, onClose, onAdd, lang }: AddTutorModalPro
               onChange={(e) => setPlan(e.target.value as PlanTier)}
               className="w-full text-xs p-2.5 bg-slate-950 border border-slate-700 rounded-xl text-slate-100 focus:outline-none focus:border-blue-500"
             >
-              <option value="free">مجاني (Free) — 9 طلاب</option>
+              <option value="free">مجاني (Free) — 10 طلاب</option>
               <option value="starter">بداية (Starter) — 30 طالباً</option>
+              <option value="growth">نمو (Growth) — 99 طالباً</option>
               <option value="pro">احترافي (Pro) — 250 طالباً</option>
-              <option value="academy">أكاديمية (Academy) — 1000 طالب</option>
+              <option value="power">قوة (Power) — 500 طالب</option>
+              <option value="enterprise">مؤسسات (Enterprise) — مخصص (+500)</option>
             </select>
           </div>
 

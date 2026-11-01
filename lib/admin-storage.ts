@@ -292,13 +292,8 @@ export const adminStorage = {
     tutor.subscription_plan = plan
     tutor.subscription_cycle = cycle
 
-    const defaultLimits: Record<PlanTier, number> = {
-      free: 9,
-      starter: 30,
-      pro: 250,
-      academy: 1000,
-    }
-    tutor.max_students_limit = maxLimit || defaultLimits[plan] || 30
+    const limit = maxLimit || PLAN_LIMITS[plan] || 30
+    tutor.max_students_limit = limit
 
     // Extend expiry
     const now = new Date()

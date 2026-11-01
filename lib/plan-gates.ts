@@ -12,27 +12,28 @@ export interface PlanLimitCheckResult {
 }
 
 export const PLAN_LIMITS: Record<string, number> = {
-  free: 9,
+  free: 10,
   starter: 30,
-  growth: 75,
-  pro: 150,
-  power: 300,
-  elite: 600,
-  academy: 600, // alias for elite
+  growth: 99,
+  pro: 250,
+  power: 500,
+  enterprise: 9999,
+  elite: 9999, // alias for enterprise
+  academy: 9999, // alias for enterprise
 }
 
 export const planGates = {
   // Normalize plan id
   normalizePlan(plan?: string): PlanTier {
     const p = (plan || 'free').toLowerCase()
-    if (p === 'academy') return 'elite' as PlanTier
+    if (p === 'academy' || p === 'elite') return 'enterprise' as PlanTier
     return (p as PlanTier) || 'free'
   },
 
   // Get max student limit for plan
   getStudentLimit(plan?: string): number {
     const normalized = this.normalizePlan(plan)
-    return PLAN_LIMITS[normalized] || 9
+    return PLAN_LIMITS[normalized] || 10
   },
 
   // 1. Hard Student Limit Check (Cannot add student beyond plan limit)
@@ -72,36 +73,36 @@ export const planGates = {
   // 3. Lesson Plans & Homework Notebook (Growth 299 EGP and above)
   canAccessLessons(plan?: string): boolean {
     const p = this.normalizePlan(plan)
-    return ['growth', 'pro', 'power', 'elite'].includes(p)
+    return ['growth', 'pro', 'power', 'enterprise', 'elite'].includes(p)
   },
 
   // 4. Student Success Profiles & Mastery Matrix (Growth 299 EGP and above)
   canAccessSuccessProfile(plan?: string): boolean {
     const p = this.normalizePlan(plan)
-    return ['growth', 'pro', 'power', 'elite'].includes(p)
+    return ['growth', 'pro', 'power', 'enterprise', 'elite'].includes(p)
   },
 
   // 5. Parent Magic Portal Links (Growth 299 EGP and above)
   canAccessParentPortal(plan?: string): boolean {
     const p = this.normalizePlan(plan)
-    return ['growth', 'pro', 'power', 'elite'].includes(p)
+    return ['growth', 'pro', 'power', 'enterprise', 'elite'].includes(p)
   },
 
   // 6. Advanced Financial Reports & Revenue Analytics (Pro 449 EGP and above)
   canAccessReports(plan?: string): boolean {
     const p = this.normalizePlan(plan)
-    return ['pro', 'power', 'elite'].includes(p)
+    return ['pro', 'power', 'enterprise', 'elite'].includes(p)
   },
 
   // 7. Bulk Excel Import (Pro 449 EGP and above)
   canAccessExcelBulkImport(plan?: string): boolean {
     const p = this.normalizePlan(plan)
-    return ['pro', 'power', 'elite'].includes(p)
+    return ['pro', 'power', 'enterprise', 'elite'].includes(p)
   },
 
-  // 8. Batch WhatsApp Dispatch Queue to All Parents (Elite 999 EGP exclusive)
+  // 8. Batch WhatsApp Dispatch Queue to All Parents (Power & Enterprise exclusive)
   canAccessBatchWhatsApp(plan?: string): boolean {
     const p = this.normalizePlan(plan)
-    return p === 'elite'
+    return ['power', 'enterprise', 'elite'].includes(p)
   },
 }

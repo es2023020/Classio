@@ -945,12 +945,16 @@ export default function SuperAdminDashboardPage() {
                           <div>
                             <span
                               className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded ${
-                                tutor.subscription_plan === 'academy'
+                                tutor.subscription_plan === 'enterprise' || tutor.subscription_plan === 'academy' || tutor.subscription_plan === 'elite'
+                                  ? 'bg-purple-950 text-purple-300 border border-purple-600/50'
+                                  : tutor.subscription_plan === 'power'
                                   ? 'bg-amber-950 text-amber-300 border border-amber-600/50'
                                   : tutor.subscription_plan === 'pro'
                                   ? 'bg-blue-950 text-blue-300 border border-blue-600/50'
+                                  : tutor.subscription_plan === 'growth'
+                                  ? 'bg-emerald-950 text-emerald-300 border border-emerald-600/50'
                                   : tutor.subscription_plan === 'starter'
-                                  ? 'bg-purple-950 text-purple-300 border border-purple-600/50'
+                                  ? 'bg-sky-950 text-sky-300 border border-sky-600/50'
                                   : 'bg-slate-800 text-slate-300'
                               }`}
                             >
@@ -1202,8 +1206,9 @@ export default function SuperAdminDashboardPage() {
                 growth: 'text-emerald-400',
                 pro: 'text-violet-400',
                 power: 'text-amber-400',
-                elite: 'text-rose-400',
-                academy: 'text-rose-400',
+                enterprise: 'text-purple-400',
+                elite: 'text-purple-400',
+                academy: 'text-purple-400',
               }
               return (
                 <div className="bg-gradient-to-br from-amber-950/60 to-slate-900 border border-amber-600/40 rounded-2xl p-5">
@@ -1393,7 +1398,17 @@ export default function SuperAdminDashboardPage() {
 
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-mono text-emerald-400 font-bold">
-                        {t.subscription_plan === 'academy' ? '499 ج.م' : t.subscription_plan === 'pro' ? '199 ج.م' : '99 ج.م'}
+                        {t.subscription_plan === 'enterprise' || t.subscription_plan === 'academy' || t.subscription_plan === 'elite'
+                          ? 'مخصص (+500)'
+                          : t.subscription_plan === 'power'
+                          ? '799 ج.م'
+                          : t.subscription_plan === 'pro'
+                          ? '449 ج.م'
+                          : t.subscription_plan === 'growth'
+                          ? '299 ج.م'
+                          : t.subscription_plan === 'starter'
+                          ? '99 ج.م'
+                          : 'مجاني'}
                       </span>
                       <button
                         onClick={() => handleOpenUpgradeModal(t)}
