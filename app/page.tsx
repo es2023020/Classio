@@ -32,7 +32,7 @@ import { ClassioLogo } from '@/components/ui/classio-logo'
 
 export default function LandingPage() {
   const { lang, toggleLang, isRTL } = useLanguage()
-  const [billing, setBilling] = useState<BillingCycle>('annual')
+  const [billing, setBilling] = useState<BillingCycle>('monthly')
   const [openFaq, setOpenFaq] = useState<number | null>(0)
 
   // Translations content with NO placeholders

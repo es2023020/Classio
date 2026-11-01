@@ -36,10 +36,10 @@ export const planGates = {
     return PLAN_LIMITS[normalized] || 10
   },
 
-  // 1. Hard Student Limit Check (Cannot add student beyond plan limit)
-  checkCanAddStudent(currentStudentCount: number, currentPlan?: string, addingCount = 1): PlanLimitCheckResult {
+  // 1. Hard Student Limit Check (Cannot add student beyond plan limit or admin-assigned limit)
+  checkCanAddStudent(currentStudentCount: number, currentPlan?: string, addingCount = 1, customLimit?: number): PlanLimitCheckResult {
     const plan = this.normalizePlan(currentPlan)
-    const limit = this.getStudentLimit(plan)
+    const limit = (customLimit && customLimit > 0) ? customLimit : this.getStudentLimit(plan)
     const newTotal = currentStudentCount + addingCount
 
     if (newTotal > limit) {

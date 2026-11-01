@@ -189,7 +189,7 @@ export function TutorDashboard() {
 
   // Bulk Import Handler
   const handleBulkImportStudents = async (newStudents: Student[]) => {
-    const check = planGates.checkCanAddStudent(students.length, profile.subscription_plan, newStudents.length)
+    const check = planGates.checkCanAddStudent(students.length, profile.subscription_plan, newStudents.length, profile.max_students_limit)
     if (!check.allowed) {
       setFeatureLockedModal({
         title: 'Import Blocked — Student Limit',
@@ -225,11 +225,18 @@ export function TutorDashboard() {
       const access = checkTutorAccess(p.email || 'tutor-1')
       setTutorAccess(access)
 
-      // Sync plan updates & limits if managed by Super Admin
+      // Sync plan updates & limits automatically from Super Admin control
       if (access.managedTutor) {
+        const planChanged =
+          p.subscription_plan !== access.managedTutor.subscription_plan ||
+          p.max_students_limit !== access.managedTutor.max_students_limit
+
         p.subscription_plan = access.managedTutor.subscription_plan
         p.max_students_limit = access.managedTutor.max_students_limit
         p.subscription_expires_at = access.managedTutor.subscription_expires_at
+        if (planChanged) {
+          await storage.saveProfile(p)
+        }
       }
 
       // Subscription expiry enforcement — revert to free if expired
@@ -237,7 +244,7 @@ export function TutorDashboard() {
         const expiresAt = new Date(p.subscription_expires_at)
         if (expiresAt < new Date()) {
           p.subscription_plan = 'free'
-          p.max_students_limit = 9
+          p.max_students_limit = 10
           await storage.saveProfile(p)
         }
       }
@@ -316,7 +323,7 @@ export function TutorDashboard() {
 
   // Guarded add-student opener — checks plan limit first
   const openAddStudentGuarded = () => {
-    const check = planGates.checkCanAddStudent(students.length, profile.subscription_plan)
+    const check = planGates.checkCanAddStudent(students.length, profile.subscription_plan, 1, profile.max_students_limit)
     if (!check.allowed) {
       setFeatureLockedModal({
         title: 'Student Limit Reached',

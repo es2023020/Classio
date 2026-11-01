@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, Suspense } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -27,7 +27,7 @@ import { useLanguage } from '@/lib/language-context'
 import { PRICING_PLANS, PRICING_RULES } from '@/lib/plans'
 import { storage } from '@/lib/storage'
 import { adminStorage } from '@/lib/admin-storage'
-import { PlanTier, BillingCycle } from '@/lib/types'
+import { PlanTier, BillingCycle, TutorProfile } from '@/lib/types'
 import { ClassioLogo } from '@/components/ui/classio-logo'
 import { formatPrice } from '@/lib/localization'
 
@@ -35,7 +35,7 @@ function CheckoutContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const initialPlanId = (searchParams.get('plan') || 'growth') as PlanTier
-  const initialBilling = (searchParams.get('billing') || 'annual') as BillingCycle
+  const initialBilling = (searchParams.get('billing') || 'monthly') as BillingCycle
 
   const { lang, toggleLang, isRTL } = useLanguage()
 
@@ -805,19 +805,43 @@ function CheckoutContent() {
               <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6">
                 {/* Plan Switcher */}
                 <div className="pb-4 border-b border-slate-100">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-slate-500">
-                      {lang === 'en' ? 'Selected Plan:' : 'الخطة المختارة:'}
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="text-xs font-bold text-slate-700">
+                      {lang === 'en' ? 'Select Plan:' : 'اختر الباقة:'}
                     </span>
                     <span className="rounded-full bg-emerald-100 text-emerald-800 px-2.5 py-0.5 text-xs font-black">
                       {selectedPlan.studentsLabel}
                     </span>
                   </div>
 
+                  {/* Visual Plan Switcher Grid */}
+                  <div className="grid grid-cols-3 gap-1.5 mb-2.5">
+                    {PRICING_PLANS.filter(p => p.id !== 'free').map((p) => {
+                      const isSelected = p.id === planId
+                      return (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={() => setPlanId(p.id)}
+                          className={`p-2 rounded-xl border text-center transition cursor-pointer flex flex-col items-center justify-center ${
+                            isSelected
+                              ? 'border-[#0f2c59] bg-[#0f2c59] text-white shadow-sm font-bold'
+                              : 'border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700'
+                          }`}
+                        >
+                          <span className="text-[11px] font-black truncate w-full">{p.name}</span>
+                          <span className={`text-[10px] font-price font-bold ${isSelected ? 'text-amber-300' : 'text-[#0f2c59]'}`}>
+                            {p.isCustomMeeting ? (lang === 'en' ? 'Meeting' : 'جلسة عمل') : `EGP ${billing === 'annual' ? Math.round(p.annualPrice / 12) : p.monthlyPrice}/mo`}
+                          </span>
+                        </button>
+                      )
+                    })}
+                  </div>
+
                   <select
                     value={planId}
                     onChange={(e) => setPlanId(e.target.value as PlanTier)}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2 text-xs font-bold text-slate-800 outline-none"
+                    className="w-full rounded-xl border border-slate-200 bg-white p-2 text-xs font-bold text-slate-800 outline-none"
                   >
                     {PRICING_PLANS.map((p) => (
                       <option key={p.id} value={p.id}>

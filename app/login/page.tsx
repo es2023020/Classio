@@ -172,15 +172,18 @@ function LoginForm() {
         lang === 'en'
           ? mode === 'signin'
             ? 'Signed in successfully! Redirecting...'
-            : 'Account created successfully! Redirecting...'
+            : 'Account created! Proceeding to payment & plan activation...'
           : mode === 'signin'
           ? 'تم تسجيل الدخول بنجاح! جاري الانتقال...'
-          : 'تم إنشاء حسابك بنجاح! جاري الانتقال...'
+          : 'تم إنشاء حسابك بنجاح! جاري الانتقال لصفحة الاشتراك وتأكيد السداد...'
       )
 
       setTimeout(() => {
-        if (planParam && planParam !== 'free') {
-          router.push(`/checkout?plan=${planParam}&billing=${billingParam}`)
+        if (mode === 'signup') {
+          // Direct new accounts to payments page connected with their plan
+          router.push(`/checkout?plan=${planParam || 'growth'}&billing=${billingParam || 'monthly'}`)
+        } else if (planParam && planParam !== 'free') {
+          router.push(`/checkout?plan=${planParam}&billing=${billingParam || 'monthly'}`)
         } else {
           router.push('/dashboard')
         }

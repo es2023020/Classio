@@ -33,7 +33,7 @@ import { formatPrice } from '@/lib/localization'
 
 export default function PricingPage() {
   const { lang, toggleLang, isRTL } = useLanguage()
-  const [billing, setBilling] = useState<BillingCycle>('annual')
+  const [billing, setBilling] = useState<BillingCycle>('monthly')
   const [studentCount, setStudentCount] = useState<number>(65)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
