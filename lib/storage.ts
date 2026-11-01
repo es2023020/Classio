@@ -947,11 +947,41 @@ export const initialHomeworks: HomeworkAssignment[] = [
   },
 ]
 
+
+
+export function getCurrentTutorId(): string | null {
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = localStorage.getItem('classio_auth_user')
+    if (!raw) return null
+    const user = JSON.parse(raw)
+    if (user?.email) {
+      return user.email.toLowerCase().trim()
+    }
+    return user?.id || null
+  } catch {
+    return null
+  }
+}
+
+export function getTutorStorageKey(baseKey: string, tutorId?: string | null): string {
+  const tid = tutorId || getCurrentTutorId()
+  if (!tid) return `classio_guest_${baseKey}`
+  const sanitized = tid.replace(/[^a-z0-9_-]/g, '_')
+  return `classio_tutor_${sanitized}_${baseKey}`
+}
+
+
 /**
  * Storage Engine: Dual Mode (Supabase or LocalStorage)
+ * Multi-tenant isolated storage per tutor with zero demo placeholder leakage
  */
 class StorageService {
   private isBrowser = typeof window !== 'undefined'
+
+  private getTutorKey(baseKey: string): string {
+    return getTutorStorageKey(baseKey)
+  }
 
   private readLocal<T>(key: string, defaultValue: T): T {
     if (!this.isBrowser) return defaultValue
@@ -981,11 +1011,58 @@ class StorageService {
         if (data) return data as TutorProfile
       }
     }
-    return this.readLocal(STORAGE_KEYS.PROFILE, initialProfile)
+    const key = this.getTutorKey('profile')
+    const existing = this.readLocal<TutorProfile | null>(key, null)
+    if (existing) return existing
+
+    // Check if auth user exists in local session to build their real initial profile
+    if (this.isBrowser) {
+      try {
+        const authRaw = localStorage.getItem('classio_auth_user')
+        if (authRaw) {
+          const auth = JSON.parse(authRaw)
+          const newProfile: TutorProfile = {
+            id: auth.id || `tutor-${Date.now()}`,
+            name: auth.name || 'معلم جديد',
+            title: auth.title || 'معلم خاص',
+            subject: auth.subject || 'عام',
+            phone: auth.phone || '',
+            email: auth.email || '',
+            avatar_initials: (auth.name || 'CL').slice(0, 2).toUpperCase(),
+            center_names: [],
+            instapay_handle: '',
+            vodafone_cash_number: '',
+            default_monthly_fee: 500,
+            subscription_plan: auth.plan || 'free',
+            max_students_limit: auth.planLimit || 10,
+          }
+          this.writeLocal(key, newProfile)
+          return newProfile
+        }
+      } catch (e) {}
+    }
+
+    const blankProfile: TutorProfile = {
+      id: 'tutor-new',
+      name: 'معلم جديد',
+      title: 'معلم خاص',
+      subject: 'عام',
+      phone: '',
+      email: '',
+      avatar_initials: 'CL',
+      center_names: [],
+      instapay_handle: '',
+      vodafone_cash_number: '',
+      default_monthly_fee: 500,
+      subscription_plan: 'free',
+      max_students_limit: 10,
+    }
+    return blankProfile
   }
 
   async saveProfile(profile: TutorProfile): Promise<TutorProfile> {
-    this.writeLocal(STORAGE_KEYS.PROFILE, profile)
+    const key = this.getTutorKey('profile')
+    this.writeLocal(key, profile)
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
@@ -1004,14 +1081,14 @@ class StorageService {
         if (data && data.length > 0) return data as Group[]
       }
     }
-    return this.readLocal(STORAGE_KEYS.GROUPS, initialGroups)
+    return this.readLocal<Group[]>(this.getTutorKey('groups'), [])
   }
 
   async saveGroup(group: Group): Promise<Group> {
     const groups = await this.getGroups()
     const index = groups.findIndex((g) => g.id === group.id)
     const updated = index >= 0 ? groups.map((g) => (g.id === group.id ? group : g)) : [group, ...groups]
-    this.writeLocal(STORAGE_KEYS.GROUPS, updated)
+    this.writeLocal(this.getTutorKey('groups'), updated)
 
     if (isSupabaseConfigured()) {
       const client = getSupabase()
@@ -1025,7 +1102,7 @@ class StorageService {
   async deleteGroup(groupId: string): Promise<void> {
     const groups = await this.getGroups()
     const updated = groups.filter((g) => g.id !== groupId)
-    this.writeLocal(STORAGE_KEYS.GROUPS, updated)
+    this.writeLocal(this.getTutorKey('groups'), updated)
 
     if (isSupabaseConfigured()) {
       const client = getSupabase()
@@ -1044,14 +1121,14 @@ class StorageService {
         if (data && data.length > 0) return data as Student[]
       }
     }
-    return this.readLocal(STORAGE_KEYS.STUDENTS, initialStudents)
+    return this.readLocal<Student[]>(this.getTutorKey('students'), [])
   }
 
   async saveStudent(student: Student): Promise<Student> {
     const students = await this.getStudents()
     const index = students.findIndex((s) => s.id === student.id)
     const updated = index >= 0 ? students.map((s) => (s.id === student.id ? student : s)) : [student, ...students]
-    this.writeLocal(STORAGE_KEYS.STUDENTS, updated)
+    this.writeLocal(this.getTutorKey('students'), updated)
 
     if (isSupabaseConfigured()) {
       const client = getSupabase()
@@ -1072,7 +1149,7 @@ class StorageService {
 
     const updatedStudent = { ...students[index], ...updates }
     students[index] = updatedStudent
-    this.writeLocal(STORAGE_KEYS.STUDENTS, students)
+    this.writeLocal(this.getTutorKey('students'), students)
 
     if (isSupabaseConfigured()) {
       const client = getSupabase()
@@ -1086,7 +1163,7 @@ class StorageService {
   async deleteStudent(studentId: string): Promise<void> {
     const students = await this.getStudents()
     const updated = students.filter((s) => s.id !== studentId)
-    this.writeLocal(STORAGE_KEYS.STUDENTS, updated)
+    this.writeLocal(this.getTutorKey('students'), updated)
 
     if (isSupabaseConfigured()) {
       const client = getSupabase()
@@ -1107,7 +1184,7 @@ class StorageService {
         if (data && data.length > 0) return data as LessonPlan[]
       }
     }
-    const all = this.readLocal(STORAGE_KEYS.LESSONS, initialLessons)
+    const all = this.readLocal<LessonPlan[]>(this.getTutorKey('lessons'), [])
     return groupId ? all.filter((l) => l.group_id === groupId) : all
   }
 
@@ -1115,7 +1192,7 @@ class StorageService {
     const lessons = await this.getLessons()
     const index = lessons.findIndex((l) => l.id === lesson.id)
     const updated = index >= 0 ? lessons.map((l) => (l.id === lesson.id ? lesson : l)) : [lesson, ...lessons]
-    this.writeLocal(STORAGE_KEYS.LESSONS, updated)
+    this.writeLocal(this.getTutorKey('lessons'), updated)
 
     if (isSupabaseConfigured()) {
       const client = getSupabase()
@@ -1129,7 +1206,7 @@ class StorageService {
   async deleteLesson(lessonId: string): Promise<void> {
     const lessons = await this.getLessons()
     const updated = lessons.filter((l) => l.id !== lessonId)
-    this.writeLocal(STORAGE_KEYS.LESSONS, updated)
+    this.writeLocal(this.getTutorKey('lessons'), updated)
 
     if (isSupabaseConfigured()) {
       const client = getSupabase()
@@ -1140,30 +1217,30 @@ class StorageService {
   }
 
   // --- Attendance ---
-  async getAttendance(groupId?: string, date?: string): Promise<AttendanceRecord[]> {
+  async getAttendance(groupIdOrStudentId?: string, date?: string): Promise<AttendanceRecord[]> {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
         let query = client.from('attendance').select('*')
-        if (groupId) query = query.eq('group_id', groupId)
+        if (groupIdOrStudentId) query = query.or(`group_id.eq.${groupIdOrStudentId},student_id.eq.${groupIdOrStudentId}`)
         if (date) query = query.eq('lesson_date', date)
         const { data } = await query
         if (data) return data as AttendanceRecord[]
       }
     }
-    const all = this.readLocal(STORAGE_KEYS.ATTENDANCE, initialAttendance)
+    const all = this.readLocal<AttendanceRecord[]>(this.getTutorKey('attendance'), [])
     return all.filter((a) => {
-      if (groupId && a.group_id !== groupId) return false
+      if (groupIdOrStudentId && a.group_id !== groupIdOrStudentId && a.student_id !== groupIdOrStudentId) return false
       if (date && a.lesson_date !== date) return false
       return true
     })
   }
 
   async saveAttendanceRecord(record: AttendanceRecord): Promise<AttendanceRecord> {
-    const all = this.readLocal(STORAGE_KEYS.ATTENDANCE, initialAttendance)
+    const all = this.readLocal<AttendanceRecord[]>(this.getTutorKey('attendance'), [])
     const index = all.findIndex((a) => a.student_id === record.student_id && a.lesson_date === record.lesson_date)
     const updated = index >= 0 ? all.map((a, i) => (i === index ? record : a)) : [record, ...all]
-    this.writeLocal(STORAGE_KEYS.ATTENDANCE, updated)
+    this.writeLocal(this.getTutorKey('attendance'), updated)
 
     // Update student's last_attendance in local list
     const students = await this.getStudents()
@@ -1173,7 +1250,7 @@ class StorageService {
       if (record.quiz_score !== null && record.quiz_score !== undefined) {
         student.last_quiz_score = `${record.quiz_score}/${record.max_quiz_score ?? 20}`
       }
-      this.writeLocal(STORAGE_KEYS.STUDENTS, students)
+      this.writeLocal(this.getTutorKey('students'), students)
     }
 
     if (isSupabaseConfigured()) {
@@ -1186,21 +1263,24 @@ class StorageService {
   }
 
   // --- Payments ---
-  async getPayments(): Promise<PaymentRecord[]> {
+  async getPayments(studentId?: string): Promise<PaymentRecord[]> {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
-        const { data } = await client.from('payments').select('*').order('created_at', { ascending: false })
+        let query = client.from('payments').select('*').order('created_at', { ascending: false })
+        if (studentId) query = query.eq('student_id', studentId)
+        const { data } = await query
         if (data && data.length > 0) return data as PaymentRecord[]
       }
     }
-    return this.readLocal(STORAGE_KEYS.PAYMENTS, initialPayments)
+    const all = this.readLocal<PaymentRecord[]>(this.getTutorKey('payments'), [])
+    return studentId ? all.filter((p) => p.student_id === studentId) : all
   }
 
   async recordPayment(payment: PaymentRecord): Promise<PaymentRecord> {
     const payments = await this.getPayments()
     const updatedPayments = [payment, ...payments]
-    this.writeLocal(STORAGE_KEYS.PAYMENTS, updatedPayments)
+    this.writeLocal(this.getTutorKey('payments'), updatedPayments)
 
     const students = await this.getStudents()
     const student = students.find((s) => s.id === payment.student_id)
@@ -1208,7 +1288,7 @@ class StorageService {
       student.paid_this_month = payment.status === 'paid'
       student.paid_amount = (student.paid_amount || 0) + payment.amount
       student.status = student.paid_this_month ? 'active' : 'late'
-      this.writeLocal(STORAGE_KEYS.STUDENTS, students)
+      this.writeLocal(this.getTutorKey('students'), students)
     }
 
     if (isSupabaseConfigured()) {
@@ -1241,20 +1321,20 @@ class StorageService {
       6: 'السبت',
     }
     const todayDayName = daysMap[new Date().getDay()]
-    const todayLessonsCount = groups.filter((g) => g.schedule_days.includes(todayDayName)).length || 2
+    const todayLessonsCount = groups.filter((g) => g.schedule_days && g.schedule_days.includes(todayDayName)).length
 
-    const monthlyExpected = students.reduce((sum, s) => sum + (s.monthly_fee || 850), 0)
+    const monthlyExpected = students.reduce((sum, s) => sum + (s.monthly_fee || 0), 0)
     const monthlyCollected = payments.reduce((sum, p) => sum + p.amount, 0)
     const monthlyOutstanding = Math.max(0, monthlyExpected - monthlyCollected)
 
     const presentCount = attendanceToday.filter((a) => a.status === 'present').length
-    const attendanceRateToday = attendanceToday.length > 0 ? Math.round((presentCount / attendanceToday.length) * 100) : 94
+    const attendanceRateToday = attendanceToday.length > 0 ? Math.round((presentCount / attendanceToday.length) * 100) : 0
 
     const pendingRemindersCount = students.filter((s) => !s.paid_this_month).length
     const studentsImprovingCount = students.filter((s) => s.trajectory === 'improving').length
-    const averageHomeworkRate = Math.round(
-      students.reduce((sum, s) => sum + (s.homework_rate || 85), 0) / (students.length || 1)
-    )
+    const averageHomeworkRate = students.length > 0
+      ? Math.round(students.reduce((sum, s) => sum + (s.homework_rate || 0), 0) / students.length)
+      : 0
 
     return {
       totalStudents,
@@ -1272,7 +1352,7 @@ class StorageService {
 
   // --- Assessments ---
   async getAssessments(studentId?: string): Promise<AssessmentRecord[]> {
-    const all = this.readLocal(STORAGE_KEYS.ASSESSMENTS, initialAssessments)
+    const all = this.readLocal<AssessmentRecord[]>(this.getTutorKey('assessments'), [])
     return studentId ? all.filter((a) => a.student_id === studentId) : all
   }
 
@@ -1280,14 +1360,13 @@ class StorageService {
     const all = await this.getAssessments()
     const index = all.findIndex((a) => a.id === record.id)
     const updated = index >= 0 ? all.map((a) => (a.id === record.id ? record : a)) : [record, ...all]
-    this.writeLocal(STORAGE_KEYS.ASSESSMENTS, updated)
+    this.writeLocal(this.getTutorKey('assessments'), updated)
 
-    // Also update student's last quiz score if applicable
     const students = await this.getStudents()
     const student = students.find((s) => s.id === record.student_id)
     if (student) {
       student.last_quiz_score = `${record.score}/${record.max_score}`
-      this.writeLocal(STORAGE_KEYS.STUDENTS, students)
+      this.writeLocal(this.getTutorKey('students'), students)
     }
 
     return record
@@ -1296,12 +1375,12 @@ class StorageService {
   async deleteAssessment(id: string): Promise<void> {
     const all = await this.getAssessments()
     const updated = all.filter((a) => a.id !== id)
-    this.writeLocal(STORAGE_KEYS.ASSESSMENTS, updated)
+    this.writeLocal(this.getTutorKey('assessments'), updated)
   }
 
   // --- Homeworks ---
   async getHomeworks(studentId?: string): Promise<HomeworkAssignment[]> {
-    const all = this.readLocal(STORAGE_KEYS.HOMEWORKS, initialHomeworks)
+    const all = this.readLocal<HomeworkAssignment[]>(this.getTutorKey('homeworks'), [])
     return studentId ? all.filter((h) => h.student_id === studentId) : all
   }
 
@@ -1309,14 +1388,14 @@ class StorageService {
     const all = await this.getHomeworks()
     const index = all.findIndex((h) => h.id === hw.id)
     const updated = index >= 0 ? all.map((h) => (h.id === hw.id ? hw : h)) : [hw, ...all]
-    this.writeLocal(STORAGE_KEYS.HOMEWORKS, updated)
+    this.writeLocal(this.getTutorKey('homeworks'), updated)
     return hw
   }
 
   async deleteHomework(id: string): Promise<void> {
     const all = await this.getHomeworks()
     const updated = all.filter((h) => h.id !== id)
-    this.writeLocal(STORAGE_KEYS.HOMEWORKS, updated)
+    this.writeLocal(this.getTutorKey('homeworks'), updated)
   }
 
   // --- Student Details & Controls ---
@@ -1325,20 +1404,21 @@ class StorageService {
     return students.find((s) => s.id === studentId || s.student_code === studentId) || null
   }
 
-  async addStudentNote(studentId: string, text: string, author = 'Ahmed Mahmoud'): Promise<Student | null> {
+  async addStudentNote(studentId: string, text: string, author?: string): Promise<Student | null> {
     const students = await this.getStudents()
     const student = students.find((s) => s.id === studentId)
     if (!student) return null
 
+    const profile = await this.getProfile()
     const newNote = {
       id: `tn-${Date.now()}`,
       date: new Date().toISOString().split('T')[0],
       text,
-      author,
+      author: author || profile.name || 'المعلم',
     }
 
     student.tutor_notes = [newNote, ...(student.tutor_notes || [])]
-    this.writeLocal(STORAGE_KEYS.STUDENTS, students)
+    this.writeLocal(this.getTutorKey('students'), students)
     return student
   }
 
@@ -1348,7 +1428,7 @@ class StorageService {
     if (!student || !student.tutor_notes) return null
 
     student.tutor_notes = student.tutor_notes.filter((n) => n.id !== noteId)
-    this.writeLocal(STORAGE_KEYS.STUDENTS, students)
+    this.writeLocal(this.getTutorKey('students'), students)
     return student
   }
 
@@ -1367,7 +1447,7 @@ class StorageService {
     }
 
     student.communication_history = [newLog, ...(student.communication_history || [])]
-    this.writeLocal(STORAGE_KEYS.STUDENTS, students)
+    this.writeLocal(this.getTutorKey('students'), students)
     return student
   }
 
@@ -1378,7 +1458,7 @@ class StorageService {
 
     student.group_id = groupId
     student.group_name = groupName
-    this.writeLocal(STORAGE_KEYS.STUDENTS, students)
+    this.writeLocal(this.getTutorKey('students'), students)
     return student
   }
 
@@ -1391,7 +1471,7 @@ class StorageService {
     if (!student) return null
 
     student.status = status
-    this.writeLocal(STORAGE_KEYS.STUDENTS, students)
+    this.writeLocal(this.getTutorKey('students'), students)
     return student
   }
 
@@ -1401,19 +1481,19 @@ class StorageService {
     const backup = {
       version: '1.0',
       exported_at: new Date().toISOString(),
-      profile: this.readLocal(STORAGE_KEYS.PROFILE, initialProfile),
-      groups: this.readLocal(STORAGE_KEYS.GROUPS, initialGroups),
-      students: this.readLocal(STORAGE_KEYS.STUDENTS, initialStudents),
-      payments: this.readLocal(STORAGE_KEYS.PAYMENTS, initialPayments),
-      attendance: this.readLocal(STORAGE_KEYS.ATTENDANCE, initialAttendance),
-      lessons: this.readLocal(STORAGE_KEYS.LESSONS, initialLessons),
-      assessments: this.readLocal(STORAGE_KEYS.ASSESSMENTS, initialAssessments),
-      homeworks: this.readLocal(STORAGE_KEYS.HOMEWORKS, initialHomeworks),
+      profile: this.readLocal(this.getTutorKey('profile'), null),
+      groups: this.readLocal(this.getTutorKey('groups'), []),
+      students: this.readLocal(this.getTutorKey('students'), []),
+      payments: this.readLocal(this.getTutorKey('payments'), []),
+      attendance: this.readLocal(this.getTutorKey('attendance'), []),
+      lessons: this.readLocal(this.getTutorKey('lessons'), []),
+      assessments: this.readLocal(this.getTutorKey('assessments'), []),
+      homeworks: this.readLocal(this.getTutorKey('homeworks'), []),
     }
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' })
     const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
-    link.download = `muallemi-backup-${new Date().toISOString().split('T')[0]}.json`
+    link.download = `classio-backup-${new Date().toISOString().split('T')[0]}.json`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -1423,34 +1503,31 @@ class StorageService {
     if (!this.isBrowser) return false
     try {
       const parsed = JSON.parse(jsonString)
-      if (!parsed.students || !parsed.groups) {
-        return false
-      }
-      if (parsed.profile) this.writeLocal(STORAGE_KEYS.PROFILE, parsed.profile)
-      if (parsed.groups) this.writeLocal(STORAGE_KEYS.GROUPS, parsed.groups)
-      if (parsed.students) this.writeLocal(STORAGE_KEYS.STUDENTS, parsed.students)
-      if (parsed.payments) this.writeLocal(STORAGE_KEYS.PAYMENTS, parsed.payments)
-      if (parsed.attendance) this.writeLocal(STORAGE_KEYS.ATTENDANCE, parsed.attendance)
-      if (parsed.lessons) this.writeLocal(STORAGE_KEYS.LESSONS, parsed.lessons)
-      if (parsed.assessments) this.writeLocal(STORAGE_KEYS.ASSESSMENTS, parsed.assessments)
-      if (parsed.homeworks) this.writeLocal(STORAGE_KEYS.HOMEWORKS, parsed.homeworks)
+      if (parsed.profile) this.writeLocal(this.getTutorKey('profile'), parsed.profile)
+      if (parsed.groups) this.writeLocal(this.getTutorKey('groups'), parsed.groups)
+      if (parsed.students) this.writeLocal(this.getTutorKey('students'), parsed.students)
+      if (parsed.payments) this.writeLocal(this.getTutorKey('payments'), parsed.payments)
+      if (parsed.attendance) this.writeLocal(this.getTutorKey('attendance'), parsed.attendance)
+      if (parsed.lessons) this.writeLocal(this.getTutorKey('lessons'), parsed.lessons)
+      if (parsed.assessments) this.writeLocal(this.getTutorKey('assessments'), parsed.assessments)
+      if (parsed.homeworks) this.writeLocal(this.getTutorKey('homeworks'), parsed.homeworks)
       return true
     } catch {
       return false
     }
   }
 
-  // Reset to rich demo data
+  // Reset to clean state for current tutor
   resetAll(): void {
     if (!this.isBrowser) return
-    localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(initialProfile))
-    localStorage.setItem(STORAGE_KEYS.GROUPS, JSON.stringify(initialGroups))
-    localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(initialStudents))
-    localStorage.setItem(STORAGE_KEYS.PAYMENTS, JSON.stringify(initialPayments))
-    localStorage.setItem(STORAGE_KEYS.ATTENDANCE, JSON.stringify(initialAttendance))
-    localStorage.setItem(STORAGE_KEYS.LESSONS, JSON.stringify(initialLessons))
-    localStorage.setItem(STORAGE_KEYS.ASSESSMENTS, JSON.stringify(initialAssessments))
-    localStorage.setItem(STORAGE_KEYS.HOMEWORKS, JSON.stringify(initialHomeworks))
+    localStorage.removeItem(this.getTutorKey('profile'))
+    localStorage.removeItem(this.getTutorKey('groups'))
+    localStorage.removeItem(this.getTutorKey('students'))
+    localStorage.removeItem(this.getTutorKey('payments'))
+    localStorage.removeItem(this.getTutorKey('attendance'))
+    localStorage.removeItem(this.getTutorKey('lessons'))
+    localStorage.removeItem(this.getTutorKey('assessments'))
+    localStorage.removeItem(this.getTutorKey('homeworks'))
   }
 }
 

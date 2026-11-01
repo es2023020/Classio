@@ -18,6 +18,24 @@ import { Button } from '@/components/ui/button'
 import { buildAbsentWhatsAppUrl, exportToCsv } from '@/lib/egyptian-helpers'
 import { useLanguage } from '@/lib/language-context'
 
+
+function getTodayString(): string {
+  const d = new Date()
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+function getYesterdayString(): string {
+  const d = new Date()
+  d.setDate(d.getDate() - 1)
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
 interface AttendanceViewProps {
   groups: Group[]
   students: Student[]
@@ -37,24 +55,34 @@ export function AttendanceView({
 }: AttendanceViewProps) {
   const { lang, t, isRTL } = useLanguage()
   const [selectedGroupId, setSelectedGroupId] = useState(groups[0]?.id || '')
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
+  const [selectedDate, setSelectedDate] = useState(getTodayString())
 
   const groupStudents = students.filter((s) => s.group_id === selectedGroupId)
   const currentGroup = groups.find((g) => g.id === selectedGroupId)
 
   // Local state for current sheet
-  const [sheet, setSheet] = useState<Record<string, { status: AttendanceStatus; homework: boolean; quiz: string }>>({})
+  const [sheet, setSheet] = useState<Record<string, { status: AttendanceStatus; homework: boolean; quiz: string; recorded: boolean }>>({})
 
   useEffect(() => {
-    const initialSheet: Record<string, { status: AttendanceStatus; homework: boolean; quiz: string }> = {}
+    const initialSheet: Record<string, { status: AttendanceStatus; homework: boolean; quiz: string; recorded: boolean }> = {}
     groupStudents.forEach((s) => {
       const match = attendanceRecords.find(
         (r) => r.student_id === s.id && r.lesson_date === selectedDate
       )
-      initialSheet[s.id] = {
-        status: match?.status || 'present',
-        homework: match ? match.homework_done : true,
-        quiz: match?.quiz_score !== null && match?.quiz_score !== undefined ? String(match.quiz_score) : '',
+      if (match) {
+        initialSheet[s.id] = {
+          status: match.status,
+          homework: match.homework_done,
+          quiz: match.quiz_score !== null && match.quiz_score !== undefined ? String(match.quiz_score) : '',
+          recorded: true,
+        }
+      } else {
+        initialSheet[s.id] = {
+          status: 'present',
+          homework: true,
+          quiz: '',
+          recorded: false,
+        }
       }
     })
     setSheet(initialSheet)
@@ -64,8 +92,8 @@ export function AttendanceView({
     const student = students.find((s) => s.id === studentId)
     if (!student) return
 
-    const currentEntry = sheet[studentId] || { status: 'present', homework: true, quiz: '' }
-    const updated = { ...currentEntry, status }
+    const currentEntry = sheet[studentId] || { status: 'present', homework: true, quiz: '', recorded: false }
+    const updated = { ...currentEntry, status, recorded: true }
     setSheet((prev) => ({ ...prev, [studentId]: updated }))
 
     const record: AttendanceRecord = {
@@ -168,10 +196,34 @@ export function AttendanceView({
     notify(lang === 'en' ? 'Attendance sheet exported successfully to Excel/CSV' : 'تم تصدير كشف الحضور بنجاح إلى ملف إكسيل/CSV')
   }
 
-  // Summary counts
-  const presentCount = Object.values(sheet).filter((v) => v.status === 'present').length
-  const absentCount = Object.values(sheet).filter((v) => v.status === 'absent').length
-  const excusedCount = Object.values(sheet).filter((v) => v.status === 'excused').length
+  // Day-by-day calculations
+  const recordedRecordsForDate = attendanceRecords.filter(
+    (r) => r.group_id === selectedGroupId && r.lesson_date === selectedDate
+  )
+  const isRecordedForDate = recordedRecordsForDate.length > 0 || Object.values(sheet).some((v) => v.recorded)
+
+  const formatFriendlyDate = (dateStr: string) => {
+    try {
+      const parts = dateStr.split('-')
+      const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]))
+      const isToday = dateStr === getTodayString()
+      const isYesterday = dateStr === getYesterdayString()
+      const dayNamesAr = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت']
+      const dayNamesEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+      const dayName = lang === 'en' ? dayNamesEn[d.getDay()] : dayNamesAr[d.getDay()]
+
+      if (isToday) return lang === 'en' ? `Today (${dayName}, ${dateStr})` : `اليوم (${dayName}، ${dateStr})`
+      if (isYesterday) return lang === 'en' ? `Yesterday (${dayName}, ${dateStr})` : `أمس (${dayName}، ${dateStr})`
+      return `${dayName} — ${dateStr}`
+    } catch {
+      return dateStr
+    }
+  }
+
+  // Summary counts - strictly based on recorded attendance
+  const presentCount = Object.values(sheet).filter((v) => v.recorded && v.status === 'present').length
+  const absentCount = Object.values(sheet).filter((v) => v.recorded && v.status === 'absent').length
+  const excusedCount = Object.values(sheet).filter((v) => v.recorded && v.status === 'excused').length
 
   return (
     <div className="space-y-6">
@@ -224,12 +276,36 @@ export function AttendanceView({
 
           <div className="space-y-1">
             <span className="text-[11px] font-bold text-slate-400">{t.attendance.selectDate}:</span>
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="block rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-800 outline-none cursor-pointer"
-            />
+            <div className="flex items-center gap-1.5">
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="block rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-800 outline-none cursor-pointer"
+              />
+              <button
+                type="button"
+                onClick={() => setSelectedDate(getTodayString())}
+                className={`px-2.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+                  selectedDate === getTodayString()
+                    ? 'bg-[#0f2c59] text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                {lang === 'en' ? 'Today' : 'اليوم'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedDate(getYesterdayString())}
+                className={`px-2.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+                  selectedDate === getYesterdayString()
+                    ? 'bg-[#0f2c59] text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                {lang === 'en' ? 'Yesterday' : 'أمس'}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -248,6 +324,37 @@ export function AttendanceView({
             <p className="text-sm font-extrabold text-amber-800">{excusedCount}</p>
           </div>
         </div>
+      </div>
+
+      {/* Session Day Status Banner */}
+      <div className={`p-3.5 rounded-2xl border text-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 ${
+        isRecordedForDate
+          ? 'bg-emerald-50/70 border-emerald-200 text-emerald-900'
+          : 'bg-amber-50/70 border-amber-200 text-amber-900'
+      }`}>
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <span className={`size-2.5 rounded-full ${isRecordedForDate ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse'}`} />
+          <span className="font-black text-sm">
+            {formatFriendlyDate(selectedDate)}
+          </span>
+          <span className="text-slate-400">|</span>
+          <span className="font-semibold text-xs">
+            {isRecordedForDate
+              ? (lang === 'en' ? 'Attendance recorded and saved in history' : 'تم تسجيل حضور هذه الحصة ومحفوظة في السجل التراكمي')
+              : (lang === 'en' ? 'Not recorded yet — mark students to record session' : 'لم يُسجل بعد — حدد حالة الطلاب لحفظ حضور اليوم')}
+          </span>
+        </div>
+
+        {!isRecordedForDate && groupStudents.length > 0 && (
+          <Button
+            size="sm"
+            onClick={markAllPresent}
+            className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs cursor-pointer shadow-xs self-start sm:self-auto"
+          >
+            <CheckCircle2 className="size-3.5 me-1" />
+            {lang === 'en' ? 'Record Attendance Now' : 'تسجيل حضور الحصة الآن'}
+          </Button>
+        )}
       </div>
 
       {/* Attendance Sheet Table */}

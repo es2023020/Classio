@@ -42,9 +42,9 @@ export function ReportsView({
   const steadyStudents = students.filter((s) => s.trajectory === 'steady').length
   const attentionStudents = students.filter((s) => s.trajectory === 'needs_attention').length
 
-  const avgHomeworkRate = Math.round(
-    students.reduce((sum, s) => sum + (s.homework_rate || 85), 0) / (students.length || 1)
-  )
+  const avgHomeworkRate = students.length > 0
+    ? Math.round(students.reduce((sum, s) => sum + (s.homework_rate || 0), 0) / students.length)
+    : 0
 
   const exportStudents = () => {
     const data = students.map((s) => {
@@ -58,9 +58,9 @@ export function ReportsView({
           'Fee': s.monthly_fee,
           'Payment Status': s.paid_this_month ? 'Paid' : 'Unpaid',
           'Trajectory': getTrajectoryBadgeText(s.trajectory, 'en'),
-          'Attendance Rate': `${s.attendance_rate || 95}%`,
-          'Homework Rate': `${s.homework_rate || 85}%`,
-          'Last Exam': s.last_quiz_score || '85/100',
+          'Attendance Rate': s.attendance_rate !== undefined ? `${s.attendance_rate}%` : '—',
+          'Homework Rate': s.homework_rate !== undefined ? `${s.homework_rate}%` : '—',
+          'Last Exam': s.last_quiz_score || '—',
           'Target Goal': s.target_goal || '',
           'Recommended Action': s.next_recommended_action || '',
         }
@@ -74,9 +74,9 @@ export function ReportsView({
         'الاشتراك': s.monthly_fee,
         'الحالة المالية': s.paid_this_month ? 'مسدد' : 'متأخر',
         'المسار الأكاديمي': getTrajectoryBadgeText(s.trajectory, 'ar'),
-        'نسبة الحضور': `${s.attendance_rate || 95}%`,
-        'نسبة تسليم الواجب': `${s.homework_rate || 85}%`,
-        'آخر امتحان': s.last_quiz_score || '85/100',
+        'نسبة الحضور': s.attendance_rate !== undefined ? `${s.attendance_rate}%` : '—',
+        'نسبة تسليم الواجب': s.homework_rate !== undefined ? `${s.homework_rate}%` : '—',
+        'آخر امتحان': s.last_quiz_score || '—',
         'الهدف الأكاديمي': s.target_goal || '',
         'الإجراء الموصى به': s.next_recommended_action || '',
       }

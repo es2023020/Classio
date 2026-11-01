@@ -47,14 +47,7 @@ import {
   LessonPlan,
   PlanTier,
 } from '@/lib/types'
-import {
-  storage,
-  initialProfile,
-  initialGroups,
-  initialStudents,
-  initialPayments,
-  initialLessons,
-} from '@/lib/storage'
+import { storage } from '@/lib/storage'
 import { isSupabaseConfigured } from '@/lib/supabase'
 import {
   localizeStudent,
@@ -115,13 +108,27 @@ export function TutorDashboard() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
 
-  // App Data States
-  const [profile, setProfile] = useState<TutorProfile>(initialProfile)
-  const [groups, setGroups] = useState<Group[]>(initialGroups)
-  const [students, setStudents] = useState<Student[]>(initialStudents)
-  const [payments, setPayments] = useState<PaymentRecord[]>(initialPayments)
+  // App Data States - clean initial states for real tutors
+  const [profile, setProfile] = useState<TutorProfile>({
+    id: '',
+    name: '',
+    title: '',
+    subject: '',
+    phone: '',
+    email: '',
+    avatar_initials: 'CL',
+    center_names: [],
+    instapay_handle: '',
+    vodafone_cash_number: '',
+    default_monthly_fee: 500,
+    subscription_plan: 'free',
+    max_students_limit: 10,
+  })
+  const [groups, setGroups] = useState<Group[]>([])
+  const [students, setStudents] = useState<Student[]>([])
+  const [payments, setPayments] = useState<PaymentRecord[]>([])
   const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>([])
-  const [lessons, setLessons] = useState<LessonPlan[]>(initialLessons)
+  const [lessons, setLessons] = useState<LessonPlan[]>([])
   const [tutorAccess, setTutorAccess] = useState<TutorStatusCheckResult>(() => checkTutorAccess())
   const [dashboardStats, setDashboardStats] = useState<DashboardStats>({
     totalStudents: 0,
@@ -130,10 +137,10 @@ export function TutorDashboard() {
     monthlyExpected: 0,
     monthlyCollected: 0,
     monthlyOutstanding: 0,
-    attendanceRateToday: 94,
+    attendanceRateToday: 0,
     pendingRemindersCount: 0,
     studentsImprovingCount: 0,
-    averageHomeworkRate: 88,
+    averageHomeworkRate: 0,
   })
 
   // Modal States
@@ -156,7 +163,7 @@ export function TutorDashboard() {
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [whatsAppModalOpen, setWhatsAppModalOpen] = useState(false)
   const [whatsAppSelectedStudent, setWhatsAppSelectedStudent] = useState<Student | null>(null)
-  const [currentUserEmail, setCurrentUserEmail] = useState<string>('ahmed.mahmoud@example.com')
+  const [currentUserEmail, setCurrentUserEmail] = useState<string>('')
 
   // Feature gate locked modal state
   const [featureLockedModal, setFeatureLockedModal] = useState<{
@@ -235,6 +242,13 @@ export function TutorDashboard() {
         }
       }
 
+      const today = new Date().toISOString().split('T')[0]
+      const todayMap: Record<string, boolean> = {}
+      att.filter((a) => a.lesson_date === today).forEach((a) => {
+        todayMap[a.student_id] = a.status === 'present'
+      })
+      setTodayAttendanceState(todayMap)
+
       setProfile(p)
       setGroups(g)
       setStudents(s)
@@ -248,8 +262,24 @@ export function TutorDashboard() {
   }, [])
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const authRaw = localStorage.getItem('classio_auth_user')
+      if (!authRaw) {
+        router.push('/login')
+        return
+      }
+      try {
+        const auth = JSON.parse(authRaw)
+        if (auth?.email) {
+          setCurrentUserEmail(auth.email)
+        }
+      } catch {
+        router.push('/login')
+        return
+      }
+    }
     refreshAllData()
-  }, [refreshAllData])
+  }, [refreshAllData, router])
 
   // Global Keyboard Shortcuts (⌘K or Ctrl+K for Barcode Scan)
   useEffect(() => {

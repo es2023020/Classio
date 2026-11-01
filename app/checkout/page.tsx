@@ -46,6 +46,13 @@ function CheckoutContent() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
+  // Tutor account info states
+  const [tutorName, setTutorName] = useState('')
+  const [tutorEmail, setTutorEmail] = useState('')
+  const [tutorPhone, setTutorPhone] = useState('')
+  const [tutorSubject, setTutorSubject] = useState('')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
   // Transaction form states
   const [senderRef, setSenderRef] = useState('')
   const [walletPhone, setWalletPhone] = useState('')
@@ -62,6 +69,25 @@ function CheckoutContent() {
   const [enterpriseCenterNames, setEnterpriseCenterNames] = useState('')
   const [enterpriseNotes, setEnterpriseNotes] = useState('')
 
+  // Check existing session
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const authRaw = localStorage.getItem('classio_auth_user')
+      if (authRaw) {
+        try {
+          const parsed = JSON.parse(authRaw)
+          if (parsed.email) {
+            setTutorEmail(parsed.email)
+            setTutorName(parsed.name || '')
+            setTutorPhone(parsed.phone || '')
+            setTutorSubject(parsed.subject || '')
+            setIsLoggedIn(true)
+          }
+        } catch (e) {}
+      }
+    }
+  }, [])
+
   const selectedPlan = PRICING_PLANS.find((p) => p.id === planId) || PRICING_PLANS[2] // default Growth
 
   const copyToClipboard = (text: string, key: string) => {
@@ -75,20 +101,63 @@ function CheckoutContent() {
     setLoading(true)
 
     try {
-      const profile = await storage.getProfile()
+      const finalEmail = (enterprisePhone ? `enterprise_${enterprisePhone}@classio.app` : tutorEmail || 'teacher@classio.app').trim().toLowerCase()
+      const finalName = (enterpriseTutorName || tutorName || finalEmail.split('@')[0]).trim()
+      const finalPhone = (enterprisePhone || tutorPhone || walletPhone || fawryPhone || '').trim()
+      const finalSubject = tutorSubject.trim() || 'عام'
+
+      // 1. Save user auth session
+      localStorage.setItem(
+        'classio_auth_user',
+        JSON.stringify({
+          email: finalEmail,
+          name: finalName,
+          phone: finalPhone,
+          subject: finalSubject,
+          plan: selectedPlan.id,
+          planLimit: selectedPlan.studentsLimit,
+        })
+      )
+
+      // 2. Save tutor profile in isolated storage
+      const tutorId = `tutor-${Date.now()}`
+      const newProfile: TutorProfile = {
+        id: tutorId,
+        name: finalName,
+        title: 'معلم خاص',
+        subject: finalSubject,
+        phone: finalPhone,
+        email: finalEmail,
+        avatar_initials: (finalName.slice(0, 2) || 'CL').toUpperCase(),
+        center_names: enterpriseCenterNames ? [enterpriseCenterNames] : [],
+        instapay_handle: '',
+        vodafone_cash_number: '',
+        default_monthly_fee: 500,
+        subscription_plan: selectedPlan.id,
+        subscription_cycle: billing,
+        max_students_limit: selectedPlan.studentsLimit,
+      }
+      await storage.saveProfile(newProfile)
+
+      // 3. Register tutor in platform admin registry
+      adminStorage.registerTutor({
+        name: finalName,
+        email: finalEmail,
+        phone: finalPhone,
+        subject: finalSubject,
+      })
 
       if (selectedPlan.isCustomMeeting) {
-        // Enterprise meeting request
         adminStorage.submitSubscriptionRequest({
-          tutor_id: profile.id || 'tutor-enterprise',
-          tutor_name: enterpriseTutorName || profile.name || 'مدرس كبار المعلمين',
-          tutor_email: profile.email || 'enterprise@classio.app',
+          tutor_id: tutorId,
+          tutor_name: finalName,
+          tutor_email: finalEmail,
           plan_id: 'enterprise',
           billing_cycle: billing,
           amount: 0,
           payment_method: 'card',
           transaction_ref: `MEETING-${Math.floor(100000 + Math.random() * 900000)}`,
-          sender_phone: enterprisePhone || profile.phone,
+          sender_phone: finalPhone,
           admin_notes: `طلب جلسة عمل خاصة للمؤسسات (+٥٠٠ طالب). السناتر: ${enterpriseCenterNames || 'غير محدد'}. عدد الطلاب المتوقع: ${enterpriseStudentsCount}. ملاحظات: ${enterpriseNotes}`,
         })
         setSuccess(true)
@@ -98,32 +167,19 @@ function CheckoutContent() {
 
       const refCode = senderRef || walletPhone || fawryCode || `TXN-${Math.floor(100000 + Math.random() * 900000)}`
 
-      // If paying by card: instant activation
-      if (paymentMethod === 'card') {
-        const updatedProfile = {
-          ...profile,
-          subscription_plan: selectedPlan.id,
-          subscription_cycle: billing,
-          max_students_limit: selectedPlan.studentsLimit,
-        }
-        await storage.saveProfile(updatedProfile)
-        setSuccess(true)
-      } else {
-        // If InstaPay, Vodafone Cash, Fawry: submit to Super Admin verification queue
-        adminStorage.submitSubscriptionRequest({
-          tutor_id: profile.id || 'tutor-1',
-          tutor_name: profile.name,
-          tutor_email: profile.email || 'ahmed.mahmoud@example.com',
-          plan_id: selectedPlan.id,
-          billing_cycle: billing,
-          amount: finalPrice,
-          payment_method: paymentMethod,
-          transaction_ref: refCode,
-          sender_phone: walletPhone || fawryPhone || profile.phone,
-          admin_notes: `طلب ترقية عبر ${paymentMethod} بمبلغ ${finalPrice} ج.م (عرض لفترة محدودة)`,
-        })
-        setSuccess(true)
-      }
+      adminStorage.submitSubscriptionRequest({
+        tutor_id: tutorId,
+        tutor_name: finalName,
+        tutor_email: finalEmail,
+        plan_id: selectedPlan.id,
+        billing_cycle: billing,
+        amount: finalPrice,
+        payment_method: paymentMethod,
+        transaction_ref: refCode,
+        sender_phone: walletPhone || fawryPhone || finalPhone,
+        admin_notes: `سداد اشتراك كلاسيو عبر ${paymentMethod} بمبلغ ${finalPrice} ج.م`,
+      })
+      setSuccess(true)
     } catch (err) {
       console.error(err)
       setLoading(false)
@@ -387,6 +443,97 @@ function CheckoutContent() {
                       ? 'Accepted Egyptian payment channels: InstaPay, Vodafone Cash, Fawry Pay, or Bank Cards'
                       : 'طرق الدفع المصرية المعتمدة: إنستاباي، فودافون كاش، خدمة فوري، أو البطاقات البنكية'}
                   </p>
+
+                  {/* Tutor Account Details */}
+                  {isLoggedIn ? (
+                    <div className="mb-6 p-4 rounded-2xl bg-blue-50/70 border border-blue-200/60 flex items-center justify-between">
+                      <div>
+                        <div className="text-[11px] font-bold text-blue-900 uppercase tracking-wider">
+                          {lang === 'en' ? 'Subscribing Account:' : 'حساب المشترك المعتمد:'}
+                        </div>
+                        <div className="text-xs font-bold text-slate-800 mt-0.5">
+                          {tutorName || tutorEmail.split('@')[0]} — {tutorEmail}
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">
+                        {lang === 'en' ? 'Verified Session' : 'جلسة نشطة'}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="mb-6 p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-slate-800">
+                          {lang === 'en' ? '1. Your Tutor Workspace Account' : '١. بيانات حساب المعلم ومساحة العمل'}
+                        </span>
+                        <span className="text-[10px] font-semibold text-slate-500">
+                          {lang === 'en' ? 'Your clean dashboard will be created for this account' : 'سيتم إنشاء لوحة تحكم خاصة بك'}
+                        </span>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">
+                          {lang === 'en' ? 'Full Name (Teacher / Center)' : 'الاسم بالكامل (المعلم أو السنتر)'}
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={tutorName}
+                          onChange={(e) => setTutorName(e.target.value)}
+                          placeholder={lang === 'en' ? 'e.g. Mr. Mohamed Hassan' : 'مثال: أ. محمد حسن'}
+                          className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-bold text-slate-700 mb-1">
+                            {lang === 'en' ? 'Email Address' : 'البريد الإلكتروني'}
+                          </label>
+                          <input
+                            type="email"
+                            required
+                            value={tutorEmail}
+                            onChange={(e) => setTutorEmail(e.target.value)}
+                            dir="ltr"
+                            placeholder="teacher@example.com"
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-slate-700 mb-1">
+                            {lang === 'en' ? 'Phone Number' : 'رقم الهاتف'}
+                          </label>
+                          <input
+                            type="tel"
+                            required
+                            value={tutorPhone}
+                            onChange={(e) => setTutorPhone(e.target.value)}
+                            dir="ltr"
+                            placeholder="010XXXXXXXX"
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1">
+                          {lang === 'en' ? 'Subject / Specialty' : 'المادة الدراسية / التخصص'}
+                        </label>
+                        <input
+                          type="text"
+                          value={tutorSubject}
+                          onChange={(e) => setTutorSubject(e.target.value)}
+                          placeholder={lang === 'en' ? 'e.g. Mathematics, English, Physics' : 'مثال: الرياضيات، اللغة الإنجليزية، الفيزياء'}
+                          className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="text-xs font-bold text-slate-800 mb-2">
+                    {lang === 'en' ? '2. Select Payment Method' : '٢. اختر وسيلة الدفع'}
+                  </div>
 
                   {/* Payment Method Selector Pills */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-6">

@@ -80,10 +80,10 @@ export function StudentSuccessModal({
   const studentAttendance = attendanceRecords.filter((a) => a.student_id === student.id)
 
   const attendedCount = studentAttendance.filter((a) => a.status === 'present').length
-  const totalLessons = studentAttendance.length || 1
-  const attendanceRate = student.attendance_rate || Math.round((attendedCount / totalLessons) * 100)
-  const homeworkRate = student.homework_rate || 88
-  const latestExam = student.last_quiz_score || '86/100'
+  const totalLessons = studentAttendance.length
+  const attendanceRate = totalLessons > 0 ? Math.round((attendedCount / totalLessons) * 100) : (student.attendance_rate ?? 0)
+  const homeworkRate = student.homework_rate ?? 0
+  const latestExam = student.last_quiz_score || '—'
 
   const handleSavePedagogyChanges = () => {
     onSavePedagogy(student.id, {

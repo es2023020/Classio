@@ -159,15 +159,15 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
     const lateCount = attendance.filter((a) => a.status === 'late').length
     const absentCount = attendance.filter((a) => a.status === 'absent').length
     const excusedCount = attendance.filter((a) => a.status === 'excused').length
-    const percentage = totalSessions > 0 ? Math.round((presentCount / totalSessions) * 100) : (student?.attendance_rate || 92)
+    const percentage = totalSessions > 0 ? Math.round((presentCount / totalSessions) * 100) : (student?.attendance_rate ?? 0)
 
     return {
-      totalSessions: totalSessions || 25,
-      presentCount: totalSessions > 0 ? presentCount : 23,
-      lateCount: totalSessions > 0 ? lateCount : 1,
-      absentCount: totalSessions > 0 ? absentCount : 1,
-      excusedCount: totalSessions > 0 ? excusedCount : 0,
-      percentage: totalSessions > 0 ? percentage : 92,
+      totalSessions,
+      presentCount,
+      lateCount,
+      absentCount,
+      excusedCount,
+      percentage,
     }
   }, [attendance, student])
 
@@ -176,9 +176,9 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
     const total = assessments.length
     if (total === 0) {
       return {
-        averagePercent: 85,
-        count: 5,
-        latestScore: '85%',
+        averagePercent: 0,
+        count: 0,
+        latestScore: '—',
       }
     }
     const sum = assessments.reduce((acc, a) => acc + (a.score / (a.max_score || 100)) * 100, 0)

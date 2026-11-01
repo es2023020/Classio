@@ -1,5 +1,5 @@
 import { Student, AttendanceRecord, PaymentRecord, AssessmentRecord, TutorProfile } from './types'
-import { storage, initialStudents, initialProfile, initialAttendance, initialPayments, initialAssessments } from './storage'
+import { storage } from './storage'
 
 export interface SanitizedParentPortalData {
   student: {

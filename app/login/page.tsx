@@ -165,8 +165,8 @@ function LoginForm() {
         email: email,
         avatar_initials: initials || 'CL',
       }
+      localStorage.setItem('classio_auth_user', JSON.stringify({ email, name: updatedProfile.name, phone: updatedProfile.phone, subject: updatedProfile.subject }))
       await storage.saveProfile(updatedProfile)
-      localStorage.setItem('classio_auth_user', JSON.stringify({ email, name: updatedProfile.name }))
 
       setSuccessMsg(
         lang === 'en'
@@ -384,36 +384,7 @@ function LoginForm() {
             </Button>
           </form>
 
-          {/* Quick Demo Sign In Section */}
-          <div className="mt-8 pt-6 border-t border-slate-100">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center mb-3">
-              {lang === 'en' ? '— Or Quick Test As Demo Tutor —' : '— أو تجربة فورية كأحد المدرسين —'}
-            </p>
-            <div className="space-y-2">
-              {demoTutors.map((tutor) => (
-                <button
-                  key={tutor.email}
-                  type="button"
-                  onClick={() => handleQuickLogin(tutor)}
-                  disabled={loading}
-                  className="w-full flex items-center justify-between p-2.5 rounded-2xl border border-slate-200/90 hover:border-[#0f2c59] hover:bg-slate-50 text-start transition cursor-pointer group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-[#0f2c59] text-white flex items-center justify-center text-xs font-bold font-mono">
-                      {tutor.avatar}
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-slate-800 group-hover:text-[#0f2c59]">{tutor.name}</div>
-                      <div className="text-[10px] text-slate-400 font-semibold">{tutor.title}</div>
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-bold text-[#0f2c59] bg-blue-50 px-2 py-1 rounded-lg">
-                    {lang === 'en' ? 'Open' : 'دخول'}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
+
         </div>
       </main>
     </div>
