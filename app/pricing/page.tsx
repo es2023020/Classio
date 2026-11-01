@@ -471,8 +471,8 @@ export default function PricingPage() {
                       <div className="flex items-center gap-2 mb-1.5">
                         <span className="text-xs line-through text-slate-400 font-bold decoration-rose-500 decoration-2">
                           {billing === 'annual'
-                            ? `${plan.originalMonthlyPrice * 10} ${lang === 'en' ? 'EGP' : 'ج.م'}`
-                            : `${plan.originalMonthlyPrice} ${lang === 'en' ? 'EGP' : 'ج.م'}`}
+                            ? `EGP ${plan.originalMonthlyPrice * 10}`
+                            : `EGP ${plan.originalMonthlyPrice}`}
                         </span>
                         <span className="text-[10px] font-black text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
                           {lang === 'en' ? 'Limited Discount' : 'خصم خاص مؤقت'}
@@ -480,27 +480,28 @@ export default function PricingPage() {
                       </div>
                     )}
 
-                    <div className="flex items-baseline gap-2">
+                    <div className="flex items-baseline gap-1.5 flex-wrap">
+                      <span className={`text-base font-black ${isPopular ? 'text-amber-300' : 'text-slate-500'}`}>
+                        EGP
+                      </span>
                       <span
-                        className={`font-price text-5xl font-black tracking-tight tabular-nums ${
+                        className={`font-price text-4xl sm:text-5xl font-black tracking-tight tabular-nums ${
                           isPopular
                             ? 'text-amber-400 drop-shadow-[0_2px_12px_rgba(251,191,36,0.3)]'
                             : 'text-slate-900'
                         }`}
                       >
-                        {price === 0 ? '0' : formatPrice(price, lang).split(' ')[0]}
+                        {price}
                       </span>
                       <span className={`text-xs font-bold ${isPopular ? 'text-slate-300' : 'text-slate-500'}`}>
-                        {price === 0 ? (lang === 'en' ? 'EGP' : 'ج.م') : formatPrice(price, lang).split(' ')[1]} {periodLabel}
+                        {billing === 'annual' ? '/ year' : '/ month'}
                       </span>
                     </div>
 
                     {billing === 'annual' && plan.annualSaving > 0 && (
                       <div className="mt-2 flex items-center gap-1.5 text-xs font-bold">
                         <span className="text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
-                          {lang === 'en'
-                            ? `Annual: ${plan.annualPrice} EGP (save ${plan.annualSaving} EGP)`
-                            : `السنوي: ${plan.annualPrice} ج.م (وفّر ${plan.annualSaving} ج.م)`}
+                          {`Annual: EGP ${plan.annualPrice} (Save EGP ${plan.annualSaving})`}
                         </span>
                       </div>
                     )}
@@ -539,7 +540,7 @@ export default function PricingPage() {
                   <Link
                     href={
                       isEnterprise
-                        ? `https://wa.me/201012345678?text=${encodeURIComponent(
+                        ? `https://wa.me/201299930937?text=${encodeURIComponent(
                             lang === 'ar'
                               ? 'مرحباً كلاسيو، أرغب في حجز جلسة عمل خاصة لمناقشة باقة المؤسسات (Enterprise) لعدد طلاب +500 طالب.'
                               : 'Hello Classio, I want to schedule an Enterprise strategy meeting for +500 students.'

@@ -797,7 +797,7 @@ export default function LandingPage() {
                 <span>{lang === 'en' ? 'View Partnership Deck →' : 'عرض ملف الشراكة ←'}</span>
               </Link>
               <a
-                href="https://wa.me/201012345678"
+                href="https://wa.me/201299930937"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm px-7 py-4 backdrop-blur-md transition-all whitespace-nowrap"

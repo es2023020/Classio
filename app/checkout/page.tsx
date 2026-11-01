@@ -248,7 +248,7 @@ function CheckoutContent() {
 
               {selectedPlan.isCustomMeeting && (
                 <a
-                  href={`https://wa.me/201012345678?text=${encodeURIComponent(
+                  href={`https://wa.me/201299930937?text=${encodeURIComponent(
                     lang === 'ar'
                       ? 'مرحباً كلاسيو، لقد قمت بتقديم طلب جلسة عمل خاصة لخطة المؤسسات (+٥٠٠ طالب) وأود التنسيق الفوري.'
                       : 'Hello Classio, I just requested an Enterprise strategy meeting and want to coordinate immediately.'
@@ -495,25 +495,25 @@ function CheckoutContent() {
                       <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-4">
                         <div className="flex items-center justify-between">
                           <span className="text-xs font-bold text-slate-700">
-                            {lang === 'en' ? 'Official Vodafone Cash Number:' : 'رقم فودافون كاش المعتمد للتحويل:'}
+                            {lang === 'en' ? 'Classio Official Business Wallet:' : 'محفظة كلاسيو الرسمية المعتمدة:'}
                           </span>
                           <button
                             type="button"
-                            onClick={() => copyToClipboard('01012345678', 'vfcash')}
+                            onClick={() => copyToClipboard('201299930937', 'vfcash')}
                             className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600 hover:underline cursor-pointer"
                           >
                             {copiedKey === 'vfcash' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                            <span>{copiedKey === 'vfcash' ? (lang === 'en' ? 'Copied!' : 'تم النسخ!') : (lang === 'en' ? 'Copy Phone' : 'نسخ الرقم')}</span>
+                            <span>{copiedKey === 'vfcash' ? (lang === 'en' ? 'Copied!' : 'تم النسخ!') : (lang === 'en' ? 'Copy Wallet' : 'نسخ رقم المحفظة')}</span>
                           </button>
                         </div>
 
-                        <div className="bg-white rounded-xl p-3 border border-slate-200 font-mono text-base font-bold text-rose-600 text-center" dir="ltr">
-                          010 1234 5678
+                        <div className="bg-white rounded-xl p-3 border border-slate-200 font-bold text-rose-600 text-center text-xs">
+                          {lang === 'en' ? 'Official Classio Business Wallet Account' : 'حساب محفظة كلاسيو التجارية المعتمدة'}
                         </div>
 
                         <div className="text-[11px] text-slate-500 leading-relaxed">
                           {lang === 'en'
-                            ? 'Send the exact amount from any mobile wallet (Vodafone, Orange, Etisalat, WE), then enter your sender phone number below.'
+                            ? 'Send the exact subscription amount from any Egyptian mobile wallet (Vodafone, Orange, Etisalat, WE Pay), then enter your sender phone number below.'
                             : 'حوّل المبلغ المطلوب من أي محفظة إلكترونية (فودافون كاش، اتصالات، أورنج، وي باي)، ثم اكتب رقم هاتفك المحوِّل منه أدناه.'}
                         </div>
 
@@ -735,27 +735,27 @@ function CheckoutContent() {
                           <Flame className="w-3 h-3 text-rose-600" />
                           {lang === 'en' ? 'Limited Time Launch Discount:' : 'خصم خاص لفترة محدودة:'}
                         </span>
-                        <span>
+                        <span className="font-price font-bold">
                           {billing === 'annual'
-                            ? `-${(selectedPlan.originalMonthlyPrice * 12) - selectedPlan.annualPrice} ج.م`
-                            : `-${selectedPlan.originalMonthlyPrice - selectedPlan.monthlyPrice} ج.م`}
+                            ? `-EGP ${(selectedPlan.originalMonthlyPrice * 12) - selectedPlan.annualPrice}`
+                            : `-EGP ${selectedPlan.originalMonthlyPrice - selectedPlan.monthlyPrice}`}
                         </span>
                       </div>
                     )}
 
                     <div className="flex justify-between text-slate-600">
                       <span>{lang === 'en' ? 'Plan Base Fee:' : 'قيمة الباقة:'}</span>
-                      <span className="font-bold">
+                      <span className="font-price font-bold text-slate-800">
                         {billing === 'annual'
-                          ? `${selectedPlan.annualPrice} ${lang === 'en' ? 'EGP / Year' : 'ج.م / سنوياً'}`
-                          : `${selectedPlan.monthlyPrice} ${lang === 'en' ? 'EGP / Month' : 'ج.م / شهرياً'}`}
+                          ? `EGP ${selectedPlan.annualPrice} / year`
+                          : `EGP ${selectedPlan.monthlyPrice} / month`}
                       </span>
                     </div>
 
                     {billing === 'annual' && selectedPlan.annualSaving > 0 && (
                       <div className="flex justify-between text-emerald-700 font-semibold bg-emerald-50 p-2.5 rounded-xl">
                         <span>{lang === 'en' ? 'Annual Discount (Pay 10, Get 12):' : 'خصم السنوي (ادفع 10 واحصل على 12):'}</span>
-                        <span>-{selectedPlan.annualSaving} {lang === 'en' ? 'EGP' : 'ج.م'}</span>
+                        <span className="font-price font-bold">-EGP {selectedPlan.annualSaving}</span>
                       </div>
                     )}
 

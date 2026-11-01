@@ -89,7 +89,7 @@ export function FeatureLockedModal({
               </span>
             </span>
             <span className="font-price font-black text-emerald-700 bg-emerald-100/70 px-2.5 py-0.5 rounded border border-emerald-300">
-              {lang === 'ar' ? targetPlan.nameAr : targetPlan.name} ({targetPlan.monthlyPrice} ج.م / شهر)
+              {targetPlan.name} (EGP {targetPlan.monthlyPrice} / mo)
             </span>
           </div>
 

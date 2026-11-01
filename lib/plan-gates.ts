@@ -14,7 +14,7 @@ export interface PlanLimitCheckResult {
 export const PLAN_LIMITS: Record<string, number> = {
   free: 10,
   starter: 30,
-  growth: 99,
+  growth: 100,
   pro: 250,
   power: 500,
   enterprise: 9999,

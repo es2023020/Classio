@@ -62,7 +62,7 @@ export function MaintenanceModeShield({
           </button>
 
           <a
-            href="https://wa.me/201012345678"
+            href="https://wa.me/201299930937"
             target="_blank"
             rel="noreferrer"
             className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 transition"
@@ -121,7 +121,7 @@ export function TutorSuspendedShield({
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
-            href="https://wa.me/201012345678?text=استفسار%20عن%20تجميد%20حساب%20المدرس"
+            href="https://wa.me/201299930937?text=استفسار%20عن%20تجميد%20حساب%20المدرس"
             target="_blank"
             rel="noreferrer"
             className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition"

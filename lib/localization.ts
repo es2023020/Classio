@@ -376,8 +376,8 @@ export function localizeLesson(lesson: LessonPlan, lang: 'en' | 'ar'): LessonPla
   }
 }
 
-export function formatPrice(amount: number, lang: 'en' | 'ar'): string {
-  return lang === 'en' ? `${amount.toLocaleString('en-US')} EGP` : `${amount.toLocaleString('ar-EG')} ج.م`
+export function formatPrice(amount: number, _lang?: 'en' | 'ar'): string {
+  return `EGP ${amount.toLocaleString('en-US')}`
 }
 
 export function getTrajectoryBadgeText(trajectory: LearningTrajectory | undefined, lang: 'en' | 'ar'): string {

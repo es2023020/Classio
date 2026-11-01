@@ -37,7 +37,7 @@ const content = {
     support: {
       title: 'Tutor Support & Guides',
       links: [
-        { label: 'WhatsApp Tutor Helpdesk', href: 'https://wa.me/201012345678' },
+        { label: 'WhatsApp Tutor Helpdesk', href: 'https://wa.me/201299930937' },
         { label: 'Partner & Investor Desk', href: '/partnerships' },
         { label: 'Supabase Integration Guide', href: '#' },
         { label: 'Excel Import Template', href: '/dashboard' },
@@ -75,7 +75,7 @@ const content = {
     support: {
       title: 'المساعدة والدعم',
       links: [
-        { label: 'دعم المدرسين عبر واتساب', href: 'https://wa.me/201012345678' },
+        { label: 'دعم المدرسين عبر واتساب', href: 'https://wa.me/201299930937' },
         { label: 'بوابة المستثمرين والشركاء', href: '/partnerships' },
         { label: 'دليل ربط قاعدة بيانات Supabase', href: '#' },
         { label: 'قالب استيراد الطلاب من Excel', href: '/dashboard' },
