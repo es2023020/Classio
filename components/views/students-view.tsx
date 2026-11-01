@@ -30,6 +30,7 @@ import {
   buildQuizReportWhatsAppUrl,
   exportToCsv,
 } from '@/lib/egyptian-helpers'
+import { whatsAppEngine } from '@/lib/whatsapp-engine'
 import { useLanguage } from '@/lib/language-context'
 import { formatPrice } from '@/lib/localization'
 
@@ -389,6 +390,27 @@ export function StudentsView({
                               <ShieldCheck className="size-3.5 text-blue-600" />
                               {t.students.whatsappQuiz}
                             </button>
+                            <button
+                              onClick={() => {
+                                setActiveMenuId(null)
+                                const payload = whatsAppEngine.composeProgressReport(s, profile)
+                                whatsAppEngine.sendViaWhatsApp(payload)
+                              }}
+                              className="flex w-full items-center gap-2 rounded-xl p-2 text-start text-xs font-bold text-emerald-700 hover:bg-emerald-50 cursor-pointer border-t border-slate-100"
+                            >
+                              <MessageCircle className="size-3.5 text-emerald-600" />
+                              <span>{lang === 'en' ? 'Send Parent Magic Portal Link' : 'إرسال رابط بوابة ولي الأمر'}</span>
+                            </button>
+                            <a
+                              href={whatsAppEngine.getPortalUrl(s.id, s.parent_phone)}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={() => setActiveMenuId(null)}
+                              className="flex w-full items-center gap-2 rounded-xl p-2 text-start text-xs text-blue-700 hover:bg-blue-50 cursor-pointer"
+                            >
+                              <Eye className="size-3.5 text-blue-600" />
+                              <span>{lang === 'en' ? 'Preview Parent Portal' : 'معاينة كارت ولي الأمر'}</span>
+                            </a>
                           </div>
                         )}
                       </div>

@@ -117,6 +117,7 @@ export interface TutorProfile {
   subscription_plan?: PlanTier
   subscription_cycle?: BillingCycle
   max_students_limit?: number
+  subscription_expires_at?: string
   created_at?: string
 }
 

@@ -23,6 +23,7 @@ import { Button } from '@/components/ui/button'
 import { useLanguage } from '@/lib/language-context'
 import { PRICING_PLANS, PRICING_RULES } from '@/lib/plans'
 import { storage } from '@/lib/storage'
+import { adminStorage } from '@/lib/admin-storage'
 import { PlanTier, BillingCycle } from '@/lib/types'
 import { ClassioLogo } from '@/components/ui/classio-logo'
 import { formatPrice } from '@/lib/localization'
@@ -65,14 +66,34 @@ function CheckoutContent() {
 
     try {
       const profile = await storage.getProfile()
-      const updatedProfile = {
-        ...profile,
-        subscription_plan: selectedPlan.id,
-        subscription_cycle: billing,
-        max_students_limit: selectedPlan.studentsLimit,
+      const refCode = senderRef || walletPhone || fawryCode || `TXN-${Math.floor(100000 + Math.random() * 900000)}`
+
+      // If paying by card: instant activation
+      if (paymentMethod === 'card') {
+        const updatedProfile = {
+          ...profile,
+          subscription_plan: selectedPlan.id,
+          subscription_cycle: billing,
+          max_students_limit: selectedPlan.studentsLimit,
+        }
+        await storage.saveProfile(updatedProfile)
+        setSuccess(true)
+      } else {
+        // If InstaPay, Vodafone Cash, Fawry: submit to Super Admin verification queue
+        adminStorage.submitSubscriptionRequest({
+          tutor_id: profile.id || 'tutor-1',
+          tutor_name: profile.name,
+          tutor_email: profile.email || 'ahmed.mahmoud@example.com',
+          plan_id: selectedPlan.id,
+          billing_cycle: billing,
+          amount: finalPrice,
+          payment_method: paymentMethod,
+          transaction_ref: refCode,
+          sender_phone: walletPhone || fawryPhone || profile.phone,
+          admin_notes: `طلب ترقية عبر ${paymentMethod} بمبلغ ${finalPrice} ج.م`,
+        })
+        setSuccess(true)
       }
-      await storage.saveProfile(updatedProfile)
-      setSuccess(true)
     } catch (err) {
       console.error(err)
       setLoading(false)
@@ -118,16 +139,26 @@ function CheckoutContent() {
         {success ? (
           /* Success Screen */
           <div className="max-w-lg mx-auto bg-white rounded-3xl border border-emerald-200 p-8 shadow-xl text-center">
-            <div className="w-16 h-16 rounded-3xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+            <div className={`w-16 h-16 rounded-3xl flex items-center justify-center mx-auto mb-4 ${paymentMethod === 'card' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'}`}>
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <h2 className="text-2xl font-black text-slate-900 mb-2">
-              {lang === 'en' ? 'Subscription Activated!' : 'تم تفعيل اشتراكك بنجاح!'}
+              {paymentMethod === 'card'
+                ? lang === 'en'
+                  ? 'Subscription Activated!'
+                  : 'تم تفعيل اشتراكك بنجاح!'
+                : lang === 'en'
+                ? 'Payment Submitted for Verification!'
+                : 'تم استلام إشعار السداد وقيد التحقق المالي!'}
             </h2>
             <p className="text-xs text-slate-600 leading-relaxed mb-6">
-              {lang === 'en'
-                ? `You are now on the Classio ${selectedPlan.name} Plan (${billing === 'annual' ? 'Annual Billing' : 'Monthly Billing'}). Your account can now host up to ${selectedPlan.studentsLimit} active students with full features.`
-                : `أنت الآن مشترك في باقة ${selectedPlan.nameAr} (${billing === 'annual' ? 'الاشتراك السنوي' : 'الاشتراك الشهري'}). تم توسيع سعة حسابك لتشمل حتى ${selectedPlan.studentsLimit} طالب نشط مع كامل المميزات.`}
+              {paymentMethod === 'card'
+                ? lang === 'en'
+                  ? `You are now on the Classio ${selectedPlan.name} Plan. Your account can now host up to ${selectedPlan.studentsLimit} active students with full features.`
+                  : `أنت الآن مشترك في باقة ${selectedPlan.nameAr}. تم توسيع سعة حسابك لتشمل حتى ${selectedPlan.studentsLimit} طالب نشط مع كامل المميزات.`
+                : lang === 'en'
+                ? `Your payment of ${finalPrice} EGP via ${paymentMethod} has been submitted. Our finance team is verifying the transfer and will activate your ${selectedPlan.name} plan shortly.`
+                : `تم إرسال إشعار سداد مبلغ ${finalPrice} ج.م عبر (${paymentMethod}). جاري مطابقة التحويل في الحساب البنكي وسيتم تفعيل باقة (${selectedPlan.nameAr}) وتوسيع سعة الطلاب (${selectedPlan.studentsLimit} طالب) فور الاعتماد.`}
             </p>
 
             <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200 text-start text-xs space-y-2 mb-6">

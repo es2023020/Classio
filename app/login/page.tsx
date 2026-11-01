@@ -21,6 +21,7 @@ import { useLanguage } from '@/lib/language-context'
 import { storage } from '@/lib/storage'
 import { TutorProfile } from '@/lib/types'
 import { ClassioLogo } from '@/components/ui/classio-logo'
+import { adminStorage } from '@/lib/admin-storage'
 
 function LoginForm() {
   const router = useRouter()
@@ -117,6 +118,37 @@ function LoginForm() {
     }
 
     try {
+      const settings = adminStorage.getSettings()
+
+      // Block registration if disabled by Super Admin
+      if (mode === 'signup' && !settings.allow_tutor_registration) {
+        throw new Error(
+          lang === 'en'
+            ? 'New tutor registrations are temporarily disabled by the platform administration.'
+            : 'التسجيل العام للمدرسين الجدد متوقف حالياً بقرار من إدارة المنصة.'
+        )
+      }
+
+      // Check if existing tutor is suspended in system
+      const existingTutor = adminStorage.getTutorById(email)
+      if (existingTutor && existingTutor.status === 'suspended') {
+        throw new Error(
+          lang === 'en'
+            ? `Your tutor account is suspended. Reason: ${existingTutor.suspension_reason || 'Administrative hold'}`
+            : `حسابك مجمد من قبل إدارة المنصة. السبب: ${existingTutor.suspension_reason || 'قرار إداري'}`
+        )
+      }
+
+      // Register new tutor in admin registry if signing up
+      if (mode === 'signup' && !existingTutor) {
+        adminStorage.registerTutor({
+          name: name || email.split('@')[0],
+          email: email,
+          phone: phone || '01000000000',
+          subject: subject || 'عام',
+        })
+      }
+
       const currentProfile = await storage.getProfile()
       const initials = (name || email.split('@')[0])
         .split(' ')

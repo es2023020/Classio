@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Sparkles, Heart } from 'lucide-react'
+import { Sparkles, Heart, ShieldAlert } from 'lucide-react'
 import { ClassioLogo } from '@/components/ui/classio-logo'
 
 interface FooterProps {
@@ -151,7 +151,17 @@ export function LandingFooter({ lang }: FooterProps) {
         </div>
 
         <div className="mt-14 pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>{t.copyright}</p>
+          <div className="flex items-center gap-3">
+            <p>{t.copyright}</p>
+            <Link
+              href="/admin/gateway"
+              className="text-slate-600 hover:text-red-400 transition-colors p-1 rounded-md"
+              title="Classio Master Root Gateway"
+              aria-label="Admin Gateway"
+            >
+              <ShieldAlert className="w-3.5 h-3.5" />
+            </Link>
+          </div>
           <p className="flex items-center gap-1.5 text-slate-400">
             <span>{t.madeWith}</span>
           </p>

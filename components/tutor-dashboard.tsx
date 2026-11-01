@@ -28,6 +28,9 @@ import {
   Globe,
   LogOut,
   ExternalLink,
+  MessageCircle,
+  AlertTriangle,
+  Lock,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -42,6 +45,7 @@ import {
   TutorProfile,
   DashboardStats,
   LessonPlan,
+  PlanTier,
 } from '@/lib/types'
 import {
   storage,
@@ -80,6 +84,18 @@ import { ScanModal } from '@/components/modals/scan-modal'
 import { StudentSuccessModal } from '@/components/modals/student-success-modal'
 import { ImportModal } from '@/components/modals/import-modal'
 import { AuthModal } from '@/components/auth/auth-modal'
+import { WhatsAppDispatchModal } from '@/components/modals/whatsapp-dispatch-modal'
+import { FeatureLockedModal } from '@/components/modals/feature-locked-modal'
+import { OfflineStatusPill } from '@/components/ui/offline-status-pill'
+import { checkTutorAccess, TutorStatusCheckResult } from '@/lib/tutor-status-check'
+import {
+  MaintenanceModeShield,
+  TutorSuspendedShield,
+  TutorPendingApprovalShield,
+  GlobalAnnouncementBar,
+  AdminImpersonationBar,
+} from '@/components/tutor-admin-guards'
+import { planGates } from '@/lib/plan-gates'
 
 export type NavTab =
   | 'dashboard' | 'الرئيسية'
@@ -106,6 +122,7 @@ export function TutorDashboard() {
   const [payments, setPayments] = useState<PaymentRecord[]>(initialPayments)
   const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>([])
   const [lessons, setLessons] = useState<LessonPlan[]>(initialLessons)
+  const [tutorAccess, setTutorAccess] = useState<TutorStatusCheckResult>(() => checkTutorAccess())
   const [dashboardStats, setDashboardStats] = useState<DashboardStats>({
     totalStudents: 0,
     activeGroups: 0,
@@ -137,7 +154,15 @@ export function TutorDashboard() {
   const [selectedSuccessStudent, setSelectedSuccessStudent] = useState<Student | null>(null)
   const [importModalOpen, setImportModalOpen] = useState(false)
   const [authModalOpen, setAuthModalOpen] = useState(false)
+  const [whatsAppModalOpen, setWhatsAppModalOpen] = useState(false)
+  const [whatsAppSelectedStudent, setWhatsAppSelectedStudent] = useState<Student | null>(null)
   const [currentUserEmail, setCurrentUserEmail] = useState<string>('ahmed.mahmoud@example.com')
+
+  // Feature gate locked modal state
+  const [featureLockedModal, setFeatureLockedModal] = useState<{
+    title: string; titleAr: string; description: string; descriptionAr: string
+    requiredPlanId: PlanTier; currentPlanId: PlanTier
+  } | null>(null)
 
   const [quickAddOpen, setQuickAddOpen] = useState(false)
   const [todayAttendanceState, setTodayAttendanceState] = useState<Record<string, boolean>>({})
@@ -157,6 +182,18 @@ export function TutorDashboard() {
 
   // Bulk Import Handler
   const handleBulkImportStudents = async (newStudents: Student[]) => {
+    const check = planGates.checkCanAddStudent(students.length, profile.subscription_plan, newStudents.length)
+    if (!check.allowed) {
+      setFeatureLockedModal({
+        title: 'Import Blocked — Student Limit',
+        titleAr: 'الاستيراد محظور — تجاوز حد الطلاب',
+        description: check.message,
+        descriptionAr: check.messageAr,
+        requiredPlanId: (check.requiredPlan || 'pro') as PlanTier,
+        currentPlanId: check.currentPlan,
+      })
+      return
+    }
     for (const s of newStudents) {
       await storage.saveStudent(s)
     }
@@ -176,6 +213,28 @@ export function TutorDashboard() {
         storage.getLessons(),
         storage.getDashboardStats(),
       ])
+
+      // Check live access against admin control center
+      const access = checkTutorAccess(p.email || 'tutor-1')
+      setTutorAccess(access)
+
+      // Sync plan updates & limits if managed by Super Admin
+      if (access.managedTutor) {
+        p.subscription_plan = access.managedTutor.subscription_plan
+        p.max_students_limit = access.managedTutor.max_students_limit
+        p.subscription_expires_at = access.managedTutor.subscription_expires_at
+      }
+
+      // Subscription expiry enforcement — revert to free if expired
+      if (p.subscription_plan && p.subscription_plan !== 'free' && p.subscription_expires_at) {
+        const expiresAt = new Date(p.subscription_expires_at)
+        if (expiresAt < new Date()) {
+          p.subscription_plan = 'free'
+          p.max_students_limit = 9
+          await storage.saveProfile(p)
+        }
+      }
+
       setProfile(p)
       setGroups(g)
       setStudents(s)
@@ -222,6 +281,24 @@ export function TutorDashboard() {
 
   const handleEditStudent = (student: Student) => {
     setEditingStudent(student)
+    setStudentModalOpen(true)
+  }
+
+  // Guarded add-student opener — checks plan limit first
+  const openAddStudentGuarded = () => {
+    const check = planGates.checkCanAddStudent(students.length, profile.subscription_plan)
+    if (!check.allowed) {
+      setFeatureLockedModal({
+        title: 'Student Limit Reached',
+        titleAr: 'وصلت للحد الأقصى من الطلاب',
+        description: check.message,
+        descriptionAr: check.messageAr,
+        requiredPlanId: (check.requiredPlan || 'starter') as PlanTier,
+        currentPlanId: check.currentPlan,
+      })
+      return
+    }
+    setEditingStudent(null)
     setStudentModalOpen(true)
   }
 
@@ -345,27 +422,76 @@ export function TutorDashboard() {
   const isReports = activeTab === 'reports' || activeTab === 'التقارير'
 
   const navItems = [
-    { key: 'dashboard' as NavTab, label: t.nav.dashboard, icon: LayoutDashboard, isActive: isDashboard },
-    { key: 'students' as NavTab, label: t.nav.students, count: students.length, icon: UsersRound, isActive: isStudents },
-    { key: 'lessons' as NavTab, label: t.nav.lessons, count: lessons.length, icon: BookOpen, isActive: isLessons },
-    { key: 'groups' as NavTab, label: t.nav.groups, count: groups.length, icon: Grid2X2, isActive: isGroups },
-    { key: 'schedule' as NavTab, label: t.nav.schedule, icon: CalendarDays, isActive: isSchedule },
+    { key: 'dashboard' as NavTab, label: t.nav.dashboard, icon: LayoutDashboard, isActive: isDashboard, locked: false },
+    { key: 'students' as NavTab, label: t.nav.students, count: students.length, icon: UsersRound, isActive: isStudents, locked: false },
+    { key: 'lessons' as NavTab, label: t.nav.lessons, count: lessons.length, icon: BookOpen, isActive: isLessons, locked: !planGates.canAccessLessons(profile.subscription_plan) },
+    { key: 'groups' as NavTab, label: t.nav.groups, count: groups.length, icon: Grid2X2, isActive: isGroups, locked: false },
+    { key: 'schedule' as NavTab, label: t.nav.schedule, icon: CalendarDays, isActive: isSchedule, locked: !planGates.canAccessSchedule(profile.subscription_plan) },
     {
       key: 'payments' as NavTab,
       label: t.nav.payments,
       badge: dashboardStats.pendingRemindersCount > 0 ? String(dashboardStats.pendingRemindersCount) : undefined,
       icon: WalletCards,
       isActive: isPayments,
+      locked: false,
     },
-    { key: 'attendance' as NavTab, label: t.nav.attendance, icon: CalendarCheck2, isActive: isAttendance },
-    { key: 'reports' as NavTab, label: t.nav.reports, icon: BarChart3, isActive: isReports },
+    { key: 'attendance' as NavTab, label: t.nav.attendance, icon: CalendarCheck2, isActive: isAttendance, locked: false },
+    { key: 'reports' as NavTab, label: t.nav.reports, icon: BarChart3, isActive: isReports, locked: !planGates.canAccessReports(profile.subscription_plan) },
   ]
 
-  const currentPlanLimit = profile.max_students_limit || 75
-  const currentPlanName = profile.subscription_plan ? profile.subscription_plan.toUpperCase() : 'GROWTH'
+  const currentPlanLimit = profile.max_students_limit || planGates.getStudentLimit(profile.subscription_plan)
+  const currentPlanName = profile.subscription_plan ? profile.subscription_plan.toUpperCase() : 'FREE'
+
+  // Expiry countdown
+  const daysUntilExpiry = profile.subscription_expires_at && profile.subscription_plan !== 'free'
+    ? Math.ceil((new Date(profile.subscription_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    : null
+
+  // Super Admin Enforcement Guards
+  if (tutorAccess.isMaintenance) {
+    return (
+      <MaintenanceModeShield
+        message={tutorAccess.maintenanceMessage}
+        messageAr={tutorAccess.maintenanceMessageAr}
+        lang={lang}
+      />
+    )
+  }
+
+  if (tutorAccess.isSuspended) {
+    return (
+      <TutorSuspendedShield
+        tutorName={profile.name}
+        reason={tutorAccess.suspensionReason}
+        lang={lang}
+      />
+    )
+  }
+
+  if (tutorAccess.isPendingApproval) {
+    return (
+      <TutorPendingApprovalShield
+        tutorName={profile.name}
+        lang={lang}
+      />
+    )
+  }
 
   return (
     <div dir={dir} className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
+      {/* Admin Impersonation Bar */}
+      {tutorAccess.isImpersonated && (
+        <AdminImpersonationBar tutorName={profile.name} lang={lang} />
+      )}
+
+      {/* Global Broadcast Announcement from Super Admin */}
+      {tutorAccess.settings.global_announcement.active && (
+        <GlobalAnnouncementBar
+          announcement={tutorAccess.settings.global_announcement}
+          lang={lang}
+        />
+      )}
+
       {/* Mobile Drawer Backdrop */}
       {mobileMenuOpen && (
         <div
@@ -441,6 +567,23 @@ export function TutorDashboard() {
               <button
                 key={item.key}
                 onClick={() => {
+                  if (item.locked) {
+                    const lockedConfig: Record<string, { title: string; titleAr: string; desc: string; descAr: string; plan: PlanTier }> = {
+                      schedule: { title: 'Schedule Planner — Starter+', titleAr: 'جدول الحصص — باقة Starter فأعلى', desc: 'Upgrade to Starter (99 EGP/mo) to unlock the timetable planner.', descAr: 'ترقّ إلى Starter (99 ج.م/شهر) للوصول إلى جدول الحصص.', plan: 'starter' },
+                      lessons: { title: 'Lesson Plans — Growth+', titleAr: 'دفتر الحصص والواجبات — باقة Growth فأعلى', desc: 'Upgrade to Growth (299 EGP/mo) to unlock Lesson Plans & Homework Notebook.', descAr: 'ترقّ إلى Growth (299 ج.م/شهر) لفتح دفتر الحصص والواجبات.', plan: 'growth' },
+                      reports: { title: 'Financial Reports — Pro+', titleAr: 'التقارير المالية المتقدمة — باقة Pro فأعلى', desc: 'Upgrade to Pro (449 EGP/mo) for advanced revenue analytics & financial reports.', descAr: 'ترقّ إلى Pro (449 ج.م/شهر) للوصول إلى التقارير المالية المتقدمة.', plan: 'pro' },
+                    }
+                    const cfg = lockedConfig[item.key] || lockedConfig['schedule']
+                    setFeatureLockedModal({
+                      title: cfg.title,
+                      titleAr: cfg.titleAr,
+                      description: cfg.desc,
+                      descriptionAr: cfg.descAr,
+                      requiredPlanId: cfg.plan,
+                      currentPlanId: profile.subscription_plan || 'free',
+                    })
+                    return
+                  }
                   setActiveTab(item.key)
                   setMobileMenuOpen(false)
                 }}
@@ -455,7 +598,9 @@ export function TutorDashboard() {
                   <span>{item.label}</span>
                 </div>
 
-                {item.badge ? (
+                {item.locked ? (
+                  <Lock className="w-3.5 h-3.5 text-slate-400" />
+                ) : item.badge ? (
                   <span className="rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-black text-white">
                     {item.badge}
                   </span>
@@ -507,6 +652,24 @@ export function TutorDashboard() {
               {t.sidebar.upgradePlan}
             </Link>
           </div>
+
+          {/* Expiry warning banner */}
+          {daysUntilExpiry !== null && daysUntilExpiry <= 10 && (
+            <div className={`mt-2 px-2.5 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1.5 ${
+              daysUntilExpiry <= 0
+                ? 'bg-rose-100 text-rose-700 border border-rose-200'
+                : daysUntilExpiry <= 3
+                ? 'bg-red-50 text-red-700 border border-red-200'
+                : 'bg-amber-50 text-amber-700 border border-amber-200'
+            }`}>
+              <AlertTriangle className="w-3 h-3 shrink-0" />
+              <span>
+                {daysUntilExpiry <= 0
+                  ? (lang === 'ar' ? 'انتهى الاشتراك! تم التحويل للمجانية' : 'Plan expired! Reverted to Free')
+                  : (lang === 'ar' ? `ينتهي خلال ${daysUntilExpiry} يوم` : `Expires in ${daysUntilExpiry}d`)}
+              </span>
+            </div>
+          )}
         </div>
       </aside>
 
@@ -539,6 +702,31 @@ export function TutorDashboard() {
 
           {/* Right Header items */}
           <div className="flex items-center gap-2.5">
+            {/* Offline Status & Auto-Sync Pill */}
+            <OfflineStatusPill
+              lang={lang}
+              onSynced={(count) =>
+                notify(
+                  lang === 'ar'
+                    ? `✅ تم مزامنة ${count} معاملة تمت بدون إنترنت بنجاح!`
+                    : `✅ Synced ${count} offline records!`
+                )
+              }
+            />
+
+            {/* WhatsApp Turbo Dispatch Button */}
+            <button
+              onClick={() => {
+                setWhatsAppSelectedStudent(null)
+                setWhatsAppModalOpen(true)
+              }}
+              className="flex items-center gap-1.5 rounded-2xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 px-3 py-2 text-xs font-bold text-emerald-800 transition cursor-pointer shadow-xs"
+              title={lang === 'ar' ? 'إرسال إشعارات وتقارير واتساب' : 'WhatsApp Dispatch'}
+            >
+              <MessageCircle className="size-4 text-emerald-600" />
+              <span className="hidden sm:inline">{lang === 'ar' ? 'واتساب أولياء الأمور' : 'WhatsApp'}</span>
+            </button>
+
             {/* Quick Add Dropdown */}
             <div className="relative">
               <Button
@@ -555,8 +743,7 @@ export function TutorDashboard() {
                   <button
                     onClick={() => {
                       setQuickAddOpen(false)
-                      setEditingStudent(null)
-                      setStudentModalOpen(true)
+                      openAddStudentGuarded()
                     }}
                     className="flex w-full items-center gap-2.5 rounded-xl p-2.5 text-start text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
                   >
@@ -656,8 +843,7 @@ export function TutorDashboard() {
               profile={localizedProfile}
               onNavigate={(tab) => setActiveTab(tab as NavTab)}
               onAddStudent={() => {
-                setEditingStudent(null)
-                setStudentModalOpen(true)
+                openAddStudentGuarded()
               }}
               onRecordPayment={handleOpenPaymentModal}
               onToggleAttendance={handleToggleAttendance}
@@ -674,15 +860,27 @@ export function TutorDashboard() {
               groups={localizedGroups}
               profile={localizedProfile}
               onAddStudent={() => {
-                setEditingStudent(null)
-                setStudentModalOpen(true)
+                openAddStudentGuarded()
               }}
               onEditStudent={handleEditStudent}
               onDeleteStudent={handleDeleteStudent}
               onRecordPayment={handleOpenPaymentModal}
               onSelectStudent={(s) => router.push(`/students/${s.id}`)}
               onOpenScanModal={() => setScanModalOpen(true)}
-              onOpenImportModal={() => setImportModalOpen(true)}
+              onOpenImportModal={() => {
+                if (!planGates.canAccessExcelBulkImport(profile.subscription_plan)) {
+                  setFeatureLockedModal({
+                    title: 'Excel Bulk Import — Pro Plan Required',
+                    titleAr: 'الاستيراد من Excel — يتطلب باقة Pro',
+                    description: 'Bulk Excel import is available for Pro (449 EGP/mo) and higher plans.',
+                    descriptionAr: 'استيراد Excel الجماعي متاح من باقة Pro (449 ج.م/شهر) وما فوقها.',
+                    requiredPlanId: 'pro',
+                    currentPlanId: profile.subscription_plan || 'free',
+                  })
+                  return
+                }
+                setImportModalOpen(true)
+              }}
               notify={notify}
             />
           )}
@@ -878,6 +1076,36 @@ export function TutorDashboard() {
           setAuthModalOpen(false)
         }}
         notify={notify}
+      />
+
+      {/* Feature Gate: Locked Feature Upgrade Modal */}
+      {featureLockedModal && (
+        <FeatureLockedModal
+          isOpen={true}
+          onClose={() => setFeatureLockedModal(null)}
+          title={featureLockedModal.title}
+          titleAr={featureLockedModal.titleAr}
+          description={featureLockedModal.description}
+          descriptionAr={featureLockedModal.descriptionAr}
+          requiredPlanId={featureLockedModal.requiredPlanId}
+          currentPlanId={featureLockedModal.currentPlanId}
+          lang={lang}
+        />
+      )}
+
+      {/* WhatsApp Turbo Dispatch Modal */}
+      <WhatsAppDispatchModal
+        isOpen={whatsAppModalOpen}
+        onClose={() => {
+          setWhatsAppModalOpen(false)
+          setWhatsAppSelectedStudent(null)
+        }}
+        tutor={profile}
+        students={students}
+        selectedStudent={whatsAppSelectedStudent}
+        groups={groups}
+        notify={notify}
+        lang={lang}
       />
     </div>
   )

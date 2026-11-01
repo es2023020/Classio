@@ -58,6 +58,7 @@ import {
   AttendanceStatus,
   LearningTrajectory,
 } from '@/lib/types'
+import { whatsAppEngine } from '@/lib/whatsapp-engine'
 import { storage } from '@/lib/storage'
 import { useLanguage } from '@/lib/language-context'
 import { formatPrice } from '@/lib/localization'
@@ -572,6 +573,18 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
               >
                 <MessageCircle className="size-3.5" />
                 {lang === 'en' ? 'Contact Parent' : 'واتساب ولي الأمر'}
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const url = whatsAppEngine.getPortalUrl(student.id, student.parent_phone)
+                  window.open(url, '_blank')
+                }}
+                className="gap-1.5 rounded-xl border-blue-200 bg-blue-50 text-blue-900 text-xs font-bold hover:bg-blue-100 shadow-xs cursor-pointer"
+              >
+                <Sparkles className="size-3.5 text-blue-600" />
+                {lang === 'en' ? 'Parent Magic Portal' : 'بوابة ولي الأمر الذكية'}
               </Button>
             </div>
           </div>
