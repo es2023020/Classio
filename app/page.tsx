@@ -21,6 +21,7 @@ import {
   Zap,
   Smartphone,
   FileSpreadsheet,
+  Flame,
 } from 'lucide-react'
 import { LandingNavbar } from '@/components/landing/navbar'
 import { LandingFooter } from '@/components/landing/footer'
@@ -96,7 +97,7 @@ export default function LandingPage() {
         'Other apps only tell you who attended or paid. Classio tells you whether the student is actually mastering the curriculum — helping you prove your value to parents every single month.',
       pricingTitle: 'Simple, Transparent Pricing for Every Stage',
       pricingSub:
-        'Start free forever with up to 9 students, or unlock professional features with our 3-day free trial.',
+        'Start free forever with up to 10 students, or lock in limited-time launch rates with our 3-day free trial.',
       monthly: 'Monthly Billing',
       annual: 'Annual Billing',
       annualBadge: 'Save 2 Months (Pay 10, Get 12)',
@@ -110,11 +111,11 @@ export default function LandingPage() {
       faqs: [
         {
           q: 'Is there a truly free plan?',
-          a: 'Yes! The Free plan is forever free for tutors managing 1 to 9 students. No credit card required, no expiration date, and no hidden charges.',
+          a: 'Yes! The Free plan is forever free for tutors managing up to 10 students. No credit card required, no expiration date, and no hidden charges.',
         },
         {
           q: 'How does the 3-day free trial work?',
-          a: 'When you select any paid plan (Starter, Growth, Pro, Power, or Elite), you enjoy full access for 3 days with zero upfront payment. You can upgrade, downgrade, or cancel at any time.',
+          a: 'When you select any paid plan (Starter, Growth, Pro, Power, or Enterprise), you enjoy full access for 3 days with zero upfront payment. You can upgrade, downgrade, or cancel at any time.',
         },
         {
           q: 'Does Classio work offline without internet?',
@@ -198,7 +199,7 @@ export default function LandingPage() {
         'البرامج العادية تكتفي بإخبارك من حضر ومن دفع. كلاسيو يخبرك هل الطالب يتحسن ويفهم المنهج فعلاً أم لا — لتثبت لأولياء الأمور قيمة شرحك كل شهر.',
       pricingTitle: 'خطط أسعار واضحة وشفافة لجميع أحجام المجموعات',
       pricingSub:
-        'ابدأ مجاناً للأبد حتى 9 طلاب، أو استفد من التجربة المجانية لمدة 3 أيام على أي باقة مدفوعة.',
+        'ابدأ مجاناً للأبد حتى 10 طلاب، أو ثبّت الأسعار المخفضة لفترة محدودة مع تجربة مجانية لمدة 3 أيام.',
       monthly: 'اشتراك شهري',
       annual: 'اشتراك سنوي',
       annualBadge: 'وفّر شهرين كاملين (ادفع ١٠ شهور واحصل على ١٢)',
@@ -212,11 +213,11 @@ export default function LandingPage() {
       faqs: [
         {
           q: 'هل توجد خطة مجانية حقيقية؟',
-          a: 'نعم! خطة Free مجانية تماماً للأبد للمدرسين الذين يديرون من 1 إلى 9 طلاب. بدون أي بطاقة بنكية وبدون فترة انتهاء صلاحية.',
+          a: 'نعم! خطة Free مجانية تماماً للأبد للمدرسين الذين يديرون حتى 10 طلاب. بدون أي بطاقة بنكية وبدون فترة انتهاء صلاحية.',
         },
         {
           q: 'كيف تعمل التجربة المجانية لمدة 3 أيام؟',
-          a: 'عند اختيارك لأي باقة مدفوعة (بداية، نمو، احترافي، قوة، نخبة)، تحصل على صلاحيات كاملة لمدة 3 أيام مجاناً وبدون أي خصم مالي مسبق.',
+          a: 'عند اختيارك لأي باقة مدفوعة (Starter, Growth, Pro, Power, Enterprise)، تحصل على صلاحيات كاملة لمدة 3 أيام مجاناً وبدون أي خصم مالي مسبق.',
         },
         {
           q: 'هل تعمل المنصة بدون اتصال بالإنترنت في السنتر؟',
@@ -548,13 +549,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 6. PRICING SECTION (EXACT 6 PLANS) ─────────────────────────── */}
+      {/* ── 6. PRICING SECTION (6 TIERS - ENGLISH PRICES & LIMITED TIME OFFERS) ── */}
       <section id="pricing" className="py-24 bg-white border-t border-slate-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 text-[#0f2c59] px-3.5 py-1 text-xs font-bold mb-3 border border-blue-200">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>{lang === 'en' ? 'Transparent Egyptian Tutor Pricing' : 'أسعار عادلة للمدرس المصري'}</span>
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            {/* Limited Time Urgency Pill */}
+            <div className="inline-flex items-center gap-2 rounded-full bg-rose-50 text-rose-600 px-4 py-1.5 text-xs font-black mb-3 border border-rose-200 shadow-xs">
+              <Flame className="w-3.5 h-3.5 text-rose-500 fill-rose-500 animate-pulse" />
+              <span>{lang === 'en' ? '⚡ Limited Time Launch Rates — Lock In Your Price Today' : '⚡ أسعار مخفضة لفترة محدودة بمناسبة انطلاق العام الدراسي'}</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-black text-slate-900 mb-3 tracking-tight">
               {t.pricingTitle}
@@ -596,8 +598,10 @@ export default function LandingPage() {
           {/* 6 Plans Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {PRICING_PLANS.map((plan) => {
-              const price = billing === 'annual' ? plan.annualPrice : plan.monthlyPrice
               const isPopular = plan.popular
+              const isEnterprise = plan.id === 'enterprise'
+              const isFree = plan.id === 'free'
+              const price = billing === 'annual' ? plan.annualPrice : plan.monthlyPrice
               const featuresList = lang === 'en' ? plan.features : plan.featuresAr
 
               return (
@@ -605,62 +609,94 @@ export default function LandingPage() {
                   key={plan.id}
                   className={`relative rounded-3xl border p-7 transition duration-200 flex flex-col justify-between ${
                     isPopular
-                      ? 'border-[#0f2c59] bg-white shadow-xl ring-2 ring-[#0f2c59]/20'
+                      ? 'border-[#0f2c59] bg-[#0f2c59] text-white shadow-2xl ring-4 ring-[#0f2c59]/20'
+                      : isEnterprise
+                      ? 'border-purple-300 bg-gradient-to-b from-purple-50/50 to-white shadow-md'
                       : 'border-slate-200 bg-white shadow-xs hover:shadow-md'
                   }`}
                 >
                   {isPopular && (
-                    <div className="absolute -top-3.5 start-1/2 -translate-x-1/2 rounded-full bg-[#0f2c59] px-3.5 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-sm">
-                      {lang === 'en' ? 'Most Popular' : 'الأكثر طلباً'}
+                    <div className="absolute -top-3.5 start-1/2 -translate-x-1/2 rounded-full bg-amber-400 px-3.5 py-1 text-[10px] font-black uppercase tracking-wider text-slate-950 shadow-sm">
+                      {lang === 'en' ? '★ Most Popular' : '★ الأكثر طلباً'}
                     </div>
                   )}
 
                   <div>
                     {/* Header */}
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-black text-slate-900">
+                      <h3 className={`text-lg font-black ${isPopular ? 'text-white' : 'text-slate-900'}`}>
                         {lang === 'en' ? plan.name : plan.nameAr}
                       </h3>
-                      <span className="rounded-full bg-slate-100 text-slate-700 px-2.5 py-0.5 text-[10px] font-bold">
+                      <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
+                        isPopular ? 'bg-white/20 text-slate-100' : 'bg-slate-100 text-slate-700'
+                      }`}>
                         {lang === 'en' ? plan.studentsLabel : plan.studentsLabelAr}
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-500 font-semibold mb-6">
+                    <p className={`text-xs font-semibold mb-6 leading-relaxed ${isPopular ? 'text-slate-300' : 'text-slate-500'}`}>
                       {lang === 'en' ? plan.desc : plan.descAr}
                     </p>
 
                     {/* Price Display */}
-                    <div className="mb-6 pb-6 border-b border-slate-100">
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="text-3xl sm:text-4xl font-black text-slate-900 font-mono">
-                          {price}
-                        </span>
-                        <span className="text-xs font-bold text-slate-500">
-                          {lang === 'en' ? 'EGP' : 'ج.م'}
-                        </span>
-                        <span className="text-xs font-semibold text-slate-400">
-                          {billing === 'annual'
-                            ? lang === 'en' ? '/year' : '/سنوياً'
-                            : lang === 'en' ? '/month' : '/شهرياً'}
-                        </span>
-                      </div>
-
-                      {billing === 'annual' && plan.annualSaving > 0 && (
-                        <div className="mt-2 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg inline-block">
-                          {lang === 'en'
-                            ? `Annual: ${plan.annualPrice} EGP (save ${plan.annualSaving} EGP)`
-                            : `السنوي: ${plan.annualPrice} ج.م (توفير ${plan.annualSaving} ج.م)`}
+                    {isEnterprise ? (
+                      <div className="mb-6 pb-6 border-b border-slate-200/50">
+                        <div className="font-price text-2xl sm:text-3xl font-black text-purple-700 tracking-tight">
+                          By consultation
                         </div>
-                      )}
-                    </div>
+                        <p className="mt-1 text-xs font-bold text-purple-900 bg-purple-100 px-2 py-0.5 rounded-lg inline-block">
+                          Custom capacity (+500 students)
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="mb-6 pb-6 border-b border-slate-100/60">
+                        {!isFree && plan.originalMonthlyPrice && (
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <span className="text-xs line-through text-slate-400 font-bold decoration-rose-500 decoration-2">
+                              {billing === 'annual'
+                                ? `EGP ${plan.originalMonthlyPrice * 10}`
+                                : `EGP ${plan.originalMonthlyPrice}`}
+                            </span>
+                            <span className="text-[10px] font-black text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
+                              {lang === 'en' ? 'Limited Discount' : 'خصم خاص مؤقت'}
+                            </span>
+                          </div>
+                        )}
+
+                        <div className="flex items-baseline gap-1.5 flex-wrap">
+                          <span className={`text-sm font-black ${isPopular ? 'text-amber-300' : 'text-slate-500'}`}>
+                            EGP
+                          </span>
+                          <span className={`font-price text-4xl sm:text-5xl font-black tracking-tight tabular-nums ${
+                            isPopular ? 'text-amber-400 drop-shadow-sm' : 'text-slate-900'
+                          }`}>
+                            {price}
+                          </span>
+                          <span className={`text-xs font-bold ${isPopular ? 'text-slate-300' : 'text-slate-500'}`}>
+                            {billing === 'annual' ? '/ year' : '/ month'}
+                          </span>
+                        </div>
+
+                        {billing === 'annual' && plan.annualSaving > 0 && (
+                          <div className="mt-2 text-[11px] font-bold text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20 inline-block">
+                            {`Annual: EGP ${plan.annualPrice} (Save EGP ${plan.annualSaving})`}
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     {/* Features checklist */}
                     <ul className="space-y-2.5 mb-8">
                       {featuresList.map((f, idx) => (
-                        <li key={idx} className="flex items-center gap-2.5 text-xs text-slate-700">
-                          <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                          <span>{f}</span>
+                        <li key={idx} className="flex items-center gap-2.5 text-xs">
+                          <div className={`size-4 rounded-full flex items-center justify-center shrink-0 ${
+                            isPopular ? 'bg-amber-400 text-slate-950 font-black' : 'bg-emerald-100 text-emerald-800'
+                          }`}>
+                            <Check className="size-2.5 stroke-[3]" />
+                          </div>
+                          <span className={`font-semibold ${isPopular ? 'text-slate-100' : 'text-slate-700'}`}>
+                            {f}
+                          </span>
                         </li>
                       ))}
                     </ul>
@@ -668,16 +704,32 @@ export default function LandingPage() {
 
                   {/* CTA Button */}
                   <Link
-                    href={`/checkout?plan=${plan.id}&billing=${billing}`}
-                    className={`w-full py-3 rounded-2xl text-center text-xs font-bold transition shadow-xs ${
+                    href={
+                      isEnterprise
+                        ? `https://wa.me/201299930937?text=${encodeURIComponent(
+                            lang === 'ar'
+                              ? 'مرحباً كلاسيو، أرغب في حجز جلسة عمل خاصة لمناقشة باقة المؤسسات (Enterprise) لعدد طلاب +500 طالب.'
+                              : 'Hello Classio, I want to schedule an Enterprise strategy meeting for +500 students.'
+                          )}`
+                        : `/checkout?plan=${plan.id}&billing=${billing}`
+                    }
+                    target={isEnterprise ? '_blank' : undefined}
+                    rel={isEnterprise ? 'noopener noreferrer' : undefined}
+                    className={`w-full py-3.5 rounded-2xl text-center text-xs font-black transition shadow-md cursor-pointer ${
                       isPopular
-                        ? 'bg-[#0f2c59] hover:bg-[#1a3d6d] text-white shadow-md'
-                        : 'bg-slate-100 hover:bg-slate-200 text-slate-800'
+                        ? 'bg-amber-400 hover:bg-amber-300 text-slate-950'
+                        : isEnterprise
+                        ? 'bg-purple-800 hover:bg-purple-700 text-white'
+                        : isFree
+                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                        : 'bg-[#0f2c59] hover:bg-[#1a3d6d] text-white'
                     }`}
                   >
-                    {plan.id === 'free'
-                      ? lang === 'en' ? 'Start Free Forever' : 'ابدأ مجاناً للأبد'
-                      : lang === 'en' ? 'Start 3-Day Free Trial' : 'ابدأ تجربة ٣ أيام مجاناً'}
+                    {isEnterprise
+                      ? (lang === 'en' ? 'Schedule Strategy Meeting' : 'احجز جلسة عمل خاصة (1-on-1)')
+                      : isFree
+                      ? (lang === 'en' ? 'Start Free Forever' : 'ابدأ مجاناً للأبد')
+                      : (lang === 'en' ? 'Start 3-Day Free Trial' : 'ابدأ التجربة المجانية (3 أيام)')}
                   </Link>
                 </div>
               )

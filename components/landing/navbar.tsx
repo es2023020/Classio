@@ -18,7 +18,7 @@ const content = {
       { label: 'Features', href: '/#features' },
       { label: 'Student Success', href: '/#success-profile' },
       { label: 'How It Works', href: '/#how-it-works' },
-      { label: 'Pricing Plans', href: '/#pricing' },
+      { label: 'Pricing Plans', href: '/pricing' },
       { label: 'Partnerships & Investors', href: '/partnerships' },
       { label: 'FAQ', href: '/#faq' },
     ],
@@ -33,7 +33,7 @@ const content = {
       { label: 'المميزات', href: '/#features' },
       { label: 'نجاح الطلاب', href: '/#success-profile' },
       { label: 'كيف يعمل', href: '/#how-it-works' },
-      { label: 'باقات الأسعار', href: '/#pricing' },
+      { label: 'باقات الأسعار', href: '/pricing' },
       { label: 'الشراكات والاستثمار', href: '/partnerships' },
       { label: 'الأسئلة الشائعة', href: '/#faq' },
     ],
@@ -50,9 +50,22 @@ export function LandingNavbar({ lang, onToggleLang }: NavbarProps) {
 
   return (
     <header
-      className="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs"
+      className="fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs"
       dir={isRtl ? 'rtl' : 'ltr'}
     >
+      {/* Limited-time Launch Offer Banner */}
+      <div className="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white text-[11px] sm:text-xs font-black py-1.5 px-4 text-center shadow-inner flex items-center justify-center gap-2">
+        <Sparkles className="w-3.5 h-3.5 text-amber-300 fill-amber-300 animate-pulse" />
+        <span>
+          {lang === 'en'
+            ? '⚡ Limited Time Launch Pricing: Lock in introductory rates today!'
+            : '⚡ أسعار مخفضة لفترة محدودة بمناسبة انطلاق العام الدراسي: ثبّت باقتك المخفضة الآن!'}
+        </span>
+        <Link href="/pricing" className="underline ms-1 text-amber-200 hover:text-white transition">
+          {lang === 'en' ? 'Explore Plans →' : 'تفاصيل الباقات ←'}
+        </Link>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
