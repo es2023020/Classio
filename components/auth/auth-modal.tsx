@@ -44,14 +44,31 @@ export function AuthModal({
         const client = getSupabase()
         if (client) {
           if (mode === 'signin') {
-            const { data, error } = await client.auth.signInWithPassword({ email, password })
+            const { data, error } = await client.auth.signInWithPassword({ email: email.trim().toLowerCase(), password })
             if (error) throw error
-            onAuthSuccess(data.user?.email || email)
+            const userEmail = data.user?.email || email.trim().toLowerCase()
+            const existingAuth = localStorage.getItem('classio_auth_user')
+            if (!existingAuth) {
+              localStorage.setItem('classio_auth_user', JSON.stringify({
+                email: userEmail,
+                name: data.user?.user_metadata?.name || userEmail.split('@')[0],
+                plan: data.user?.user_metadata?.plan || 'free',
+                planLimit: 10,
+              }))
+            }
+            onAuthSuccess(userEmail)
             notify(lang === 'en' ? 'Signed in successfully via Supabase' : 'تم تسجيل الدخول بنجاح عبر Supabase')
           } else {
-            const { data, error } = await client.auth.signUp({ email, password })
+            const { data, error } = await client.auth.signUp({ email: email.trim().toLowerCase(), password })
             if (error) throw error
-            onAuthSuccess(data.user?.email || email)
+            const userEmail = data.user?.email || email.trim().toLowerCase()
+            localStorage.setItem('classio_auth_user', JSON.stringify({
+              email: userEmail,
+              name: userEmail.split('@')[0],
+              plan: 'free',
+              planLimit: 10,
+            }))
+            onAuthSuccess(userEmail)
             notify(lang === 'en' ? 'Account created! Please check your email for confirmation.' : 'تم إنشاء الحساب بنجاح! راجع بريدك للتأكيد.')
           }
           onClose()

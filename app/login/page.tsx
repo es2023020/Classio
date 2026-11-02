@@ -28,6 +28,8 @@ import { ClassioLogo } from '@/components/ui/classio-logo'
 import { adminStorage } from '@/lib/admin-storage'
 import { PRICING_PLANS } from '@/lib/plans'
 import { PLAN_LIMITS } from '@/lib/plan-gates'
+import { isSupabaseConfigured } from '@/lib/supabase'
+import { signInWithSupabase, signUpWithSupabase } from '@/lib/supabase-auth'
 
 interface RegisteredAccount {
   email: string
@@ -135,6 +137,84 @@ function LoginForm() {
 
       // --- SIGN IN FLOW ---
       if (mode === 'signin') {
+        // If Supabase is configured, authenticate directly with Supabase Auth
+        if (isSupabaseConfigured()) {
+          const res = await signInWithSupabase(cleanEmail, password)
+          if (res.success && res.tutor) {
+            // Check if tutor account is suspended
+            const existingTutor = adminStorage.getTutorById(cleanEmail)
+            if (existingTutor && existingTutor.status === 'suspended') {
+              throw new Error(
+                lang === 'en'
+                  ? `Your tutor account is suspended. Reason: ${existingTutor.suspension_reason || 'Administrative hold'}`
+                  : `حسابك مجمد من قبل إدارة المنصة. السبب: ${existingTutor.suspension_reason || 'قرار إداري'}`
+              )
+            }
+
+            const tutorPlan = res.tutor.subscription_plan || 'free'
+            const planLimit = res.tutor.max_students_limit || PLAN_LIMITS[tutorPlan] || 10
+
+            // Update active session in browser
+            localStorage.setItem(
+              'classio_auth_user',
+              JSON.stringify({
+                email: cleanEmail,
+                name: res.tutor.name,
+                phone: res.tutor.phone,
+                subject: res.tutor.subject,
+                plan: tutorPlan,
+                planLimit: planLimit,
+              })
+            )
+
+            // Cache in registered accounts list
+            try {
+              const regRaw = localStorage.getItem('classio_registered_accounts')
+              const list: RegisteredAccount[] = regRaw ? JSON.parse(regRaw) : []
+              const idx = list.findIndex((u) => u.email.toLowerCase() === cleanEmail)
+              const entry: RegisteredAccount = {
+                email: cleanEmail,
+                name: res.tutor.name,
+                phone: res.tutor.phone,
+                subject: res.tutor.subject,
+                plan: tutorPlan,
+                billing: res.tutor.subscription_cycle || 'monthly',
+                maxLimit: planLimit,
+                createdAt: res.tutor.created_at || new Date().toISOString(),
+              }
+              if (idx >= 0) list[idx] = entry
+              else list.push(entry)
+              localStorage.setItem('classio_registered_accounts', JSON.stringify(list))
+            } catch (e) {}
+
+            setSuccessMsg(
+              lang === 'en'
+                ? `Welcome back, ${res.tutor.name}! Loading your dashboard...`
+                : `مرحباً بعودتك، أ. ${res.tutor.name}! جاري الدخول للوحة التحكم...`
+            )
+
+            setTimeout(() => {
+              if (planParam && planParam !== 'free') {
+                router.push(`/checkout?plan=${planParam}&billing=${selectedBilling}`)
+              } else {
+                router.push('/dashboard')
+              }
+            }, 600)
+            return
+          }
+
+          // If Supabase returned error and no local match, throw Supabase error
+          const localMatch = findRegisteredUser(cleanEmail)
+          if (!localMatch) {
+            throw new Error(
+              lang === 'ar'
+                ? (res.errorAr || 'البريد الإلكتروني أو كلمة المرور غير صحيحة.')
+                : (res.error || 'Invalid email or password.')
+            )
+          }
+        }
+
+        // Offline / Local Storage Sign In Fallback
         const existingAccount = findRegisteredUser(cleanEmail)
 
         // Strict Requirement: No one can log in unless they signed up first!
@@ -231,6 +311,28 @@ function LoginForm() {
         }
 
         const planLimit = PLAN_LIMITS[selectedPlan] || 10
+
+        // Create account in Supabase if configured
+        if (isSupabaseConfigured()) {
+          const res = await signUpWithSupabase({
+            email: cleanEmail,
+            password,
+            name: name.trim(),
+            phone: phone.trim(),
+            subject: subject.trim() || 'عام',
+            plan: selectedPlan,
+            billing: selectedBilling,
+            planLimit,
+          })
+
+          if (!res.success) {
+            throw new Error(
+              lang === 'ar'
+                ? (res.errorAr || 'تعذر إنشاء الحساب عبر Supabase.')
+                : (res.error || 'Failed to create account via Supabase.')
+            )
+          }
+        }
 
         // 1. Save new account in classio_registered_accounts
         const newAccount: RegisteredAccount = {

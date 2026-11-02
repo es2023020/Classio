@@ -1007,8 +1007,15 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
-        const { data } = await client.from('tutors').select('*').limit(1).single()
-        if (data) return data as TutorProfile
+        const tutorEmail = getCurrentTutorId()
+        if (tutorEmail) {
+          const { data } = await client
+            .from('tutors')
+            .select('*')
+            .eq('email', tutorEmail.toLowerCase().trim())
+            .maybeSingle()
+          if (data) return data as TutorProfile
+        }
       }
     }
     const key = this.getTutorKey('profile')
@@ -1077,7 +1084,10 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
-        const { data } = await client.from('groups').select('*').order('created_at', { ascending: false })
+        const tid = getCurrentTutorId()
+        let query = client.from('groups').select('*').order('created_at', { ascending: false })
+        if (tid) query = query.eq('tutor_id', tid.toLowerCase().trim())
+        const { data } = await query
         if (data && data.length > 0) return data as Group[]
       }
     }
@@ -1093,7 +1103,8 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
-        await client.from('groups').upsert(group)
+        const tid = getCurrentTutorId() || undefined
+        await client.from('groups').upsert({ ...group, tutor_id: (group as any).tutor_id || tid })
       }
     }
     return group
@@ -1117,7 +1128,10 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
-        const { data } = await client.from('students').select('*').order('created_at', { ascending: false })
+        const tid = getCurrentTutorId()
+        let query = client.from('students').select('*').order('created_at', { ascending: false })
+        if (tid) query = query.eq('tutor_id', tid.toLowerCase().trim())
+        const { data } = await query
         if (data && data.length > 0) return data as Student[]
       }
     }
@@ -1133,7 +1147,8 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
-        await client.from('students').upsert(student)
+        const tid = getCurrentTutorId() || undefined
+        await client.from('students').upsert({ ...student, tutor_id: student.tutor_id || tid })
       }
     }
     return student
@@ -1178,8 +1193,10 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
+        const tid = getCurrentTutorId()
         let query = client.from('lessons').select('*').order('lesson_date', { ascending: false })
         if (groupId) query = query.eq('group_id', groupId)
+        if (tid) query = query.eq('tutor_id', tid.toLowerCase().trim())
         const { data } = await query
         if (data && data.length > 0) return data as LessonPlan[]
       }
@@ -1197,7 +1214,8 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
-        await client.from('lessons').upsert(lesson)
+        const tid = getCurrentTutorId() || undefined
+        await client.from('lessons').upsert({ ...lesson, tutor_id: (lesson as any).tutor_id || tid })
       }
     }
     return lesson
@@ -1267,8 +1285,10 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
+        const tid = getCurrentTutorId()
         let query = client.from('payments').select('*').order('created_at', { ascending: false })
         if (studentId) query = query.eq('student_id', studentId)
+        if (tid) query = query.eq('tutor_id', tid.toLowerCase().trim())
         const { data } = await query
         if (data && data.length > 0) return data as PaymentRecord[]
       }
@@ -1294,7 +1314,8 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
-        await client.from('payments').insert(payment)
+        const tid = getCurrentTutorId() || undefined
+        await client.from('payments').insert({ ...payment, tutor_id: (payment as any).tutor_id || tid })
       }
     }
     return payment

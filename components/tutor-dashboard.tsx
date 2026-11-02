@@ -90,6 +90,7 @@ import {
 } from '@/components/tutor-admin-guards'
 import { planGates } from '@/lib/plan-gates'
 import { getSubscriptionStatus, daysUntilExpiry as calcDaysUntilExpiry } from '@/lib/subscription'
+import { signOutFromSupabase, getCurrentSupabaseUser } from '@/lib/supabase-auth'
 
 export type NavTab =
   | 'dashboard' | 'الرئيسية'
@@ -104,6 +105,7 @@ export type NavTab =
 export function TutorDashboard() {
   const router = useRouter()
   const { lang, t, toggleLang, isRTL, dir } = useLanguage()
+  const isSupabaseReady = isSupabaseConfigured()
 
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -285,6 +287,29 @@ export function TutorDashboard() {
     if (typeof window !== 'undefined') {
       const authRaw = localStorage.getItem('classio_auth_user')
       if (!authRaw) {
+        if (isSupabaseReady) {
+          getCurrentSupabaseUser().then((sbUser) => {
+            if (sbUser?.email) {
+              const meta = sbUser.user_metadata || {}
+              localStorage.setItem(
+                'classio_auth_user',
+                JSON.stringify({
+                  email: sbUser.email,
+                  name: meta.name || sbUser.email.split('@')[0],
+                  phone: meta.phone || '',
+                  subject: meta.subject || 'عام',
+                  plan: meta.plan || 'free',
+                  planLimit: meta.plan === 'free' ? 10 : 30,
+                })
+              )
+              setCurrentUserEmail(sbUser.email)
+              refreshAllData()
+            } else {
+              router.push('/login')
+            }
+          }).catch(() => router.push('/login'))
+          return
+        }
         router.push('/login')
         return
       }
@@ -299,7 +324,7 @@ export function TutorDashboard() {
       }
     }
     refreshAllData()
-  }, [refreshAllData, router])
+  }, [refreshAllData, router, isSupabaseReady])
 
   // Global Keyboard Shortcuts (⌘K or Ctrl+K for Barcode Scan)
   useEffect(() => {
@@ -459,8 +484,6 @@ export function TutorDashboard() {
       notify('تمت استعادة البيانات الافتراضية بنجاح')
     }
   }
-
-  const isSupabaseReady = isSupabaseConfigured()
 
   const isDashboard = activeTab === 'dashboard' || activeTab === 'الرئيسية'
   const isStudents = activeTab === 'students' || activeTab === 'الطلاب'
@@ -929,7 +952,8 @@ export function TutorDashboard() {
 
             {/* Logout Button */}
             <button
-              onClick={() => {
+              onClick={async () => {
+                await signOutFromSupabase()
                 localStorage.removeItem('classio_auth_user')
                 router.push('/login')
               }}
