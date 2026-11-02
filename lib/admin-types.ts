@@ -18,6 +18,10 @@ export interface ManagedTutor {
   subscription_plan: PlanTier
   subscription_cycle: BillingCycle
   subscription_expires_at?: string
+  subscription_starts_at?: string   // actual start date after 3-day grace period
+  payment_submitted_at?: string     // when the tutor submitted payment on /checkout
+  subscription_status?: 'free' | 'pending' | 'active' | 'expiring_soon' | 'expired'
+  activated_at?: string             // when admin verified & activated the subscription
   created_at: string
   last_active_at: string
   instapay_handle?: string

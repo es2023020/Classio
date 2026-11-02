@@ -635,7 +635,9 @@ function LoginForm() {
 
           <div className="mt-6 pt-5 border-t border-slate-100 text-center">
             <p className="text-[11px] text-slate-500">
-              {lang === 'en' ? 'Accepted Payment Method: InstaPay (sayed017@instapay) • Vodafone Cash & Fawry coming soon' : 'طريقة الدفع المعتمدة: إنستاباي (sayed017@instapay) • فودافون كاش وفوري قريباً'}
+              {lang === 'en'
+                ? 'After creating your account, you will be guided to complete payment.'
+                : 'بعد إنشاء الحساب، ستُوجَّه لإتمام الدفع وتفعيل الاشتراك.'}
             </p>
           </div>
         </div>

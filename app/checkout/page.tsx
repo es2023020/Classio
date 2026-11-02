@@ -33,6 +33,7 @@ import { adminStorage } from '@/lib/admin-storage'
 import { PlanTier, BillingCycle, TutorProfile } from '@/lib/types'
 import { ClassioLogo } from '@/components/ui/classio-logo'
 import { formatPrice } from '@/lib/localization'
+import { buildSubscriptionDates } from '@/lib/subscription'
 
 function CheckoutContent() {
   const router = useRouter()
@@ -149,6 +150,16 @@ function CheckoutContent() {
       const finalPhone = (enterprisePhone || tutorPhone || senderPhoneInput || '').trim()
       const finalSubject = tutorSubject.trim() || 'عام'
 
+      // Build subscription dates: grace period 3 days, then 30/365 days expiry
+      const isFree = selectedPlan.id === 'free'
+      const subDates = isFree ? null : {
+        paymentSubmittedAt: new Date().toISOString(),
+        subscriptionStartsAt: (() => { const d = new Date(); d.setDate(d.getDate() + 3); return d.toISOString() })(),
+        subscriptionExpiresAt: (() => { const d = new Date(); d.setDate(d.getDate() + 3 + (billing === 'annual' ? 365 : 30)); return d.toISOString() })(),
+        subscriptionStatus: 'pending' as const,
+        billing,
+      }
+
       // 1. Save user auth session
       localStorage.setItem(
         'classio_auth_user',
@@ -159,6 +170,8 @@ function CheckoutContent() {
           subject: finalSubject,
           plan: selectedPlan.id,
           planLimit: selectedPlan.studentsLimit,
+          paymentSubmittedAt: subDates?.paymentSubmittedAt,
+          subscriptionStatus: isFree ? 'free' : 'pending',
         })
       )
 
@@ -179,6 +192,10 @@ function CheckoutContent() {
         subscription_plan: selectedPlan.id,
         subscription_cycle: billing,
         max_students_limit: selectedPlan.studentsLimit,
+        payment_submitted_at: subDates?.paymentSubmittedAt,
+        subscription_starts_at: subDates?.subscriptionStartsAt,
+        subscription_expires_at: subDates?.subscriptionExpiresAt,
+        subscription_status: isFree ? 'free' : 'pending',
       }
       await storage.saveProfile(newProfile)
 
@@ -191,6 +208,10 @@ function CheckoutContent() {
         subscription_plan: selectedPlan.id,
         subscription_cycle: billing,
         max_students_limit: selectedPlan.studentsLimit,
+        payment_submitted_at: subDates?.paymentSubmittedAt,
+        subscription_starts_at: subDates?.subscriptionStartsAt,
+        subscription_expires_at: subDates?.subscriptionExpiresAt,
+        subscription_status: isFree ? 'free' : 'pending',
       })
 
       // 4. Save in registered accounts list so tutor can log in subsequent times
@@ -207,6 +228,8 @@ function CheckoutContent() {
             billing: billing,
             maxLimit: selectedPlan.studentsLimit,
             createdAt: new Date().toISOString(),
+            paymentSubmittedAt: subDates?.paymentSubmittedAt,
+            subscriptionStatus: isFree ? 'free' : 'pending',
           })
           localStorage.setItem('classio_registered_accounts', JSON.stringify(list))
         }

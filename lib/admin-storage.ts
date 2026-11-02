@@ -299,6 +299,8 @@ export const adminStorage = {
     const now = new Date()
     now.setMonth(now.getMonth() + extensionMonths)
     tutor.subscription_expires_at = now.toISOString()
+    tutor.subscription_status = plan === 'free' ? 'free' : 'active'
+    if (!tutor.activated_at) tutor.activated_at = new Date().toISOString()
 
     this.saveTutors(tutors)
 
@@ -309,6 +311,57 @@ export const adminStorage = {
       tutor.id,
       'medium',
       `Updated tutor ${tutor.name} plan to ${plan} (${cycle}) with limit ${tutor.max_students_limit}.`
+    )
+    return tutor
+  },
+
+  // Activate a tutor subscription after payment is verified by admin.
+  // Grace period: subscription starts 3 days after payment_submitted_at.
+  // Monthly plan: 30 days from start. Annual plan: 365 days from start.
+  activateTutorSubscription(
+    tutorId: string,
+    plan: PlanTier,
+    cycle: BillingCycle,
+    maxLimit?: number
+  ): ManagedTutor | null {
+    const tutors = this.getTutors()
+    const tutor = tutors.find(
+      (t) => t.id === tutorId || t.email.toLowerCase() === tutorId.toLowerCase()
+    )
+    if (!tutor) return null
+
+    const limit = maxLimit || PLAN_LIMITS[plan] || 30
+    const now = new Date()
+
+    // Grace: start 3 days after payment submission (or now if not recorded)
+    const baseDate = tutor.payment_submitted_at
+      ? new Date(tutor.payment_submitted_at)
+      : now
+    const startsAt = new Date(baseDate)
+    startsAt.setDate(startsAt.getDate() + 3)
+
+    // Expiry: 30 days (monthly) or 365 days (annual) from start
+    const expiresAt = new Date(startsAt)
+    expiresAt.setDate(expiresAt.getDate() + (cycle === 'annual' ? 365 : 30))
+
+    tutor.subscription_plan = plan
+    tutor.subscription_cycle = cycle
+    tutor.max_students_limit = limit
+    tutor.subscription_status = 'active'
+    tutor.subscription_starts_at = startsAt.toISOString()
+    tutor.subscription_expires_at = expiresAt.toISOString()
+    tutor.activated_at = now.toISOString()
+    tutor.status = 'active'
+
+    this.saveTutors(tutors)
+
+    this.logAuditEvent(
+      'Subscription Activated',
+      `تم تفعيل اشتراك المدرس (${tutor.name}) - الباقة: [${plan.toUpperCase()}] (${cycle}) - يبدأ: ${startsAt.toLocaleDateString('ar-EG')} - ينتهي: ${expiresAt.toLocaleDateString('ar-EG')}`,
+      'financial',
+      tutor.id,
+      'high',
+      `Activated: ${tutor.name} (${tutor.email}) Plan ${plan} (${cycle}), starts ${startsAt.toISOString()}, expires ${expiresAt.toISOString()}, limit ${limit}`
     )
     return tutor
   },
@@ -373,13 +426,12 @@ export const adminStorage = {
     req.reviewed_at = new Date().toISOString()
     this.saveSubscriptionRequests(requests)
 
-    // Apply plan upgrade & student limits strictly to the tutor
+    // Apply plan upgrade, student limits & subscription dates strictly to the tutor
     const plan = req.plan_id
     const cycle = req.billing_cycle
-    const durationMonths = cycle === 'annual' ? 12 : 1
     const newLimit = PLAN_LIMITS[plan] || 30
 
-    this.updateTutorPlan(req.tutor_id, plan, cycle, newLimit, durationMonths)
+    this.activateTutorSubscription(req.tutor_id, plan, cycle, newLimit)
 
     this.logAuditEvent(
       'Subscription Payment Verified & Activated',
@@ -437,6 +489,11 @@ export const adminStorage = {
       max_students_limit: tutorData.max_students_limit || PLAN_LIMITS[tutorData.subscription_plan || 'free'] || 10,
       subscription_plan: tutorData.subscription_plan || 'free',
       subscription_cycle: tutorData.subscription_cycle || 'monthly',
+      subscription_status: tutorData.subscription_status || (tutorData.subscription_plan === 'free' ? 'free' : 'pending'),
+      payment_submitted_at: tutorData.payment_submitted_at,
+      subscription_starts_at: tutorData.subscription_starts_at,
+      subscription_expires_at: tutorData.subscription_expires_at,
+      activated_at: tutorData.activated_at,
       created_at: new Date().toISOString(),
       last_active_at: new Date().toISOString(),
       instapay_handle: tutorData.instapay_handle,

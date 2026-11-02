@@ -89,6 +89,7 @@ import {
   AdminImpersonationBar,
 } from '@/components/tutor-admin-guards'
 import { planGates } from '@/lib/plan-gates'
+import { getSubscriptionStatus, daysUntilExpiry as calcDaysUntilExpiry } from '@/lib/subscription'
 
 export type NavTab =
   | 'dashboard' | 'الرئيسية'
@@ -171,6 +172,10 @@ export function TutorDashboard() {
     requiredPlanId: PlanTier; currentPlanId: PlanTier
   } | null>(null)
 
+  // Subscription gate states
+  const [liveSubStatus, setLiveSubStatus] = useState<'free' | 'pending' | 'active' | 'expiring_soon' | 'expired'>('free')
+  const [subDaysLeft, setSubDaysLeft] = useState<number>(9999)
+
   const [quickAddOpen, setQuickAddOpen] = useState(false)
   const [todayAttendanceState, setTodayAttendanceState] = useState<Record<string, boolean>>({})
 
@@ -248,6 +253,14 @@ export function TutorDashboard() {
           await storage.saveProfile(p)
         }
       }
+
+      // Compute live subscription status for banners/wall
+      const computedStatus = getSubscriptionStatus(
+        p.subscription_expires_at,
+        p.subscription_status
+      )
+      setLiveSubStatus(computedStatus)
+      setSubDaysLeft(calcDaysUntilExpiry(p.subscription_expires_at))
 
       const today = new Date().toISOString().split('T')[0]
       const todayMap: Record<string, boolean> = {}
@@ -527,6 +540,65 @@ export function TutorDashboard() {
           announcement={tutorAccess.settings.global_announcement}
           lang={lang}
         />
+      )}
+
+      {/* ── Subscription Expired Wall ── Full-screen block when plan has expired */}
+      {liveSubStatus === 'expired' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/95 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md bg-white rounded-3xl p-8 text-center shadow-2xl border border-rose-100">
+            <div className="w-16 h-16 rounded-2xl bg-red-100 text-red-600 mx-auto flex items-center justify-center mb-5">
+              <Lock className="w-8 h-8" />
+            </div>
+            <h2 className="text-xl font-black text-slate-900 mb-2">
+              {lang === 'en' ? 'Subscription Expired' : 'انتهت صلاحية اشتراكك'}
+            </h2>
+            <p className="text-sm text-slate-500 mb-6 leading-relaxed">
+              {lang === 'en'
+                ? 'Your Classio subscription has expired. Renew now to regain full access to your dashboard and student data.'
+                : 'انتهى اشتراكك في منصة Classio. جدد اشتراكك الآن لاستعادة الوصول الكامل للوحة التحكم وبيانات طلابك.'}
+            </p>
+            <Link
+              href="/checkout"
+              className="inline-flex items-center justify-center gap-2 bg-[#0f2c59] text-white font-black px-6 py-3 rounded-2xl hover:bg-[#1a3d6d] transition w-full text-sm"
+            >
+              <Zap className="w-4 h-4 text-amber-400" />
+              {lang === 'en' ? 'Renew Subscription' : 'تجديد الاشتراك الآن'}
+            </Link>
+            <button
+              onClick={() => { localStorage.removeItem('classio_auth_user'); window.location.href = '/login' }}
+              className="mt-3 text-xs text-slate-400 hover:text-slate-600 underline w-full"
+            >
+              {lang === 'en' ? 'Sign out' : 'تسجيل الخروج'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Payment Pending Notice ── Soft banner (not a wall) */}
+      {liveSubStatus === 'pending' && (
+        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex items-center justify-center gap-2 text-xs text-amber-800 font-bold text-center flex-wrap">
+          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+          <span>
+            {lang === 'en'
+              ? '⏳ Payment under review — your subscription will activate within 24 hours of verification.'
+              : '⏳ جاري مراجعة الدفع — سيتم تفعيل اشتراكك خلال 24 ساعة من التحقق من السداد.'}
+          </span>
+        </div>
+      )}
+
+      {/* ── Expiring Soon Warning ── Banner when ≤7 days left */}
+      {liveSubStatus === 'expiring_soon' && (
+        <div className="bg-orange-50 border-b border-orange-200 px-4 py-2.5 flex items-center justify-center gap-2 text-xs text-orange-800 font-bold text-center flex-wrap">
+          <AlertTriangle className="w-4 h-4 text-orange-600 shrink-0" />
+          <span>
+            {lang === 'en'
+              ? `⚠️ Your subscription expires in ${subDaysLeft} day${subDaysLeft !== 1 ? 's' : ''} — renew now to avoid interruption.`
+              : `⚠️ اشتراكك ينتهي خلال ${subDaysLeft} يوم — جدد الآن لتجنب انقطاع الخدمة.`}
+          </span>
+          <Link href="/checkout" className="underline font-black text-orange-900 hover:text-orange-700 shrink-0">
+            {lang === 'en' ? 'Renew Now' : 'تجديد الآن'}
+          </Link>
+        </div>
       )}
 
       {/* Mobile Drawer Backdrop */}

@@ -129,6 +129,10 @@ export interface TutorProfile {
   subscription_cycle?: BillingCycle
   max_students_limit?: number
   subscription_expires_at?: string
+  subscription_starts_at?: string   // after 3-day grace period
+  payment_submitted_at?: string     // when payment was submitted
+  subscription_status?: 'free' | 'pending' | 'active' | 'expiring_soon' | 'expired'
+  activated_at?: string             // when admin activated
   created_at?: string
 }
 

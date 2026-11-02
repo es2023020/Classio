@@ -897,6 +897,7 @@ export default function SuperAdminDashboardPage() {
                       <th className="p-3 text-start">{lang === 'ar' ? 'المدرس والمادة' : 'Tutor & Subject'}</th>
                       <th className="p-3 text-start">{lang === 'ar' ? 'الحالة' : 'Status'}</th>
                       <th className="p-3 text-start">{lang === 'ar' ? 'الباقة والسعة' : 'Tier & Limit'}</th>
+                      <th className="p-3 text-start">{lang === 'ar' ? 'تواريخ الاشتراك' : 'Subscription Dates'}</th>
                       <th className="p-3 text-start">{lang === 'ar' ? 'السناتر التابعة' : 'Centers'}</th>
                       <th className="p-3 text-start">{lang === 'ar' ? 'الاتصال والدفع' : 'Contact / Pay'}</th>
                       <th className="p-3 text-center">{lang === 'ar' ? 'التحكم الإداري الكامل' : 'Actions'}</th>
@@ -984,6 +985,31 @@ export default function SuperAdminDashboardPage() {
                               {tutor.instapay_handle}
                             </p>
                           )}
+                          {/* Subscription dates mini-display */}
+                          <div className="mt-1 space-y-0.5 text-[10px]">
+                            {tutor.payment_submitted_at && (
+                              <div className="text-slate-400">💳 {new Date(tutor.payment_submitted_at).toLocaleDateString('en-GB')}</div>
+                            )}
+                            {tutor.subscription_starts_at && (
+                              <div className="text-emerald-400">🟢 {new Date(tutor.subscription_starts_at).toLocaleDateString('en-GB')}</div>
+                            )}
+                            {tutor.subscription_expires_at && (
+                              <div className={new Date(tutor.subscription_expires_at) < new Date() ? 'text-red-400 font-bold' : 'text-amber-300'}>
+                                📅 {new Date(tutor.subscription_expires_at).toLocaleDateString('en-GB')}
+                              </div>
+                            )}
+                            {tutor.subscription_status && (
+                              <span className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-black uppercase ${
+                                tutor.subscription_status === 'active' ? 'bg-emerald-900 text-emerald-300' :
+                                tutor.subscription_status === 'pending' ? 'bg-amber-900 text-amber-300' :
+                                tutor.subscription_status === 'expired' ? 'bg-red-900 text-red-300' :
+                                tutor.subscription_status === 'expiring_soon' ? 'bg-orange-900 text-orange-300' :
+                                'bg-slate-800 text-slate-400'
+                              }`}>
+                                {tutor.subscription_status}
+                              </span>
+                            )}
+                          </div>
                         </td>
 
                         {/* Complete Administrative Controls */}
