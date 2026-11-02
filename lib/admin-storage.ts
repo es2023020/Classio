@@ -434,7 +434,7 @@ export const adminStorage = {
       status: tutorData.status || initialStatus,
       centers: tutorData.centers || ['السنتر الرئيسي'],
       student_count: 0,
-      max_students_limit: 30,
+      max_students_limit: tutorData.max_students_limit || PLAN_LIMITS[tutorData.subscription_plan || 'free'] || 10,
       subscription_plan: tutorData.subscription_plan || 'free',
       subscription_cycle: tutorData.subscription_cycle || 'monthly',
       created_at: new Date().toISOString(),

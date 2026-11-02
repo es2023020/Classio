@@ -90,8 +90,8 @@ export default function PricingPage() {
         ar: 'ما هي طرق الدفع المصرية المقبولة للاشتراك؟',
       },
       a: {
-        en: 'We accept all popular Egyptian payment channels: InstaPay direct transfers, Vodafone Cash (and Orange/Etisalat/WE wallets), Fawry payment reference codes, and Visa/Mastercard/Meeza debit & credit cards.',
-        ar: 'نقبل كافة وسائل الدفع المصرية الشائعة: التحويل المباشر عبر إنستاباي (InstaPay)، محافظ المحمول (فودافون كاش، أورنج كاش، اتصالات كاش، وي باي)، أكواد فوري (Fawry)، والبطاقات البنكية وميزة (Meeza / Visa / Mastercard).',
+        en: 'We currently accept instant bank transfers via InstaPay (IPN handle: sayed017@instapay). Vodafone Cash and Fawry will be available soon.',
+        ar: 'نقبل حالياً التحويل اللحظي المباشر عبر تطبيق إنستاباي (InstaPay) على المعرف (sayed017@instapay). وسيتوفر الدفع عبر فودافون كاش وفوري قريباً.',
       },
     },
     {
