@@ -711,7 +711,7 @@ export default function LandingPage() {
                               ? 'مرحباً كلاسيو، أرغب في حجز جلسة عمل خاصة لمناقشة باقة المؤسسات (Enterprise) لعدد طلاب +500 طالب.'
                               : 'Hello Classio, I want to schedule an Enterprise strategy meeting for +500 students.'
                           )}`
-                        : `/checkout?plan=${plan.id}&billing=${billing}`
+                        : `/login?mode=signup&plan=${plan.id}&billing=${billing}`
                     }
                     target={isEnterprise ? '_blank' : undefined}
                     rel={isEnterprise ? 'noopener noreferrer' : undefined}

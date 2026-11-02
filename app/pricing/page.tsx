@@ -227,7 +227,7 @@ export default function PricingPage() {
               </Button>
             </Link>
 
-            <Link href="/checkout?plan=growth&billing=annual">
+            <Link href="/login?mode=signup&plan=growth&billing=monthly">
               <Button className="bg-[#0f2c59] hover:bg-[#1a3d6d] text-white text-xs font-black rounded-xl px-4 cursor-pointer shadow-sm">
                 {lang === 'en' ? 'Try Free for 3 Days' : 'جرب مجاناً لمدة 3 أيام'}
               </Button>
@@ -360,7 +360,7 @@ export default function PricingPage() {
             </span>
 
             <Link
-              href={`/checkout?plan=${recommendedPlanId}&billing=${billing}`}
+              href={`/login?mode=signup&plan=${recommendedPlanId}&billing=${billing}`}
               className="inline-flex items-center gap-1 text-[#0f2c59] font-black hover:underline cursor-pointer"
             >
               <span>{lang === 'en' ? 'Select This Plan' : 'اختيار هذه الخطة'}</span>
@@ -545,7 +545,7 @@ export default function PricingPage() {
                               ? 'مرحباً كلاسيو، أرغب في حجز جلسة عمل خاصة لمناقشة باقة المؤسسات (Enterprise) لعدد طلاب +500 طالب.'
                               : 'Hello Classio, I want to schedule an Enterprise strategy meeting for +500 students.'
                           )}`
-                        : `/checkout?plan=${plan.id}&billing=${billing}`
+                        : `/login?mode=signup&plan=${plan.id}&billing=${billing}`
                     }
                     className="block w-full"
                     target={isEnterprise ? '_blank' : undefined}
@@ -778,12 +778,12 @@ export default function PricingPage() {
               : 'انضم لمئات المعلمين في مصر الذين يعتمدون على كلاسيو يومياً في السناتر والمجموعات الخاصة.'}
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link href="/checkout?plan=growth&billing=annual">
+            <Link href="/login?mode=signup&plan=growth&billing=monthly">
               <Button className="rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs px-6 py-3 cursor-pointer shadow-lg">
                 {lang === 'en' ? 'Start 3-Day Free Trial' : 'ابدأ التجربة المجانية (3 أيام)'}
               </Button>
             </Link>
-            <Link href="/checkout?plan=free">
+            <Link href="/login?mode=signup&plan=free">
               <Button variant="outline" className="rounded-2xl border-white/20 bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-5 py-3 cursor-pointer">
                 {lang === 'en' ? 'Use Free Forever' : 'ابدأ بالخطة المجانية (حتى 10 طلاب)'}
               </Button>

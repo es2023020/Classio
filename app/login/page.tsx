@@ -18,6 +18,7 @@ import {
   CreditCard,
   AlertCircle,
   Layers,
+  Check,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useLanguage } from '@/lib/language-context'
@@ -62,12 +63,16 @@ function LoginForm() {
   const [errorMsg, setErrorMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
 
-  // Sync plan if search params change
+  // Sync plan and ensure clean new user session when in signup mode
   useEffect(() => {
     if (planParam && PRICING_PLANS.some((p) => p.id === planParam)) {
       setSelectedPlan(planParam)
     }
-  }, [planParam])
+    if (mode === 'signup' && typeof window !== 'undefined') {
+      // Clear any old session so the new teacher starts 100% fresh
+      localStorage.removeItem('classio_auth_user')
+    }
+  }, [planParam, mode])
 
   // Helper: Find registered user in localStorage or admin storage
   const findRegisteredUser = (emailToCheck: string): RegisteredAccount | null => {
@@ -102,6 +107,8 @@ function LoginForm() {
 
     return null
   }
+
+  const selectedPlanObj = PRICING_PLANS.find((p) => p.id === selectedPlan) || PRICING_PLANS[2]
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -158,7 +165,7 @@ function LoginForm() {
           return
         }
 
-        // Update active session
+        // Update active session for this existing user
         const planLimit = existingAccount.maxLimit || PLAN_LIMITS[existingAccount.plan] || 10
         localStorage.setItem(
           'classio_auth_user',
@@ -216,10 +223,9 @@ function LoginForm() {
         if (alreadyExists) {
           setErrorMsg(
             lang === 'en'
-              ? 'An account already exists with this email. Please sign in below.'
-              : 'يوجد حساب مسجل بالفعل بهذا البريد الإلكتروني. يرجى تسجيل الدخول أدناه.'
+              ? 'An account already exists with this email. Please sign in below or use a different email.'
+              : 'يوجد حساب مسجل بالفعل بهذا البريد الإلكتروني. يرجى تسجيل الدخول أدناه أو استخدام بريد جديد.'
           )
-          setMode('signin')
           setLoading(false)
           return
         }
@@ -259,7 +265,7 @@ function LoginForm() {
           max_students_limit: planLimit,
         })
 
-        // 3. Save initial isolated profile
+        // 3. Save initial isolated profile for THIS new teacher (0 students, completely clean)
         const tutorId = `tutor-${Date.now()}`
         const newProfile: TutorProfile = {
           id: tutorId,
@@ -279,7 +285,7 @@ function LoginForm() {
         }
         await storage.saveProfile(newProfile)
 
-        // 4. Save active auth session
+        // 4. Set active auth session strictly for THIS new teacher
         localStorage.setItem(
           'classio_auth_user',
           JSON.stringify({
@@ -297,7 +303,7 @@ function LoginForm() {
           setSuccessMsg(
             lang === 'en'
               ? 'Free account created successfully! Entering your clean dashboard...'
-              : 'تم إنشاء حسابك بالباقة المجانية بنجاح! جاري الدخول للوحة التحكم...'
+              : 'تم إنشاء حسابك بالباقة المجانية بنجاح! جاري الدخول للوحة التحكم النظيفة...'
           )
           setTimeout(() => {
             router.push('/dashboard')
@@ -368,8 +374,8 @@ function LoginForm() {
                   ? 'Access your private workspace and student records'
                   : 'أدر طلابك ومجموعاتك وتابع تحصيلك الدراسي بكل احترافية'
                 : lang === 'en'
-                ? 'Choose your plan to start (Free forever up to 10 students)'
-                : 'اختر باقتك للبدء فوراً (مجانية للأبد حتى 10 طلاب)'}
+                ? 'Create your account to activate your chosen tutoring plan'
+                : 'أنشئ حسابك لبدء تفعيل باقتك المختارة فوراً'}
             </p>
           </div>
 
@@ -394,6 +400,12 @@ function LoginForm() {
                 setMode('signup')
                 setErrorMsg('')
                 setSuccessMsg('')
+                localStorage.removeItem('classio_auth_user')
+                setName('')
+                setEmail('')
+                setPhone('')
+                setPassword('')
+                setSubject('')
               }}
               className={`flex-1 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
                 mode === 'signup' ? 'bg-white text-[#0f2c59] shadow-xs' : 'text-slate-500 hover:text-slate-800'
@@ -416,6 +428,7 @@ function LoginForm() {
                   onClick={() => {
                     setMode('signup')
                     setErrorMsg('')
+                    localStorage.removeItem('classio_auth_user')
                   }}
                   className="self-start text-[11px] font-black text-rose-800 underline hover:text-rose-900 cursor-pointer pt-1"
                 >
@@ -436,6 +449,25 @@ function LoginForm() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === 'signup' && (
               <>
+                {/* Desired Plan Highlight Banner */}
+                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-black uppercase text-blue-900 tracking-wider block">
+                      {lang === 'en' ? 'Creating account for plan:' : 'جاري إنشاء الحساب لباقة:'}
+                    </span>
+                    <span className="text-xs font-black text-slate-900">
+                      Classio {selectedPlanObj.name} ({selectedPlanObj.studentsLabel})
+                    </span>
+                  </div>
+                  <span className="text-xs font-price font-bold text-[#0f2c59] bg-white px-2.5 py-1 rounded-xl border border-slate-200 shadow-2xs">
+                    {selectedPlanObj.id === 'free'
+                      ? (lang === 'en' ? 'Free Forever' : 'مجاناً للأبد')
+                      : selectedPlanObj.isCustomMeeting
+                      ? (lang === 'en' ? '1-on-1 Meeting' : 'جلسة خاصة')
+                      : `EGP ${selectedBilling === 'annual' ? Math.round(selectedPlanObj.annualPrice / 12) : selectedPlanObj.monthlyPrice}/mo`}
+                  </span>
+                </div>
+
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5">
                     {lang === 'en' ? 'Full Name (Teacher / Center)' : 'الاسم بالكامل (المعلم أو السنتر)'}
@@ -488,12 +520,12 @@ function LoginForm() {
                   </div>
                 </div>
 
-                {/* Plan Selection Section (Mandatory Requirement) */}
+                {/* Plan Selection Section */}
                 <div className="pt-2">
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="block text-xs font-black text-slate-800 flex items-center gap-1.5">
                       <Layers className="w-3.5 h-3.5 text-[#0f2c59]" />
-                      <span>{lang === 'en' ? 'Choose Your Plan (Required):' : 'اختر باقتك الدراسية (إلزامي للبدء):'}</span>
+                      <span>{lang === 'en' ? 'Change Desired Plan:' : 'تعديل الباقة المطلوبة:'}</span>
                     </label>
                     <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
                       {selectedPlan === 'free'
@@ -581,7 +613,7 @@ function LoginForm() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full mt-3 py-3 rounded-2xl bg-[#0f2c59] hover:bg-[#1a3d6d] text-white font-bold text-xs shadow-md transition cursor-pointer"
+              className="w-full mt-3 py-3.5 rounded-2xl bg-[#0f2c59] hover:bg-[#1a3d6d] text-white font-bold text-xs shadow-md transition cursor-pointer"
             >
               {loading
                 ? lang === 'en'

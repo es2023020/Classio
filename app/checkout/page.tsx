@@ -70,25 +70,31 @@ function CheckoutContent() {
   const [enterpriseCenterNames, setEnterpriseCenterNames] = useState('')
   const [enterpriseNotes, setEnterpriseNotes] = useState('')
 
-  // Check existing session
+  // Check existing session: redirect to signup if no created account
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const authRaw = localStorage.getItem('classio_auth_user')
-      if (authRaw) {
-        try {
-          const parsed = JSON.parse(authRaw)
-          if (parsed.email) {
-            setTutorEmail(parsed.email)
-            setTutorName(parsed.name || '')
-            setTutorPhone(parsed.phone || '')
-            setSenderPhoneInput(parsed.phone || '')
-            setTutorSubject(parsed.subject || '')
-            setIsLoggedIn(true)
-          }
-        } catch (e) {}
+      if (!authRaw) {
+        router.push(`/login?mode=signup&plan=${initialPlanId}&billing=${initialBilling}`)
+        return
+      }
+      try {
+        const parsed = JSON.parse(authRaw)
+        if (parsed && parsed.email) {
+          setTutorEmail(parsed.email)
+          setTutorName(parsed.name || '')
+          setTutorPhone(parsed.phone || '')
+          setSenderPhoneInput(parsed.phone || '')
+          setTutorSubject(parsed.subject || '')
+          setIsLoggedIn(true)
+        } else {
+          router.push(`/login?mode=signup&plan=${initialPlanId}&billing=${initialBilling}`)
+        }
+      } catch (e) {
+        router.push(`/login?mode=signup&plan=${initialPlanId}&billing=${initialBilling}`)
       }
     }
-  }, [])
+  }, [initialPlanId, initialBilling, router])
 
   const selectedPlan = PRICING_PLANS.find((p) => p.id === planId) || PRICING_PLANS[2] // default Growth
 
@@ -498,18 +504,30 @@ function CheckoutContent() {
 
                   {/* Tutor Account Details */}
                   {isLoggedIn ? (
-                    <div className="mb-6 p-4 rounded-2xl bg-blue-50/70 border border-blue-200/60 flex items-center justify-between">
+                    <div className="mb-6 p-4 rounded-2xl bg-blue-50/70 border border-blue-200/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <div>
                         <div className="text-[11px] font-bold text-blue-900 uppercase tracking-wider">
-                          {lang === 'en' ? 'Subscribing Account:' : 'حساب المشترك المعتمد:'}
+                          {lang === 'en' ? 'Subscribing Account (Created):' : 'حساب المعلم المشترك الحالي (الذي تم إنشاؤه):'}
                         </div>
                         <div className="text-xs font-bold text-slate-800 mt-0.5">
-                          {tutorName || tutorEmail.split('@')[0]} — {tutorEmail}
+                          {tutorName || tutorEmail.split('@')[0]} — <span className="font-mono text-slate-600">{tutorEmail}</span>
                         </div>
                       </div>
-                      <span className="text-[10px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">
-                        {lang === 'en' ? 'Verified Session' : 'جلسة نشطة'}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-black bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">
+                          {lang === 'en' ? 'Active Session' : 'جلسة نشطة'}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            localStorage.removeItem('classio_auth_user')
+                            router.push(`/login?mode=signup&plan=${planId}&billing=${billing}`)
+                          }}
+                          className="text-[11px] font-bold text-[#0f2c59] hover:underline cursor-pointer"
+                        >
+                          {lang === 'en' ? 'Create for New Teacher' : 'إنشاء حساب لمدرس جديد'}
+                        </button>
+                      </div>
                     </div>
                   ) : (
                     <div className="mb-6 p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3.5">
