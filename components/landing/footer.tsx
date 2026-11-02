@@ -31,7 +31,7 @@ const content = {
         { label: 'Partnerships & Investors', href: '/partnerships' },
         { label: 'Tutor Sign In', href: '/login' },
         { label: 'Start Free Trial', href: '/login?mode=signup' },
-        { label: 'Subscribe & Checkout', href: '/checkout' },
+        { label: 'Plans & Pricing', href: '/pricing' },
       ],
     },
     support: {
@@ -69,7 +69,7 @@ const content = {
         { label: 'الشراكات والمستثمرون', href: '/partnerships' },
         { label: 'تسجيل دخول المدرس', href: '/login' },
         { label: 'ابدأ التجربة المجانية', href: '/login?mode=signup' },
-        { label: 'الاشتراك والدفع', href: '/checkout' },
+        { label: 'الاشتراك والأسعار', href: '/pricing' },
       ],
     },
     support: {
