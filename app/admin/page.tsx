@@ -106,9 +106,10 @@ export default function SuperAdminDashboardPage() {
     window.setTimeout(() => setToastMessage(''), 3500)
   }
 
-  // Refresh all system data from storage
-  const reloadData = useCallback(() => {
-    setTutors(adminStorage.getTutors())
+  // Refresh all system data from cloud database or local storage
+  const reloadData = useCallback(async () => {
+    const freshTutors = await adminStorage.getTutorsAsync()
+    setTutors(freshTutors)
     setSettings(adminStorage.getSettings())
     setAuditLogs(adminStorage.getAuditLogs())
     setSubRequests(adminStorage.getSubscriptionRequests())

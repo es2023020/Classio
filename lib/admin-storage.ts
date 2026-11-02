@@ -8,6 +8,7 @@ import {
 import { PlanTier, BillingCycle, Student, Group, PaymentRecord } from './types'
 import { initialProfile, initialStudents, initialGroups, initialPayments } from './storage'
 import { PLAN_LIMITS } from './plan-gates'
+import { getSupabase, isSupabaseConfigured } from './supabase'
 
 const ADMIN_STORAGE_KEYS = {
   TUTORS: 'classio_admin_tutors_list_v1',
@@ -16,107 +17,10 @@ const ADMIN_STORAGE_KEYS = {
   SUBSCRIPTION_REQUESTS: 'classio_admin_sub_requests_v1',
 }
 
-export const initialSubscriptionRequests: SubscriptionRequest[] = [
-  {
-    id: 'req-001',
-    tutor_id: 'tutor-3',
-    tutor_name: 'عمر خالد الحسيني',
-    tutor_email: 'omar.khaled@example.com',
-    plan_id: 'pro',
-    billing_cycle: 'monthly',
-    amount: 449,
-    payment_method: 'instapay',
-    transaction_ref: 'IPN-20261031-77892',
-    sender_phone: '01234567890',
-    status: 'pending',
-    requested_at: new Date(Date.now() - 3600000 * 2).toISOString(),
-    admin_notes: 'تحويل إنستاباي بنك مصر',
-  },
-]
+// Zero-template clean initial arrays — only real data
+export const initialSubscriptionRequests: SubscriptionRequest[] = []
 
-export const initialManagedTutors: ManagedTutor[] = [
-  {
-    id: 'tutor-1',
-    name: 'أحمد محمود',
-    name_ar: 'أحمد محمود',
-    email: 'ahmed.mahmoud@example.com',
-    phone: '01012345678',
-    subject: 'الفيزياء للثانوية العامة',
-    title: 'مدرس أول فيزياء وكيمياء',
-    status: 'active',
-    centers: ['سنتر الأوائل — مدينة نصر', 'سنتر النخبة — التجمع', 'سنتر الأهرام — المهندسين', 'حصص أونلاين'],
-    student_count: 67,
-    max_students_limit: 250,
-    subscription_plan: 'pro',
-    subscription_cycle: 'monthly',
-    subscription_expires_at: '2026-12-31T23:59:59Z',
-    created_at: '2026-08-01T10:00:00Z',
-    last_active_at: new Date().toISOString(),
-    instapay_handle: 'ahmed.phys@instapay',
-    vodafone_cash_number: '01012345678',
-    notes_admin: 'من أوائل المدرسين المشتركين، أداء ممتاز ودفع منتظم.',
-  },
-  {
-    id: 'tutor-2',
-    name: 'سارة نبيل',
-    name_ar: 'د. سارة نبيل',
-    email: 'sara.nabil@example.com',
-    phone: '01123456789',
-    subject: 'الكيمياء لغات وثانوية عامة',
-    title: 'مدرسة كيمياء ولغات وIGCSE',
-    status: 'active',
-    centers: ['سنتر المعادي التعليمي', 'سنter الشروق', 'أونلاين Zoom'],
-    student_count: 142,
-    max_students_limit: 500,
-    subscription_plan: 'academy',
-    subscription_cycle: 'annual',
-    subscription_expires_at: '2027-08-31T23:59:59Z',
-    created_at: '2026-08-15T12:30:00Z',
-    last_active_at: new Date(Date.now() - 3600000 * 4).toISOString(),
-    instapay_handle: 'sara.chem@instapay',
-    vodafone_cash_number: '01123456789',
-    notes_admin: 'خطة أكاديمية سنوية مع 3 سناتر تابعة.',
-  },
-  {
-    id: 'tutor-3',
-    name: 'عمر خالد الحسيني',
-    name_ar: 'عمر خالد',
-    email: 'omar.khaled@example.com',
-    phone: '01234567890',
-    subject: 'الرياضيات البحتة والتطبيقية',
-    title: 'مدرس أول رياضيات ثانوية عامة',
-    status: 'pending_approval',
-    centers: ['سنتر الدقي', 'سنتر الهرم'],
-    student_count: 0,
-    max_students_limit: 30,
-    subscription_plan: 'starter',
-    subscription_cycle: 'monthly',
-    created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
-    last_active_at: new Date(Date.now() - 3600000 * 2).toISOString(),
-    instapay_handle: 'omar.math@instapay',
-    vodafone_cash_number: '01234567890',
-    notes_admin: 'سجل حديثاً في انتظار مراجعة ترخيص التدريس وقبول العضوية.',
-  },
-  {
-    id: 'tutor-4',
-    name: 'طارق السيد',
-    name_ar: 'أ. طارق السيد',
-    email: 'tarek.elsayed@example.com',
-    phone: '01511223344',
-    subject: 'الأحياء والجيولوجيا',
-    title: 'مدرس أحياء',
-    status: 'suspended',
-    suspension_reason: 'تم تجميد الحساب مؤقتاً بسبب تأخر سداد الاشتراك الشهري وتكرار البلاغات.',
-    centers: ['سنتر شبرا'],
-    student_count: 19,
-    max_students_limit: 30,
-    subscription_plan: 'free',
-    subscription_cycle: 'monthly',
-    created_at: '2026-07-10T09:00:00Z',
-    last_active_at: '2026-10-15T14:20:00Z',
-    notes_admin: 'تم إيقاف حسابه بقرار إداري بتاريخ 15 أكتوبر.',
-  },
-]
+export const initialManagedTutors: ManagedTutor[] = []
 
 export const initialSystemSettings: PlatformSystemSettings = {
   maintenance_mode: false,
@@ -201,6 +105,83 @@ export const adminStorage = {
   },
 
   // --- Tutors Management ---
+  async syncTutorToSupabase(tutor: ManagedTutor, isDelete = false): Promise<void> {
+    if (!isSupabaseConfigured()) return
+    const client = getSupabase()
+    if (!client) return
+    try {
+      if (isDelete) {
+        await client.from('tutors').delete().eq('id', tutor.id)
+      } else {
+        await client.from('tutors').upsert({
+          id: tutor.id,
+          name: tutor.name,
+          name_ar: tutor.name_ar,
+          email: tutor.email,
+          phone: tutor.phone,
+          subject: tutor.subject,
+          title: tutor.title,
+          subscription_plan: tutor.subscription_plan,
+          subscription_cycle: tutor.subscription_cycle,
+          max_students_limit: tutor.max_students_limit,
+          subscription_status: tutor.subscription_status,
+          subscription_starts_at: tutor.subscription_starts_at,
+          subscription_expires_at: tutor.subscription_expires_at,
+          payment_submitted_at: tutor.payment_submitted_at,
+          activated_at: tutor.activated_at,
+          center_names: tutor.centers,
+          instapay_handle: tutor.instapay_handle,
+          vodafone_cash_number: tutor.vodafone_cash_number,
+        })
+      }
+    } catch (e) {
+      console.warn('Failed to sync tutor with Supabase:', e)
+    }
+  },
+
+  async getTutorsAsync(): Promise<ManagedTutor[]> {
+    if (isSupabaseConfigured()) {
+      const client = getSupabase()
+      if (client) {
+        try {
+          const { data } = await client.from('tutors').select('*').order('created_at', { ascending: false })
+          if (data && data.length > 0) {
+            const mapped: ManagedTutor[] = data.map((r: any) => ({
+              id: r.id,
+              name: r.name,
+              name_ar: r.name_ar || r.name,
+              email: r.email,
+              phone: r.phone || '',
+              subject: r.subject || 'عام',
+              title: r.title || 'معلم خاص',
+              status: (r.status || (r.subscription_status === 'pending' ? 'pending_approval' : 'active')) as any,
+              centers: r.center_names || ['السنتر الرئيسي'],
+              student_count: r.student_count || 0,
+              max_students_limit: r.max_students_limit || 10,
+              subscription_plan: r.subscription_plan || 'free',
+              subscription_cycle: r.subscription_cycle || 'monthly',
+              subscription_status: r.subscription_status || 'free',
+              subscription_starts_at: r.subscription_starts_at,
+              subscription_expires_at: r.subscription_expires_at,
+              payment_submitted_at: r.payment_submitted_at,
+              activated_at: r.activated_at,
+              created_at: r.created_at,
+              last_active_at: r.updated_at || r.created_at,
+              instapay_handle: r.instapay_handle,
+              vodafone_cash_number: r.vodafone_cash_number,
+              notes_admin: r.notes_admin,
+            }))
+            this.saveTutors(mapped)
+            return mapped
+          }
+        } catch (e) {
+          console.warn('Supabase tutors query error:', e)
+        }
+      }
+    }
+    return this.getTutors()
+  },
+
   getTutors(): ManagedTutor[] {
     return this.readLocal(ADMIN_STORAGE_KEYS.TUTORS, initialManagedTutors)
   },
@@ -223,6 +204,8 @@ export const adminStorage = {
     tutor.status = 'active'
     delete tutor.suspension_reason
     this.saveTutors(tutors)
+    this.syncTutorToSupabase(tutor)
+    this.syncTutorToSupabase(tutor)
 
     this.logAuditEvent(
       'Tutor Admitted & Approved',
@@ -244,6 +227,7 @@ export const adminStorage = {
     tutor.status = 'suspended'
     tutor.suspension_reason = reason || 'تم إيقاف الحساب بقرار من الإدارة العليا.'
     this.saveTutors(tutors)
+    this.syncTutorToSupabase(tutor)
 
     this.logAuditEvent(
       'Tutor Account Suspended',
@@ -265,6 +249,7 @@ export const adminStorage = {
     tutor.status = 'active'
     delete tutor.suspension_reason
     this.saveTutors(tutors)
+    this.syncTutorToSupabase(tutor)
 
     this.logAuditEvent(
       'Tutor Reinstated',
@@ -303,6 +288,7 @@ export const adminStorage = {
     if (!tutor.activated_at) tutor.activated_at = new Date().toISOString()
 
     this.saveTutors(tutors)
+    this.syncTutorToSupabase(tutor)
 
     this.logAuditEvent(
       'Tutor Subscription Updated',
@@ -354,6 +340,7 @@ export const adminStorage = {
     tutor.status = 'active'
 
     this.saveTutors(tutors)
+    this.syncTutorToSupabase(tutor)
 
     this.logAuditEvent(
       'Subscription Activated',
@@ -374,6 +361,7 @@ export const adminStorage = {
 
     const filtered = tutors.filter((t) => t.id !== tutorId)
     this.saveTutors(filtered)
+    this.syncTutorToSupabase(tutor, true)
 
     this.logAuditEvent(
       'Tutor Permanently Deleted',
@@ -503,6 +491,7 @@ export const adminStorage = {
 
     tutors.push(newTutor)
     this.saveTutors(tutors)
+    this.syncTutorToSupabase(newTutor)
 
     this.logAuditEvent(
       'New Tutor Registered',
