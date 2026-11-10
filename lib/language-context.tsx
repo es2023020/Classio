@@ -14,20 +14,20 @@ interface LanguageContextValue {
 }
 
 const LanguageContext = createContext<LanguageContextValue>({
-  lang: 'en',
-  t: en,
+  lang: 'ar',
+  t: ar,
   setLang: () => {},
   toggleLang: () => {},
-  isRTL: false,
-  dir: 'ltr',
+  isRTL: true,
+  dir: 'rtl',
 })
 
 const STORAGE_KEY = 'classio_lang'
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Language>('en')
+  const [lang, setLangState] = useState<Language>('ar')
 
-  // Initialize from localStorage if present
+  // Initialize from localStorage if explicitly set to en
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY) as Language | null
@@ -36,8 +36,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         document.documentElement.lang = saved
         document.documentElement.dir = saved === 'ar' ? 'rtl' : 'ltr'
       } else {
-        document.documentElement.lang = 'en'
-        document.documentElement.dir = 'ltr'
+        document.documentElement.lang = 'ar'
+        document.documentElement.dir = 'rtl'
       }
     } catch {
       // ignore

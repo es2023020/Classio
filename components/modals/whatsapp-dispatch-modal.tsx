@@ -57,6 +57,16 @@ export function WhatsAppDispatchModal({
   const [currentQueueIndex, setCurrentQueueIndex] = useState(0)
   const [copied, setCopied] = useState(false)
 
+  // Accessibility: Close on Escape key
+  React.useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
   // Calculate Batch List
@@ -107,11 +117,18 @@ export function WhatsAppDispatchModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="whatsapp-modal-title"
+      dir={lang === 'ar' ? 'rtl' : 'ltr'}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+    >
       <div className="w-full max-w-xl bg-white rounded-3xl p-6 text-slate-900 shadow-2xl relative">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+          aria-label="Close"
+          className="absolute top-4 end-4 text-slate-400 hover:text-slate-600 p-1 rounded-lg cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -122,7 +139,7 @@ export function WhatsAppDispatchModal({
             <MessageCircle className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="font-black text-base text-slate-900">
+            <h3 id="whatsapp-modal-title" className="font-black text-base text-slate-900">
               {lang === 'ar' ? 'محرك مراسلة أولياء الأمور عبر واتساب' : 'WhatsApp Turbo Dispatch Engine'}
             </h3>
             <p className="text-xs text-slate-500">

@@ -25,16 +25,45 @@ export function PaymentModal({
   const [studentId, setStudentId] = useState(defaultStudentId || (students[0]?.id ?? ''))
   const selectedStudent = students.find((s) => s.id === studentId) || students[0]
 
-  const monthsEn = ['May 2024', 'June 2024', 'July 2024', 'August 2024', 'September 2024', 'October 2024', 'November 2024']
-  const monthsAr = ['مايو ٢٠٢٤', 'يونيو ٢٠٢٤', 'يوليو ٢٠٢٤', 'أغسطس ٢٠٢٤', 'سبتمبر ٢٠٢٤', 'أكتوبر ٢٠٢٤', 'نوفمبر ٢٠٢٤']
-  const months = lang === 'en' ? monthsEn : monthsAr
+  // Dynamically generate current academic calendar months
+  const months = React.useMemo(() => {
+    const list: string[] = []
+    const now = new Date()
+    for (let i = -2; i <= 6; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth() + i, 1)
+      list.push(
+        new Intl.DateTimeFormat(lang === 'ar' ? 'ar-EG' : 'en-EG', {
+          month: 'long',
+          year: 'numeric',
+        }).format(d)
+      )
+    }
+    return list
+  }, [lang])
 
-  const [monthYear, setMonthYear] = useState(lang === 'en' ? 'May 2024' : 'مايو ٢٠٢٤')
-  const [amount, setAmount] = useState<number>(selectedStudent?.monthly_fee || 850)
+  const [monthYear, setMonthYear] = useState('')
+
+  React.useEffect(() => {
+    if (months.length > 0 && !monthYear) {
+      setMonthYear(months[2] || months[0])
+    }
+  }, [months, monthYear])
+
+  const [amount, setAmount] = useState<number>(selectedStudent?.monthly_fee || 500)
   const [method, setMethod] = useState<PaymentMethod>('vodafone_cash')
   const [status, setStatus] = useState<'paid' | 'partial'>('paid')
   const [notes, setNotes] = useState('')
   const [showReceiptAfter, setShowReceiptAfter] = useState(true)
+
+  // Accessibility: Close on Escape key
+  React.useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
@@ -42,7 +71,7 @@ export function PaymentModal({
     setStudentId(id)
     const s = students.find((item) => item.id === id)
     if (s) {
-      setAmount(s.monthly_fee || 850)
+      setAmount(s.monthly_fee || 500)
     }
   }
 
@@ -74,7 +103,13 @@ export function PaymentModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="payment-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <div className="w-full max-w-md rounded-3xl bg-white p-5 sm:p-6 shadow-2xl transition-all max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -83,7 +118,7 @@ export function PaymentModal({
               <Wallet className="size-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-800">{t.paymentModal.title}</h2>
+              <h2 id="payment-modal-title" className="text-lg font-bold text-slate-800">{t.paymentModal.title}</h2>
               <p className="text-xs text-slate-500">
                 {lang === 'en'
                   ? 'Record monthly fee collection and issue digital receipt'

@@ -31,6 +31,8 @@ import {
   MessageCircle,
   AlertTriangle,
   Lock,
+  Zap,
+  Cloud,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -73,6 +75,7 @@ import { PaymentModal } from '@/components/modals/payment-modal'
 import { ReceiptModal } from '@/components/modals/receipt-modal'
 import { GroupModal } from '@/components/modals/group-modal'
 import { SettingsModal } from '@/components/modals/settings-modal'
+import { CloudBackupModal } from '@/components/modals/cloud-backup-modal'
 import { ScanModal } from '@/components/modals/scan-modal'
 import { StudentSuccessModal } from '@/components/modals/student-success-modal'
 import { ImportModal } from '@/components/modals/import-modal'
@@ -160,6 +163,7 @@ export function TutorDashboard() {
   const [editingGroup, setEditingGroup] = useState<Group | null>(null)
 
   const [settingsModalOpen, setSettingsModalOpen] = useState(false)
+  const [cloudBackupModalOpen, setCloudBackupModalOpen] = useState(false)
   const [scanModalOpen, setScanModalOpen] = useState(false)
   const [selectedSuccessStudent, setSelectedSuccessStudent] = useState<Student | null>(null)
   const [importModalOpen, setImportModalOpen] = useState(false)
@@ -846,6 +850,16 @@ export function TutorDashboard() {
               }
             />
 
+            {/* Cloud Backup & Sync Button */}
+            <button
+              onClick={() => setCloudBackupModalOpen(true)}
+              aria-label={lang === 'ar' ? 'النسخ الاحتياطي والمزامنة السحابية' : 'Cloud Backup and Sync'}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-[11px] font-bold text-slate-700 shadow-xs cursor-pointer transition"
+            >
+              <Cloud className="size-3.5 text-blue-600" />
+              <span className="hidden lg:inline">{lang === 'ar' ? 'نسخ احتياطي' : 'Backup'}</span>
+            </button>
+
             {/* WhatsApp Turbo Dispatch Button */}
             <button
               onClick={() => {
@@ -1154,6 +1168,16 @@ export function TutorDashboard() {
         profile={profile}
         onSaveProfile={handleSaveProfile}
         onResetData={handleResetData}
+      />
+
+      <CloudBackupModal
+        isOpen={cloudBackupModalOpen}
+        onClose={() => setCloudBackupModalOpen(false)}
+        lang={lang}
+        notify={notify}
+        onDataRestored={() => {
+          refreshAllData()
+        }}
       />
 
       <ScanModal

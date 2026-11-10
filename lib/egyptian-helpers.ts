@@ -116,10 +116,10 @@ export function buildMonthlyProgressCardWhatsAppUrl(
       ? '⚠️ يحتاج لمزيد من التركيز والمتابعة (Needs Attention)'
       : '🟡 أداء منتظم ومستقر (Steady)'
 
-  const attendance = student.attendance_rate || 95
-  const homework = student.homework_rate || 88
-  const examScore = student.last_quiz_score || '82/100'
-  const targetGoal = student.target_goal || 'التفوق في امتحانات الثانوية العامة'
+  const attendance = typeof student.attendance_rate === 'number' ? `${student.attendance_rate}%` : 'قيد التسجيل'
+  const homework = typeof student.homework_rate === 'number' ? `${student.homework_rate}%` : 'قيد التسجيل'
+  const examScore = student.last_quiz_score || 'لا يوجد اختبار مسجل حتى الآن'
+  const targetGoal = student.target_goal || 'التفوق والتميز الدراسي'
 
   // Topics breakdown
   let strongTopics = ''
@@ -145,8 +145,8 @@ export function buildMonthlyProgressCardWhatsAppUrl(
 ${trajectoryEmoji}
 
 ⭐ *المؤشرات التعليمية الأساسية:*
-• نسبة حضور الحصص: *${attendance}%*
-• نسبة إنجاز الواجبات: *${homework}%*
+• نسبة حضور الحصص: *${attendance}*
+• نسبة إنجاز الواجبات: *${homework}*
 • آخر درجة امتحان شامل: *${examScore}*
 • الهدف التعليمي للطالب: *${targetGoal}*${strongTopics}${weakTopics}${nextAction}
 ----------------------------------------
@@ -217,4 +217,32 @@ export function exportToCsv(filename: string, rows: Record<string, any>[]): void
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
+}
+
+/**
+ * Generates collision-proof, sequentially clean student code
+ * Format: STD-YY-XXXX (e.g. STD-26-0101) backed by sequence check
+ */
+export function generateUniqueStudentCode(existingCodes: string[] = [], prefix: string = 'STD'): string {
+  const yearSuffix = new Date().getFullYear().toString().slice(-2)
+  const existingSet = new Set(existingCodes.map((c) => (c || '').toUpperCase().trim()))
+
+  let maxSeq = 100
+  for (const code of existingSet) {
+    const match = code.match(new RegExp(`^${prefix}-${yearSuffix}-(\\d+)$`))
+    if (match) {
+      const num = parseInt(match[1], 10)
+      if (num > maxSeq) maxSeq = num
+    }
+  }
+
+  let nextSeq = maxSeq + 1
+  let candidate = `${prefix}-${yearSuffix}-${String(nextSeq).padStart(4, '0')}`
+
+  while (existingSet.has(candidate)) {
+    nextSeq++
+    candidate = `${prefix}-${yearSuffix}-${String(nextSeq).padStart(4, '0')}`
+  }
+
+  return candidate
 }

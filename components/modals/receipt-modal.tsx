@@ -19,6 +19,16 @@ interface ReceiptModalProps {
 export function ReceiptModal({ isOpen, onClose, payment, student, tutor }: ReceiptModalProps) {
   const { lang, isRTL } = useLanguage()
 
+  // Accessibility: Close on Escape key
+  React.useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
+
   if (!isOpen || !payment) return null
 
   const handlePrint = () => {
@@ -34,11 +44,17 @@ export function ReceiptModal({ isOpen, onClose, payment, student, tutor }: Recei
   const methodLabel = getPaymentMethodBadgeText(payment.method, lang)
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="receipt-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <div className="w-full max-w-md rounded-3xl bg-white p-5 sm:p-6 shadow-2xl transition-all max-h-[92vh] overflow-y-auto">
         {/* Header Actions */}
         <div className="flex items-center justify-between pb-3">
-          <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+          <span id="receipt-modal-title" className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
             <CheckCircle2 className="size-3.5" /> {lang === 'en' ? 'Official Certified Receipt' : 'إيصال سداد معتمد'}
           </span>
           <button

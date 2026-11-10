@@ -182,6 +182,9 @@ export interface Student {
   student_code: string // كود الطالب في السنتر
   status: 'active' | 'inactive' | 'archived' | 'late' | 'suspended'
   monthly_fee: number
+  discount_type?: 'none' | 'sibling' | 'scholarship' | 'custom'
+  discount_amount?: number // EGP deduction applied
+  is_sibling?: boolean
   paid_this_month: boolean
   paid_amount?: number
   notes?: string

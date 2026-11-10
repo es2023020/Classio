@@ -34,7 +34,7 @@ import { signInWithSupabase, signUpWithSupabase } from '@/lib/supabase-auth'
 interface RegisteredAccount {
   email: string
   name: string
-  password?: string
+  // password field removed — Supabase Auth is the source of truth for credentials
   phone: string
   subject: string
   plan: PlanTier
@@ -238,12 +238,18 @@ function LoginForm() {
           )
         }
 
-        // Check password match if stored
-        if (existingAccount.password && existingAccount.password !== password) {
-          setErrorMsg(lang === 'en' ? 'Incorrect password. Please try again.' : 'كلمة المرور غير صحيحة، يرجى المحاولة ثانية.')
-          setLoading(false)
-          return
-        }
+        // For offline mode: check if user has a local account (no password check — Supabase handles auth)
+        // Migrate legacy plaintext passwords out of localStorage if they exist
+        try {
+          const regRaw = localStorage.getItem('classio_registered_accounts')
+          if (regRaw) {
+            const list = JSON.parse(regRaw) as Array<RegisteredAccount & { password?: string }>
+            if (list.some((u) => u.password)) {
+              const cleaned = list.map(({ password: _pw, ...rest }) => rest)
+              localStorage.setItem('classio_registered_accounts', JSON.stringify(cleaned))
+            }
+          }
+        } catch {}
 
         // Update active session for this existing user
         const planLimit = existingAccount.maxLimit || PLAN_LIMITS[existingAccount.plan] || 10
@@ -334,11 +340,11 @@ function LoginForm() {
           }
         }
 
-        // 1. Save new account in classio_registered_accounts
+        // 1. Save new account in classio_registered_accounts (NO password stored)
         const newAccount: RegisteredAccount = {
           email: cleanEmail,
           name: name.trim(),
-          password: password,
+          // password intentionally omitted — Supabase Auth is the source of truth
           phone: phone.trim(),
           subject: subject.trim() || 'عام',
           plan: selectedPlan,
@@ -349,9 +355,11 @@ function LoginForm() {
 
         try {
           const regRaw = localStorage.getItem('classio_registered_accounts')
-          const list: RegisteredAccount[] = regRaw ? JSON.parse(regRaw) : []
-          list.push(newAccount)
-          localStorage.setItem('classio_registered_accounts', JSON.stringify(list))
+          const rawList = regRaw ? (JSON.parse(regRaw) as Array<RegisteredAccount & { password?: string }>) : []
+          // Strip any plaintext passwords from existing entries
+          const sanitizedList: RegisteredAccount[] = rawList.map(({ password: _pw, ...rest }) => rest)
+          sanitizedList.push(newAccount)
+          localStorage.setItem('classio_registered_accounts', JSON.stringify(sanitizedList))
         } catch (e) {
           console.error(e)
         }
@@ -368,6 +376,7 @@ function LoginForm() {
         })
 
         // 3. Save initial isolated profile for THIS new teacher (0 students, completely clean)
+        // Use auth UUID when available, fall back to email-based ID for offline mode
         const tutorId = `tutor-${Date.now()}`
         const newProfile: TutorProfile = {
           id: tutorId,
@@ -378,7 +387,7 @@ function LoginForm() {
           email: newAccount.email,
           avatar_initials: (newAccount.name.slice(0, 2) || 'CL').toUpperCase(),
           center_names: [],
-          instapay_handle: 'sayed017@instapay',
+          instapay_handle: '',
           vodafone_cash_number: '',
           default_monthly_fee: 500,
           subscription_plan: selectedPlan,

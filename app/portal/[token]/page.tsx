@@ -49,8 +49,21 @@ export default function ParentMagicPortalPage() {
   useEffect(() => {
     async function loadPortal() {
       setLoading(true)
-      const portalData = await portalTokenManager.getPortalData(token)
-      setData(portalData)
+      try {
+        // Try server-side API first (cross-device database lookup)
+        const res = await fetch(`/api/portal?token=${encodeURIComponent(token)}`)
+        if (res.ok) {
+          const portalData = await res.json()
+          setData(portalData)
+        } else {
+          // Fallback to local token manager if API is not yet linked or offline
+          const fallbackData = await portalTokenManager.getPortalData(token)
+          setData(fallbackData)
+        }
+      } catch {
+        const fallbackData = await portalTokenManager.getPortalData(token)
+        setData(fallbackData)
+      }
 
       // Check if session previously verified this student
       if (typeof window !== 'undefined') {
@@ -69,6 +82,41 @@ export default function ParentMagicPortalPage() {
     setChallengeError('')
     setChallengeLoading(true)
 
+    try {
+      // 1. Try server-side verification with rate-limiting
+      const res = await fetch('/api/portal/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, phoneDigits: enteredDigits }),
+      })
+
+      if (res.status === 429) {
+        const json = await res.json()
+        setChallengeError(
+          lang === 'ar'
+            ? (json.errorAr || 'تجاوزت الحد المسموح به من المحاولات. انتظر 15 دقيقة.')
+            : (json.error || 'Too many attempts. Please try again in 15 minutes.')
+        )
+        setChallengeLoading(false)
+        return
+      }
+
+      if (res.ok) {
+        const json = await res.json()
+        if (json.success) {
+          setIsChallengePassed(true)
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem(`portal_verified_${token}`, 'true')
+          }
+          setChallengeLoading(false)
+          return
+        }
+      }
+    } catch {
+      // Network failure, fallback to offline check
+    }
+
+    // 2. Offline fallback verification
     const ok = await portalTokenManager.verifyParentPhoneDigits(token, enteredDigits)
     if (ok) {
       setIsChallengePassed(true)

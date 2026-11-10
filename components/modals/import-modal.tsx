@@ -44,6 +44,16 @@ export function ImportModal({
   const [parsedRows, setParsedRows] = useState<Partial<Student>[]>([])
   const [parseError, setParseError] = useState('')
 
+  // Accessibility: Close on Escape key
+  React.useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
   const handleDownloadSample = () => {
@@ -142,7 +152,7 @@ export function ImportModal({
         const relation = (rowObj['Relation'] || rowObj['صلة القرابة'] || 'ولي الأمر') as any
         const school = rowObj['School'] || rowObj['المدرسة'] || ''
         const fee = Number(
-          rowObj['Monthly Fee'] || rowObj['الاشتراك الشهري'] || rowObj['الاشتراك'] || rowObj['fee'] || 850
+          rowObj['Monthly Fee'] || rowObj['الاشتراك الشهري'] || rowObj['الاشتراك'] || rowObj['fee'] || 0
         )
 
         // Find or fallback to group
@@ -150,7 +160,7 @@ export function ImportModal({
           groups.find((g) => g.name.toLowerCase().includes(groupName.toLowerCase())) || groups[0]
 
         students.push({
-          id: `std-${Date.now()}-${i}`,
+          id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `std-${Date.now()}-${i}`,
           name: name.trim(),
           student_code: code.trim(),
           group_id: matchedGroup?.id || 'grp-1',
@@ -159,7 +169,7 @@ export function ImportModal({
           student_phone: studentPhone.trim() || parentPhone.trim(),
           parent_relation: relation,
           school: school.trim(),
-          monthly_fee: fee || 850,
+          monthly_fee: fee || matchedGroup?.monthly_fee || 500,
           status: 'active',
           paid_this_month: false,
           paid_amount: 0,
@@ -207,7 +217,13 @@ export function ImportModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="import-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <div className="w-full max-w-2xl rounded-3xl bg-white p-6 md:p-8 shadow-2xl transition-all max-h-[92vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -216,7 +232,7 @@ export function ImportModal({
               <FileSpreadsheet className="size-6" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900">
+              <h2 id="import-modal-title" className="text-base font-bold text-slate-900">
                 {lang === 'en' ? 'Import Students via Excel / CSV' : 'استيراد كشف الطلاب من ملف Excel / CSV'}
               </h2>
               <p className="text-xs text-slate-500">

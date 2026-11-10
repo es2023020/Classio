@@ -17,25 +17,26 @@ export function PinUnlockModal({ isOpen, onUnlocked, lang }: PinUnlockModalProps
 
   if (!isOpen) return null
 
-  const handleUnlock = (e: React.FormEvent) => {
+  const handleUnlock = async (e: React.FormEvent) => {
     e.preventDefault()
     setErrorMsg('')
     setLoading(true)
 
-    setTimeout(() => {
-      const ok = adminAuth.unlockWithPin(pin)
+    try {
+      const ok = await adminAuth.unlockWithPin(pin)
       if (ok) {
         setPin('')
         onUnlocked()
       } else {
         setErrorMsg(
           lang === 'ar'
-            ? 'رمز الأمان السداسي (PIN) غير صحيح! حاول مجدداً.'
-            : 'Incorrect Master Security PIN. Try again.'
+            ? 'رمز الأمان (PIN) غير صحيح! حاول مجدداً.'
+            : 'Incorrect Security PIN. Try again.'
         )
       }
+    } finally {
       setLoading(false)
-    }, 400)
+    }
   }
 
   return (

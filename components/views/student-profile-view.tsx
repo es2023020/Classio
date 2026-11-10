@@ -820,8 +820,8 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                   <div>
                     <span className="text-slate-400 font-semibold">{lang === 'en' ? 'Parent/guardian' : 'ولي الأمر'}</span>
                     <p className="mt-1 font-bold text-slate-800">
-                      {student.parent_name || 'Mohamed Ahmed'}
-                      <span className="text-slate-400 font-normal ms-1">({student.parent_relation || 'الأب'})</span>
+                      {student.parent_name || (lang === 'en' ? 'Guardian' : 'ولي الأمر')}
+                      <span className="text-slate-400 font-normal ms-1">({student.parent_relation || 'ولي الأمر'})</span>
                     </p>
                   </div>
 
@@ -849,7 +849,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                   <div>
                     <span className="text-slate-400 font-semibold">{lang === 'en' ? 'Joined' : 'تاريخ الانضمام'}</span>
                     <p className="mt-1 font-bold text-slate-800">
-                      {student.joined_date || 'September 2026'}
+                      {student.joined_date || (lang === 'en' ? 'Registered' : 'مسجل في السجل')}
                     </p>
                   </div>
 

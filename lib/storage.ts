@@ -955,10 +955,9 @@ export function getCurrentTutorId(): string | null {
     const raw = localStorage.getItem('classio_auth_user')
     if (!raw) return null
     const user = JSON.parse(raw)
-    if (user?.email) {
-      return user.email.toLowerCase().trim()
-    }
-    return user?.id || null
+    // Prefer the Supabase user UUID (id) for proper multi-tenant isolation
+    // Fall back to email only for legacy offline-only sessions
+    return user?.id || user?.email?.toLowerCase().trim() || null
   } catch {
     return null
   }
@@ -981,6 +980,24 @@ class StorageService {
 
   private getTutorKey(baseKey: string): string {
     return getTutorStorageKey(baseKey)
+  }
+
+  /**
+   * Get the authenticated Supabase user's UUID (the proper multi-tenant key).
+   * With RLS enabled, the anon client can only see rows where user_id = auth.uid(),
+   * so we don't need to filter by tutor_id manually — RLS handles it.
+   * This helper is still used for upserts (to set tutor_id on new records).
+   */
+  private async getAuthTutorId(): Promise<string | null> {
+    if (!isSupabaseConfigured()) return null
+    const client = getSupabase()
+    if (!client) return null
+    try {
+      const { data: { user } } = await client.auth.getUser()
+      return user?.id || null
+    } catch {
+      return null
+    }
   }
 
   private readLocal<T>(key: string, defaultValue: T): T {
@@ -1007,12 +1024,13 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
-        const tutorEmail = getCurrentTutorId()
-        if (tutorEmail) {
+        // Always prefer authenticated session for secure multi-tenant lookup
+        const { data: { user } } = await client.auth.getUser()
+        if (user?.id) {
           const { data } = await client
             .from('tutors')
             .select('*')
-            .eq('email', tutorEmail.toLowerCase().trim())
+            .eq('user_id', user.id)
             .maybeSingle()
           if (data) return data as TutorProfile
         }
@@ -1084,10 +1102,8 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
-        const tid = getCurrentTutorId()
-        let query = client.from('groups').select('*').order('created_at', { ascending: false })
-        if (tid) query = query.eq('tutor_id', tid.toLowerCase().trim())
-        const { data } = await query
+        // With RLS enabled, the authenticated session automatically scopes to this tutor's data
+        const { data } = await client.from('groups').select('*').order('created_at', { ascending: false })
         if (data && data.length > 0) return data as Group[]
       }
     }
@@ -1103,8 +1119,8 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
-        const tid = getCurrentTutorId() || undefined
-        await client.from('groups').upsert({ ...group, tutor_id: (group as any).tutor_id || tid })
+        const tutorId = await this.getAuthTutorId() || getCurrentTutorId() || undefined
+        await client.from('groups').upsert({ ...group, tutor_id: (group as any).tutor_id || tutorId })
       }
     }
     return group
@@ -1128,10 +1144,8 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
-        const tid = getCurrentTutorId()
-        let query = client.from('students').select('*').order('created_at', { ascending: false })
-        if (tid) query = query.eq('tutor_id', tid.toLowerCase().trim())
-        const { data } = await query
+        // RLS ensures only this tutor's students are returned
+        const { data } = await client.from('students').select('*').order('created_at', { ascending: false })
         if (data && data.length > 0) return data as Student[]
       }
     }
@@ -1147,8 +1161,8 @@ class StorageService {
     if (isSupabaseConfigured()) {
       const client = getSupabase()
       if (client) {
-        const tid = getCurrentTutorId() || undefined
-        await client.from('students').upsert({ ...student, tutor_id: student.tutor_id || tid })
+        const tutorId = await this.getAuthTutorId() || getCurrentTutorId() || undefined
+        await client.from('students').upsert({ ...student, tutor_id: student.tutor_id || tutorId })
       }
     }
     return student

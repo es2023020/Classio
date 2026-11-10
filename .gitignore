@@ -7,10 +7,21 @@ __v0_jsx-dev-runtime.ts
 .v0-trash/
 .vercel/
 
-# Environment variables
+# Environment variables — NEVER commit these
 .env*.local
+.env.production
+.env.staging
 
 # Common ignores
 node_modules
 .next/
 .DS_Store
+
+# Build artifacts
+tsconfig.tsbuildinfo
+
+# Use pnpm only — npm lockfile is redundant
+package-lock.json
+
+# OS files
+Thumbs.db

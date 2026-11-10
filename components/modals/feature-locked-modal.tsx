@@ -39,6 +39,16 @@ export function FeatureLockedModal({
 }: FeatureLockedModalProps) {
   const router = useRouter()
 
+  // Accessibility: Close on Escape key
+  React.useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
   const targetPlan = PRICING_PLANS.find((p) => p.id === requiredPlanId) || PRICING_PLANS[2]
@@ -50,11 +60,18 @@ export function FeatureLockedModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="locked-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+      dir={lang === 'ar' ? 'rtl' : 'ltr'}
+    >
       <div className="w-full max-w-md bg-white rounded-3xl p-6 sm:p-7 text-slate-900 shadow-2xl relative border border-slate-200">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+          aria-label="Close"
+          className="absolute top-4 end-4 text-slate-400 hover:text-slate-600 p-1 rounded-lg cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -65,7 +82,7 @@ export function FeatureLockedModal({
         </div>
 
         {/* Title */}
-        <h3 className="text-center font-black text-lg text-slate-900">
+        <h3 id="locked-modal-title" className="text-center font-black text-lg text-slate-900">
           {lang === 'ar' ? titleAr : title}
         </h3>
         <p className="text-center text-xs text-slate-500 mt-1 mb-5">

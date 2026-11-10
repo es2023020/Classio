@@ -622,11 +622,15 @@ export const adminStorage = {
       .filter((p) => p.method === 'cash')
       .reduce((sum, p) => sum + (p.amount || 0), 0)
 
-    // SaaS MRR calculation from tutor plans (starter: 99, pro: 199, academy: 499)
+    // SaaS MRR calculation from tutor plans (starter: 99, growth: 299, pro: 449, power: 799, academy: 499)
     const planPrices: Record<PlanTier, number> = {
       free: 0,
       starter: 99,
-      pro: 199,
+      growth: 299,
+      pro: 449,
+      power: 799,
+      enterprise: 1200,
+      elite: 1500,
       academy: 499,
     }
     const platformMRR = tutors

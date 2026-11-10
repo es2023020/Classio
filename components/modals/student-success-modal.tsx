@@ -74,6 +74,16 @@ export function StudentSuccessModal({
   const [newTopicName, setNewTopicName] = useState('')
   const [newTopicLevel, setNewTopicLevel] = useState<'strong' | 'needs_practice' | 'review_required'>('needs_practice')
 
+  // Accessibility: Close on Escape key
+  React.useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
+
   if (!isOpen || !student) return null
 
   const studentPayments = payments.filter((p) => p.student_id === student.id)
@@ -108,7 +118,7 @@ export function StudentSuccessModal({
   }
 
   const handleSendProgressWhatsApp = () => {
-    const period = lang === 'en' ? 'May 2024' : 'مايو ٢٠٢٤'
+    const period = new Intl.DateTimeFormat(lang === 'ar' ? 'ar-EG' : 'en-EG', { month: 'long', year: 'numeric' }).format(new Date())
     const url = buildMonthlyProgressCardWhatsAppUrl(student, tutor.name, tutor.subject, period)
     window.open(url, '_blank')
     notify(lang === 'en' ? `Opened WhatsApp progress report for ${student.name}` : `تم فتح واتساب لإرسال تقرير المستوى لولي أمر الطالب ${student.name}`)
@@ -124,7 +134,13 @@ export function StudentSuccessModal({
   const TrajectoryIcon = trajectoryBadge.icon
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="success-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <div className="w-full max-w-2xl rounded-3xl bg-white p-6 md:p-8 shadow-2xl transition-all max-h-[92vh] overflow-y-auto">
         {/* Top Header */}
         <div className="flex items-start justify-between border-b border-slate-100 pb-4">
@@ -134,7 +150,7 @@ export function StudentSuccessModal({
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-xl font-bold text-slate-900">{student.name}</h2>
+                <h2 id="success-modal-title" className="text-xl font-bold text-slate-900">{student.name}</h2>
                 <span className="rounded-md border bg-slate-100 px-2 py-0.5 font-mono text-xs font-bold text-slate-700">
                   {student.student_code}
                 </span>

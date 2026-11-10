@@ -37,9 +37,19 @@ export function GroupModal({ isOpen, onClose, onSave, editingGroup }: GroupModal
     editingGroup?.schedule_days || (lang === 'en' ? ['Saturday', 'Tuesday'] : ['السبت', 'الثلاثاء'])
   )
   const [timeSlot, setTimeSlot] = useState(editingGroup?.time_slot || (lang === 'en' ? '04:00 PM - 06:30 PM' : '04:00 م - 06:30 م'))
-  const [monthlyFee, setMonthlyFee] = useState(editingGroup?.monthly_fee || 850)
-  const [sessionFee, setSessionFee] = useState(editingGroup?.session_fee || 220)
+  const [monthlyFee, setMonthlyFee] = useState(editingGroup?.monthly_fee || 500)
+  const [sessionFee, setSessionFee] = useState(editingGroup?.session_fee || 150)
   const [maxStudents, setMaxStudents] = useState(editingGroup?.max_students || 35)
+
+  // Accessibility: Close on Escape key
+  React.useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
@@ -78,7 +88,13 @@ export function GroupModal({ isOpen, onClose, onSave, editingGroup }: GroupModal
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="group-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <div className="w-full max-w-lg rounded-3xl bg-white p-5 sm:p-6 shadow-2xl transition-all max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -87,7 +103,7 @@ export function GroupModal({ isOpen, onClose, onSave, editingGroup }: GroupModal
               <Grid2X2 className="size-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-800">
+              <h2 id="group-modal-title" className="text-lg font-bold text-slate-800">
                 {editingGroup ? t.groupModal.editTitle : t.groupModal.addTitle}
               </h2>
               <p className="text-xs text-slate-500">

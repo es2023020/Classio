@@ -5,6 +5,7 @@ import { X, User } from 'lucide-react'
 import { Student, Group } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { useLanguage } from '@/lib/language-context'
+import { generateUniqueStudentCode } from '@/lib/egyptian-helpers'
 
 interface StudentModalProps {
   isOpen: boolean
@@ -12,9 +13,10 @@ interface StudentModalProps {
   onSave: (student: Student) => void
   groups: Group[]
   editingStudent?: Student | null
+  existingStudentCodes?: string[]
 }
 
-export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent }: StudentModalProps) {
+export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, existingStudentCodes = [] }: StudentModalProps) {
   const { lang, t, isRTL } = useLanguage()
   const [name, setName] = useState(editingStudent?.name || '')
   const [studentPhone, setStudentPhone] = useState(editingStudent?.student_phone || '')
@@ -24,13 +26,27 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent }
   )
   const [groupId, setGroupId] = useState(editingStudent?.group_id || (groups[0]?.id ?? ''))
   const [studentCode, setStudentCode] = useState(
-    editingStudent?.student_code || `STD-${Math.floor(100 + Math.random() * 900)}`
+    editingStudent?.student_code || generateUniqueStudentCode(existingStudentCodes)
   )
   const [school, setSchool] = useState(editingStudent?.school || '')
   const [monthlyFee, setMonthlyFee] = useState<number>(
-    editingStudent?.monthly_fee || groups.find((g) => g.id === groupId)?.monthly_fee || 850
+    editingStudent?.monthly_fee || groups.find((g) => g.id === groupId)?.monthly_fee || 0
   )
+  const [discountType, setDiscountType] = useState<'none' | 'sibling' | 'scholarship' | 'custom'>(
+    editingStudent?.discount_type || (editingStudent?.is_sibling ? 'sibling' : 'none')
+  )
+  const [discountAmount, setDiscountAmount] = useState<number>(editingStudent?.discount_amount || 0)
   const [notes, setNotes] = useState(editingStudent?.notes || '')
+
+  // Accessibility: Close on Escape key
+  React.useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
@@ -56,10 +72,13 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent }
       parent_relation: parentRelation,
       group_id: groupId,
       group_name: selectedGroup?.name || (lang === 'en' ? 'General Group' : 'مجموعة عامة'),
-      student_code: studentCode.trim() || `STD-${Math.floor(100 + Math.random() * 900)}`,
+      student_code: studentCode.trim() || generateUniqueStudentCode(existingStudentCodes),
       school: school.trim(),
       status: editingStudent?.status || 'active',
-      monthly_fee: Number(monthlyFee) || 850,
+      monthly_fee: Math.max(0, (Number(monthlyFee) || groups.find((g) => g.id === groupId)?.monthly_fee || 0) - (discountType !== 'none' ? Number(discountAmount) : 0)),
+      discount_type: discountType,
+      discount_amount: discountType !== 'none' ? Number(discountAmount) : 0,
+      is_sibling: discountType === 'sibling',
       paid_this_month: editingStudent?.paid_this_month || false,
       paid_amount: editingStudent?.paid_amount || 0,
       notes: notes.trim(),
@@ -72,7 +91,13 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent }
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="student-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <div className="w-full max-w-lg rounded-3xl bg-white p-5 sm:p-6 shadow-2xl transition-all max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -81,7 +106,7 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent }
               <User className="size-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-800">
+              <h2 id="student-modal-title" className="text-lg font-bold text-slate-800">
                 {editingStudent ? t.studentModal.editTitle : t.studentModal.addTitle}
               </h2>
               <p className="text-xs text-slate-500">
@@ -187,13 +212,62 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent }
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-700">{t.studentModal.monthlyFee}</label>
+              <label className="text-xs font-semibold text-slate-700">{t.studentModal.monthlyFee} (ج.م)</label>
               <input
                 type="number"
                 value={monthlyFee}
                 onChange={(e) => setMonthlyFee(Number(e.target.value))}
                 className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0f2c59] focus:bg-white"
               />
+            </div>
+
+            {/* Sibling & Fee Exceptions */}
+            <div className="space-y-1.5 sm:col-span-2 rounded-2xl border border-slate-200/80 bg-slate-50/60 p-3">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-700">
+                  {lang === 'en' ? 'Fee Exception / Discount' : 'الخصومات والاستثناءات (أشقاء / تفوق)'}
+                </label>
+                <select
+                  value={discountType}
+                  onChange={(e) => {
+                    const val = e.target.value as any
+                    setDiscountType(val)
+                    if (val === 'sibling' && discountAmount === 0) setDiscountAmount(100)
+                    if (val === 'none') setDiscountAmount(0)
+                  }}
+                  className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 outline-none"
+                >
+                  <option value="none">{lang === 'en' ? 'No Discount' : 'بدون خصم'}</option>
+                  <option value="sibling">{lang === 'en' ? 'Sibling Discount (أشقاء)' : 'خصم أشقاء (إخوة)'}</option>
+                  <option value="scholarship">{lang === 'en' ? 'Scholarship / Hardship' : 'منحة / إعفاء جزئي'}</option>
+                  <option value="custom">{lang === 'en' ? 'Custom Deduction' : 'خصم مخصص'}</option>
+                </select>
+              </div>
+
+              {discountType !== 'none' && (
+                <div className="mt-2.5 flex items-center gap-3">
+                  <div className="flex-1">
+                    <span className="text-[11px] font-semibold text-slate-500">
+                      {lang === 'en' ? 'Deduction Amount (EGP):' : 'قيمة الخصم المستقطع (ج.م):'}
+                    </span>
+                    <input
+                      type="number"
+                      min="0"
+                      value={discountAmount}
+                      onChange={(e) => setDiscountAmount(Number(e.target.value))}
+                      className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-800 outline-none focus:border-[#0f2c59]"
+                    />
+                  </div>
+                  <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2 text-center">
+                    <span className="block text-[10px] font-bold text-emerald-800">
+                      {lang === 'en' ? 'Net Fee' : 'الصافي بعد الخصم'}
+                    </span>
+                    <span className="text-xs font-black text-emerald-700">
+                      {Math.max(0, monthlyFee - discountAmount)} ج.م
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-1.5 sm:col-span-2">

@@ -42,6 +42,16 @@ export function ScanModal({
     }
   }, [isOpen])
 
+  // Accessibility: Close on Escape key
+  useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
   const matchedStudent = query.trim()
@@ -67,7 +77,13 @@ export function ScanModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="scan-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <div className="w-full max-w-lg rounded-3xl bg-white p-5 sm:p-6 shadow-2xl transition-all max-h-[92vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -76,7 +92,7 @@ export function ScanModal({
               <QrCode className="size-6" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900">
+              <h2 id="scan-modal-title" className="text-base font-bold text-slate-900">
                 {lang === 'en' ? 'Quick Student ID & Barcode Scanner' : 'مسح كود الطالب السريع (سنتر / حضور)'}
               </h2>
               <p className="text-xs text-slate-500">

@@ -69,7 +69,7 @@ export const offlineSyncManager = {
     for (const item of queue) {
       try {
         if (item.type === 'record_attendance') {
-          await storage.saveAttendance(item.payload as AttendanceRecord)
+          await storage.saveAttendanceRecord(item.payload as AttendanceRecord)
           syncedCount++
         } else if (item.type === 'record_payment') {
           await storage.recordPayment(item.payload as PaymentRecord)

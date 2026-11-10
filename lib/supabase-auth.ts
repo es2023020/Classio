@@ -93,7 +93,8 @@ export async function signUpWithSupabase(params: {
     }
 
     const userId = data.user?.id
-    const tutorId = `tutor-${Date.now()}`
+    // Use the auth user's UUID as the tutor ID for clean, collision-proof multi-tenancy
+    const tutorId = userId || crypto.randomUUID()
 
     // Insert or update profile in public.tutors table
     const isFree = params.plan === 'free'
@@ -106,7 +107,7 @@ export async function signUpWithSupabase(params: {
       email: cleanEmail,
       avatar_initials: (params.name.slice(0, 2) || 'CL').toUpperCase(),
       center_names: [],
-      instapay_handle: 'sayed017@instapay',
+      instapay_handle: '',
       vodafone_cash_number: '',
       default_monthly_fee: 500,
       subscription_plan: params.plan,
@@ -196,8 +197,10 @@ export async function signInWithSupabase(
     // Fallback if no tutor record in table yet (e.g. first login via Supabase auth)
     if (!tutorRecord && data.user) {
       const meta = data.user.user_metadata || {}
+      // Use auth user's UUID as tutor ID for proper multi-tenancy
+      const fallbackTutorId = data.user.id
       tutorRecord = {
-        id: `tutor-${Date.now()}`,
+        id: fallbackTutorId,
         name: meta.name || cleanEmail.split('@')[0],
         title: 'معلم خاص',
         subject: meta.subject || 'عام',
@@ -205,7 +208,7 @@ export async function signInWithSupabase(
         email: cleanEmail,
         avatar_initials: ((meta.name || cleanEmail).slice(0, 2) || 'CL').toUpperCase(),
         center_names: [],
-        instapay_handle: 'sayed017@instapay',
+        instapay_handle: '',
         vodafone_cash_number: '',
         default_monthly_fee: 500,
         subscription_plan: (meta.plan as PlanTier) || 'free',
@@ -220,7 +223,9 @@ export async function signInWithSupabase(
           ...tutorRecord,
           user_id: data.user.id,
         })
-      } catch (e) {}
+      } catch (e) {
+        console.warn('Failed to upsert fallback tutor record:', e)
+      }
     }
 
     return {

@@ -56,17 +56,27 @@ export const whatsAppEngine = {
   // 2. Compose Payment Due / Reminder Message
   composePaymentReminder(student: Student, tutor: TutorProfile, monthYear?: string): WhatsAppMessagePayload {
     const month = monthYear || 'الشهر الحالي'
-    const amount = student.monthly_fee || 850
+    const feeAmount = typeof student.monthly_fee === 'number' && student.monthly_fee > 0 
+      ? student.monthly_fee 
+      : (tutor.default_monthly_fee || 0)
+    const amountText = feeAmount > 0 ? `${feeAmount} ج.م` : 'المصروفات المقررة'
     const portalUrl = this.getPortalUrl(student.id, student.parent_phone)
+
+    const paymentMethods: string[] = []
+    if (tutor.instapay_handle) {
+      paymentMethods.push(`• إنستاباي (InstaPay): ${tutor.instapay_handle}`)
+    }
+    if (tutor.vodafone_cash_number || tutor.phone) {
+      paymentMethods.push(`• محفظة فودافون كاش: ${tutor.vodafone_cash_number || tutor.phone}`)
+    }
+    paymentMethods.push(`• أو نقداً بسكرتارية السنتر في موعد الحصة القادمة`)
 
     const text =
       `السلام عليكم ورحمة الله وبركاته،\n` +
       `ولي أمر الطالب العزيز (${student.name})، تحية طيبة من مكتب أستاذ ${tutor.name}.\n\n` +
-      `نود تذكيركم بلطف بمصروفات مادة (${tutor.subject}) عن شهر (${month}) وقدرها: ${amount} ج.م.\n\n` +
+      `نود تذكيركم بلطف بمصروفات مادة (${tutor.subject || 'المادة الدراسية'}) عن شهر (${month}) وقدرها: ${amountText}.\n\n` +
       `💳 يمكنكم التحويل عبر الوسائل التالية:\n` +
-      `• إنستاباي (InstaPay): ${tutor.instapay_handle || 'ahmed.phys@instapay'}\n` +
-      `• محفظة فودافون كاش: ${tutor.vodafone_cash_number || tutor.phone}\n` +
-      `• أو نقداً بسكرتارية السنتر في موعد الحصة القادمة.\n\n` +
+      `${paymentMethods.join('\n')}\n\n` +
       `🔗 رابط تفاصيل حساب الطالب والسداد الإلكتروني:\n${portalUrl}\n\n` +
       `شكراً جزيلاً لتعاونكم ودعمكم المستمر.`
 
@@ -106,16 +116,17 @@ export const whatsAppEngine = {
   // 4. Compose Comprehensive Academic Report Card
   composeProgressReport(student: Student, tutor: TutorProfile): WhatsAppMessagePayload {
     const portalUrl = this.getPortalUrl(student.id, student.parent_phone)
-    const attRate = student.attendance_rate || 95
-    const hwRate = student.homework_rate || 90
+    const attRateText = typeof student.attendance_rate === 'number' ? `${student.attendance_rate}%` : 'قيد التسجيل'
+    const hwRateText = typeof student.homework_rate === 'number' ? `${student.homework_rate}%` : 'قيد التسجيل'
+    const quizScoreText = student.last_quiz_score ? student.last_quiz_score : 'سيتم التحديث بعد أقرب تقييم'
+    const noteText = student.notes ? `\n💡 ملاحظة الأستاذ: ${student.notes}` : ''
 
     const text =
       `السلام عليكم ورحمة الله،\n` +
-      `تقرير المتابعة الأكاديمية الشهري للطالب (${student.name}) في مادة (${tutor.subject}):\n\n` +
-      `📈 نسبة الحضور والانتظام: ${attRate}%\n` +
-      `📝 نسبة تسليم الواجبات: ${hwRate}%\n` +
-      `🎯 آخر تقييم: ${student.last_quiz_score || '85/100'}\n` +
-      `💡 ملاحظة الأستاذ: ${student.notes || 'طالب متميز وملتزم ومستواه في تقدم مستمر.'}\n\n` +
+      `تقرير المتابعة الأكاديمية للطالب (${student.name}) في مادة (${tutor.subject || 'المادة الدراسية'}):\n\n` +
+      `📈 نسبة الحضور والانتظام: ${attRateText}\n` +
+      `📝 نسبة تسليم الواجبات: ${hwRateText}\n` +
+      `🎯 آخر تقييم: ${quizScoreText}${noteText}\n\n` +
       `🔍 للاطلاع على التقرير المفصل ومصفوفة إتقان الدروس:\n${portalUrl}\n\n` +
       `خالص تحياتنا، أستاذ ${tutor.name}.`
 

@@ -33,6 +33,7 @@ import {
   TrendingUp,
   AlertCircle,
   Radio,
+  Sparkles,
   FileSpreadsheet,
 } from 'lucide-react'
 import { adminAuth } from '@/lib/admin-auth'

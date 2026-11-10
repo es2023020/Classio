@@ -13,6 +13,7 @@ import {
   PieChart,
   Award,
   BookOpen,
+  Building,
 } from 'lucide-react'
 import { Student, Group, PaymentRecord, AttendanceRecord, DashboardStats } from '@/lib/types'
 import { Button } from '@/components/ui/button'
@@ -137,6 +138,51 @@ export function ReportsView({
       })
     exportToCsv(lang === 'en' ? `overdue_report_${new Date().toISOString().split('T')[0]}` : `كشف_المتأخرات_للمتابعة_${new Date().toISOString().split('T')[0]}`, data)
     notify(lang === 'en' ? 'Overdue balances report exported successfully' : 'تم تصدير كشف المتأخرات بنجاح')
+  }
+
+  const exportCenterSettlement = () => {
+    // Unique centers
+    const centers = Array.from(new Set(groups.map((g) => g.center_name || (lang === 'en' ? 'Main Center' : 'السنتر الرئيسي'))))
+    const currentMonth = new Intl.DateTimeFormat(lang === 'ar' ? 'ar-EG' : 'en-EG', { month: 'long', year: 'numeric' }).format(new Date())
+
+    const data = centers.map((centerName) => {
+      const centerGroups = groups.filter((g) => (g.center_name || (lang === 'en' ? 'Main Center' : 'السنتر الرئيسي')) === centerName)
+      const centerGroupIds = new Set(centerGroups.map((g) => g.id))
+      const centerStudents = students.filter((s) => centerGroupIds.has(s.group_id))
+      
+      const expectedRevenue = centerStudents.reduce((sum, s) => sum + (s.monthly_fee || 0), 0)
+      const collectedRevenue = payments
+        .filter((p) => centerGroupIds.has(p.group_id || ''))
+        .reduce((sum, p) => sum + (p.amount || 0), 0)
+      const pendingRevenue = Math.max(0, expectedRevenue - collectedRevenue)
+      const rate = expectedRevenue > 0 ? Math.round((collectedRevenue / expectedRevenue) * 100) : 0
+
+      if (lang === 'en') {
+        return {
+          'Center Name': centerName,
+          'Month': currentMonth,
+          'Total Groups': centerGroups.length,
+          'Enrolled Students': centerStudents.length,
+          'Expected Revenue (EGP)': expectedRevenue,
+          'Collected (EGP)': collectedRevenue,
+          'Pending Balance (EGP)': pendingRevenue,
+          'Collection Rate': `${rate}%`,
+        }
+      }
+      return {
+        'اسم السنتر': centerName,
+        'شهر التسوية': currentMonth,
+        'عدد المجموعات': centerGroups.length,
+        'إجمالي الطلاب': centerStudents.length,
+        'الإيراد المتوقع (ج.م)': expectedRevenue,
+        'المحصل الفعلي (ج.م)': collectedRevenue,
+        'المتبقي غير المحصل (ج.م)': pendingRevenue,
+        'نسبة التحصيل': `${rate}%`,
+      }
+    })
+
+    exportToCsv(lang === 'en' ? `center_settlements_${new Date().toISOString().split('T')[0]}` : `تقرير_تسوية_حسابات_السناتر_${new Date().toISOString().split('T')[0]}`, data)
+    notify(lang === 'en' ? 'Center settlements report exported successfully' : 'تم تصدير تقرير تسوية حسابات السناتر بنجاح')
   }
 
   return (
@@ -287,7 +333,7 @@ export function ReportsView({
             : 'تنزيل ملفات إكسيل جاهزة بكافة التفاصيل للتسليم لإدارة السنتر، أولياء الأمور، أو الأرشفة'}
         </p>
 
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4 transition hover:bg-white hover:shadow-xs">
             <div className="flex size-10 items-center justify-center rounded-xl bg-blue-100 text-[#0f2c59]">
               <FileSpreadsheet className="size-5" />
@@ -342,6 +388,28 @@ export function ReportsView({
               variant="outline"
               size="sm"
               onClick={exportOverdue}
+              className="mt-4 w-full gap-2 rounded-xl text-xs font-bold text-slate-700 cursor-pointer"
+            >
+              <Download className="size-3.5" /> {lang === 'en' ? 'Download Excel' : 'تحميل Excel'}
+            </Button>
+          </div>
+
+          <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4 transition hover:bg-white hover:shadow-xs">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-700">
+              <Building className="size-5" />
+            </div>
+            <h4 className="mt-3 text-xs font-bold text-slate-800">
+              {lang === 'en' ? 'Center Settlements' : 'تسوية حسابات السناتر'}
+            </h4>
+            <p className="mt-1 text-[11px] text-slate-500">
+              {lang === 'en'
+                ? 'Monthly breakdown by center: groups, enrolled students, expected and collected'
+                : 'كشف مالي لكل سنتر: المجموعات، الطلاب، المتوقع والمحصل للمحاسبة'}
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportCenterSettlement}
               className="mt-4 w-full gap-2 rounded-xl text-xs font-bold text-slate-700 cursor-pointer"
             >
               <Download className="size-3.5" /> {lang === 'en' ? 'Download Excel' : 'تحميل Excel'}

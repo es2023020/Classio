@@ -1,14 +1,13 @@
 import { SuperAdminSession } from './admin-types'
 
-// Hardened Master Super-Admin Configurations
+// Admin auth config: all credentials come ONLY from server-side environment variables.
+// NEXT_PUBLIC_* is intentionally NOT used here — these values must never ship in the browser bundle.
+// Set CLASSIO_ADMIN_EMAIL, CLASSIO_ADMIN_PASSWORD, CLASSIO_ADMIN_PIN, CLASSIO_ADMIN_FORTRESS_KEY
+// as server-side env vars in Vercel (not exposed to the client).
 export const MASTER_ADMIN_CONFIG = {
-  DEFAULT_EMAIL: process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL || 'owner@classio.app',
-  DEFAULT_PASSWORD: process.env.NEXT_PUBLIC_SUPER_ADMIN_PASSWORD || 'ClassioRoot#2026!',
-  DEFAULT_MASTER_PIN: process.env.NEXT_PUBLIC_SUPER_ADMIN_PIN || '749201',
-  DEFAULT_FORTRESS_KEY: process.env.NEXT_PUBLIC_FORTRESS_KEY || 'master-fortress-779',
-  SESSION_STORAGE_KEY: 'classio_master_superadmin_session_v1',
-  ATTEMPTS_STORAGE_KEY: 'classio_master_failed_attempts_v1',
-  LOCKOUT_STORAGE_KEY: 'classio_master_lockout_until_v1',
+  SESSION_STORAGE_KEY: 'classio_master_superadmin_session_v2',
+  ATTEMPTS_STORAGE_KEY: 'classio_master_failed_attempts_v2',
+  LOCKOUT_STORAGE_KEY: 'classio_master_lockout_until_v2',
   IMPERSONATE_STORAGE_KEY: 'classio_impersonated_tutor_id',
   MAX_FAILED_ATTEMPTS: 5,
   LOCKOUT_DURATION_MINUTES: 15,
@@ -30,14 +29,13 @@ export const adminAuth = {
     if (typeof window === 'undefined') return { isLocked: false, remainingMinutes: 0 }
     const lockoutUntilStr = localStorage.getItem(MASTER_ADMIN_CONFIG.LOCKOUT_STORAGE_KEY)
     if (!lockoutUntilStr) return { isLocked: false, remainingMinutes: 0 }
-    
+
     const lockoutUntil = new Date(lockoutUntilStr).getTime()
     const now = Date.now()
     if (now < lockoutUntil) {
       const remainingMinutes = Math.ceil((lockoutUntil - now) / 60000)
       return { isLocked: true, remainingMinutes }
     } else {
-      // Lockout expired
       localStorage.removeItem(MASTER_ADMIN_CONFIG.LOCKOUT_STORAGE_KEY)
       localStorage.removeItem(MASTER_ADMIN_CONFIG.ATTEMPTS_STORAGE_KEY)
       return { isLocked: false, remainingMinutes: 0 }
@@ -64,30 +62,9 @@ export const adminAuth = {
     localStorage.removeItem(MASTER_ADMIN_CONFIG.LOCKOUT_STORAGE_KEY)
   },
 
-  // Verify fortress entrance passkey (Stops curiosity scanners and brute-force discovery)
-  verifyFortressPasskey(key: string): boolean {
-    const trimmed = (key || '').trim()
-    return trimmed === MASTER_ADMIN_CONFIG.DEFAULT_FORTRESS_KEY
-  },
-
-  // Stage 1: Validate Master Email & Password
-  validateCredentials(email: string, pass: string): boolean {
-    const cleanEmail = (email || '').trim().toLowerCase()
-    return (
-      cleanEmail === MASTER_ADMIN_CONFIG.DEFAULT_EMAIL.toLowerCase() &&
-      pass === MASTER_ADMIN_CONFIG.DEFAULT_PASSWORD
-    )
-  },
-
-  // Stage 2: Validate 6-digit Master Security PIN
-  validateMasterPin(pin: string): boolean {
-    const cleanPin = (pin || '').trim()
-    return cleanPin === MASTER_ADMIN_CONFIG.DEFAULT_MASTER_PIN
-  },
-
-  // Complete Login and Issue Hardened Master Session
-  login(email: string, pass: string, pin: string, fortressKey: string): AuthChallengeResult {
-    // 1. Check lockout
+  // Complete login: credentials validated server-side via /api/admin/auth
+  async login(email: string, pass: string, pin: string, fortressKey: string): Promise<AuthChallengeResult> {
+    // 1. Check client-side lockout first (rate limit before even hitting server)
     const lockout = this.getLockoutStatus()
     if (lockout.isLocked) {
       return {
@@ -98,61 +75,74 @@ export const adminAuth = {
       }
     }
 
-    // 2. Check fortress passkey
-    if (!this.verifyFortressPasskey(fortressKey)) {
+    try {
+      // 2. Validate server-side — credentials NEVER compared in browser
+      const response = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim().toLowerCase(), password: pass, pin, fortressKey }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        const fail = this.recordFailedAttempt()
+        return {
+          success: false,
+          message: data.message || `Authentication failed. (${fail.remainingAttempts} attempts remaining)`,
+          messageAr: data.messageAr || `فشل التحقق. (متبقي ${fail.remainingAttempts} محاولات)`,
+        }
+      }
+
+      // Authentication verified! Reset failed attempts
+      this.resetFailedAttempts()
+
+      const now = new Date()
+      const expiresAt = new Date(now.getTime() + MASTER_ADMIN_CONFIG.SESSION_TIMEOUT_MINUTES * 60000)
+
+      // Session token is a UUID from the server
+      const session: SuperAdminSession = {
+        token: data.token || crypto.randomUUID(),
+        email: email.trim().toLowerCase(),
+        role: 'super_admin',
+        authenticated_at: now.toISOString(),
+        expires_at: expiresAt.toISOString(),
+        last_activity_at: now.toISOString(),
+        is_locked: false,
+      }
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(MASTER_ADMIN_CONFIG.SESSION_STORAGE_KEY, JSON.stringify(session))
+      }
+
+      return {
+        success: true,
+        message: 'Super-Admin identity verified. Welcome to the Admin Command Center.',
+        messageAr: 'تم التحقق من هوية المسؤول بنجاح. أهلاً بك في لوحة القيادة والتحكم.',
+        session,
+      }
+    } catch {
       const fail = this.recordFailedAttempt()
       return {
         success: false,
-        message: `Invalid Fortress Entry Key. (${fail.remainingAttempts} attempts remaining)`,
-        messageAr: `رمز مفتاح الدخول المشفر غير صحيح. (متبقي ${fail.remainingAttempts} محاولات)`,
+        message: `Network error during authentication. (${fail.remainingAttempts} attempts remaining)`,
+        messageAr: `خطأ في الاتصال أثناء التحقق. (متبقي ${fail.remainingAttempts} محاولات)`,
       }
     }
+  },
 
-    // 3. Check credentials
-    if (!this.validateCredentials(email, pass)) {
-      const fail = this.recordFailedAttempt()
-      return {
-        success: false,
-        message: `Invalid master email or root password. (${fail.remainingAttempts} attempts remaining)`,
-        messageAr: `البريد الإلكتروني الرئيسي أو كلمة المرور الرئيسية غير صحيحة. (متبقي ${fail.remainingAttempts} محاولات)`,
-      }
-    }
-
-    // 4. Check 6-digit Security PIN
-    if (!this.validateMasterPin(pin)) {
-      const fail = this.recordFailedAttempt()
-      return {
-        success: false,
-        message: `Invalid 6-digit Master PIN. (${fail.remainingAttempts} attempts remaining)`,
-        messageAr: `رمز الأمان السداسي (PIN) الرئيسي غير صحيح. (متبقي ${fail.remainingAttempts} محاولات)`,
-      }
-    }
-
-    // Authentication verified! Reset failed attempts
-    this.resetFailedAttempts()
-
-    const now = new Date()
-    const expiresAt = new Date(now.getTime() + MASTER_ADMIN_CONFIG.SESSION_TIMEOUT_MINUTES * 60000)
-
-    const session: SuperAdminSession = {
-      token: `fortress_tok_${Math.random().toString(36).substring(2)}_${Date.now()}`,
-      email: MASTER_ADMIN_CONFIG.DEFAULT_EMAIL,
-      role: 'super_admin',
-      authenticated_at: now.toISOString(),
-      expires_at: expiresAt.toISOString(),
-      last_activity_at: now.toISOString(),
-      is_locked: false,
-    }
-
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(MASTER_ADMIN_CONFIG.SESSION_STORAGE_KEY, JSON.stringify(session))
-    }
-
-    return {
-      success: true,
-      message: 'Master Super-Admin identity verified. Welcome to the Fortress Command Center.',
-      messageAr: 'تم التحقق من هوية السوبر أدمن الرئيسي بنجاح. أهلاً بك في غرفة القيادة والتحكم.',
-      session,
+  // Verify PIN: validated server-side
+  async verifyPin(pin: string): Promise<boolean> {
+    try {
+      const response = await fetch('/api/admin/verify-pin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin }),
+      })
+      const data = await response.json()
+      return response.ok && data.success === true
+    } catch {
+      return false
     }
   },
 
@@ -163,7 +153,7 @@ export const adminAuth = {
       const raw = localStorage.getItem(MASTER_ADMIN_CONFIG.SESSION_STORAGE_KEY)
       if (!raw) return null
       const session: SuperAdminSession = JSON.parse(raw)
-      
+
       // Check expiry
       if (new Date().getTime() > new Date(session.expires_at).getTime()) {
         this.logout()
@@ -197,11 +187,10 @@ export const adminAuth = {
     }
   },
 
-  // Unlock with Master PIN
-  unlockWithPin(pin: string): boolean {
-    if (!this.validateMasterPin(pin)) {
-      return false
-    }
+  // Unlock with Master PIN (server-validated)
+  async unlockWithPin(pin: string): Promise<boolean> {
+    const isValid = await this.verifyPin(pin)
+    if (!isValid) return false
     const session = this.getSession()
     if (!session) return false
     session.is_locked = false
