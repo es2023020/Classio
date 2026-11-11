@@ -549,15 +549,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── 6. PRICING SECTION (6 TIERS - ENGLISH PRICES & LIMITED TIME OFFERS) ── */}
+      {/* ── 6. PRICING SECTION (6 TIERS) ── */}
       <section id="pricing" className="py-24 bg-white border-t border-slate-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10">
-            {/* Limited Time Urgency Pill */}
-            <div className="inline-flex items-center gap-2 rounded-full bg-rose-50 text-rose-600 px-4 py-1.5 text-xs font-black mb-3 border border-rose-200 shadow-xs">
-              <Flame className="w-3.5 h-3.5 text-rose-500 fill-rose-500 animate-pulse" />
-              <span>{lang === 'en' ? '⚡ Limited Time Launch Rates — Lock In Your Price Today' : '⚡ أسعار مخفضة لفترة محدودة بمناسبة انطلاق العام الدراسي'}</span>
-            </div>
             <h2 className="text-2xl sm:text-4xl font-black text-slate-900 mb-3 tracking-tight">
               {t.pricingTitle}
             </h2>
@@ -652,13 +647,10 @@ export default function LandingPage() {
                       <div className="mb-6 pb-6 border-b border-slate-100/60">
                         {!isFree && plan.originalMonthlyPrice && (
                           <div className="flex items-center gap-2 mb-1.5">
-                            <span className="text-xs line-through text-slate-400 font-bold decoration-rose-500 decoration-2">
+                            <span className="text-xs line-through text-slate-400 font-bold decoration-slate-400 decoration-2">
                               {billing === 'annual'
                                 ? `EGP ${plan.originalMonthlyPrice * 10}`
                                 : `EGP ${plan.originalMonthlyPrice}`}
-                            </span>
-                            <span className="text-[10px] font-black text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
-                              {lang === 'en' ? 'Limited Discount' : 'خصم خاص مؤقت'}
                             </span>
                           </div>
                         )}

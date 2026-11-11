@@ -280,15 +280,6 @@ function CheckoutContent() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Limited-Time Offer Banner */}
-      <div className="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white text-xs font-black py-2 px-4 text-center shadow-inner flex items-center justify-center gap-2 flex-wrap">
-        <Flame className="w-3.5 h-3.5 text-amber-300 fill-amber-300 animate-bounce" />
-        <span>
-          {lang === 'en'
-            ? '⚡ Limited Time Launch Pricing: Lock in your introductory rate today for the entire year!'
-            : '⚡ أسعار مخفضة لفترة محدودة بمناسبة انطلاق العام الدراسي: ثبّت باقتك الآن بالسعر الحالي طوال العام!'}
-        </span>
-      </div>
 
       {/* Header */}
       <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between border-b border-slate-200/60 bg-white">
@@ -842,21 +833,6 @@ function CheckoutContent() {
                   </div>
                 ) : (
                   <div className="space-y-3 py-4 border-t border-b border-slate-100 text-xs">
-                    {/* Limited Time Discount Line */}
-                    {selectedPlan.originalMonthlyPrice && (
-                      <div className="flex justify-between text-rose-600 bg-rose-50 p-2 rounded-xl items-center font-bold">
-                        <span className="flex items-center gap-1">
-                          <Flame className="w-3 h-3 text-rose-600" />
-                          {lang === 'en' ? 'Limited Time Launch Discount:' : 'خصم خاص لفترة محدودة:'}
-                        </span>
-                        <span className="font-price font-bold">
-                          {billing === 'annual'
-                            ? `-EGP ${(selectedPlan.originalMonthlyPrice * 12) - selectedPlan.annualPrice}`
-                            : `-EGP ${selectedPlan.originalMonthlyPrice - selectedPlan.monthlyPrice}`}
-                        </span>
-                      </div>
-                    )}
-
                     <div className="flex justify-between text-slate-600">
                       <span>{lang === 'en' ? 'Plan Base Fee:' : 'قيمة الباقة:'}</span>
                       <span className="font-price font-bold text-slate-800">

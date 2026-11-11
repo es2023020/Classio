@@ -101,9 +101,6 @@ export function FeatureLockedModal({
           <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-200/60">
             <span className="font-bold text-[#0f2c59] flex items-center gap-1">
               <span>{lang === 'ar' ? 'الباقة المطلوبة:' : 'Required Tier:'}</span>
-              <span className="text-[10px] bg-rose-100 text-rose-700 px-1.5 py-0.2 rounded font-black">
-                {lang === 'ar' ? 'لفترة محدودة' : 'Limited Time'}
-              </span>
             </span>
             <span className="font-price font-black text-emerald-700 bg-emerald-100/70 px-2.5 py-0.5 rounded border border-emerald-300">
               {targetPlan.name} (EGP {targetPlan.monthlyPrice} / mo)

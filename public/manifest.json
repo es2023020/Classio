@@ -6,8 +6,8 @@
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#0f2c59",
-  "dir": "rtl",
-  "lang": "ar",
+  "dir": "ltr",
+  "lang": "en",
   "icons": [
     {
       "src": "/classio-icon.png",

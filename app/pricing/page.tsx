@@ -66,12 +66,12 @@ export default function PricingPage() {
     },
     {
       q: {
-        en: 'Are these prices really for a limited time?',
-        ar: 'هل هذه الأسعار سارية لفترة محدودة بالفعل؟',
+        en: 'Can I change or cancel my plan at any time?',
+        ar: 'هل يمكنني تغيير أو ترقية خطتي في أي وقت؟',
       },
       a: {
-        en: 'Yes! These discounted introductory rates are active for the current academic launch window. Once you subscribe, your rate is locked in for the entire active subscription cycle.',
-        ar: 'نعم! هذه الأسعار الترويجية المخفضة متاحة لفترة محدودة بمناسبة انطلاق العام الدراسي. عند اشتراكك الآن، يُثبَّت هذا السعر المخفض لحسابك طوال استمرار اشتراكك.',
+        en: 'Yes! You can upgrade or switch between plans at any time as your student roster grows.',
+        ar: 'نعم! يمكنك ترقية خطتك أو التبديل بين الباقات في أي وقت بكل سهولة مع نمو عدد طلابك.',
       },
     },
     {
@@ -177,18 +177,6 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Limited-Time Urgency Announcement Bar */}
-      <div className="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white text-xs font-black py-2.5 px-4 text-center shadow-inner relative z-30 flex items-center justify-center gap-2 flex-wrap">
-        <span className="inline-flex items-center gap-1 bg-white/20 px-2 py-0.5 rounded-full text-[11px] tracking-wide uppercase">
-          <Flame className="w-3.5 h-3.5 text-amber-300 fill-amber-300 animate-bounce" />
-          {lang === 'en' ? 'Limited Time Offer' : 'عرض خاص لفترة محدودة'}
-        </span>
-        <span className="font-bold">
-          {lang === 'en'
-            ? '🔥 Special Launch Rates: Free up to 10 students, Starter at 99 EGP, Growth at 299 EGP, Pro at 449 EGP, Power at 799 EGP! Lock in your price today.'
-            : '🔥 خصومات إطلاق كلاسيو لفترة محدودة: مجاني حتى 10 طلاب، بداية 99 ج.م، نمو 299 ج.م، احترافي 449 ج.م، قوة 799 ج.م! ثبّت باقتك الآن.'}
-        </span>
-      </div>
 
       {/* Top Navigation */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-2xs">
@@ -239,12 +227,12 @@ export default function PricingPage() {
       {/* Hero Section */}
       <section className="relative pt-12 pb-10 overflow-hidden bg-gradient-to-b from-white via-slate-50 to-slate-100/70 border-b border-slate-200/60">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 border border-rose-200 text-xs font-bold text-rose-700 mb-4 shadow-xs">
-            <Clock className="w-3.5 h-3.5 text-rose-600 animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs font-bold text-blue-700 mb-4 shadow-xs">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
             <span>
               {lang === 'en'
-                ? '⚡ Limited Time Introductory Pricing • 3-Day Free Trial'
-                : '⚡ أسعار مخفضة لفترة محدودة بمناسبة العام الدراسي • تجربة مجانية 3 أيام'}
+                ? '✨ 3-Day Free Trial on all paid plans'
+                : '✨ تجربة مجانية 3 أيام على جميع الباقات المدفوعة'}
             </span>
           </div>
 
@@ -418,9 +406,9 @@ export default function PricingPage() {
                       </span>
                     )}
                     {!isFree && !isEnterprise && (
-                      <span className="rounded-full bg-rose-500/15 text-rose-600 border border-rose-500/30 px-2.5 py-0.5 text-[10px] font-black flex items-center gap-1">
-                        <Flame className="w-3 h-3 text-rose-500" />
-                        {lang === 'en' ? 'Limited Time' : 'لفترة محدودة'}
+                      <span className="rounded-full bg-blue-500/15 text-blue-600 border border-blue-500/30 px-2.5 py-0.5 text-[10px] font-black flex items-center gap-1">
+                        <Sparkles className="w-3 h-3 text-blue-500" />
+                        {lang === 'en' ? 'Free Trial' : 'تجربة مجانية'}
                       </span>
                     )}
                     {isRecommended && !isPopular && (
@@ -466,20 +454,6 @@ export default function PricingPage() {
                   </div>
                 ) : (
                   <div className="my-5 pb-5 border-b border-slate-200/40">
-                    {/* Crossed-out original price for limited time */}
-                    {!isFree && plan.originalMonthlyPrice && (
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <span className="text-xs line-through text-slate-400 font-bold decoration-rose-500 decoration-2">
-                          {billing === 'annual'
-                            ? `EGP ${plan.originalMonthlyPrice * 10}`
-                            : `EGP ${plan.originalMonthlyPrice}`}
-                        </span>
-                        <span className="text-[10px] font-black text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
-                          {lang === 'en' ? 'Limited Discount' : 'خصم خاص مؤقت'}
-                        </span>
-                      </div>
-                    )}
-
                     <div className="flex items-baseline gap-1.5 flex-wrap">
                       <span className={`text-base font-black ${isPopular ? 'text-amber-300' : 'text-slate-500'}`}>
                         EGP
@@ -594,18 +568,6 @@ export default function PricingPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            <div className="rounded-2xl border border-slate-200 p-5 bg-slate-50/50 hover:bg-white hover:shadow-xs transition">
-              <div className="size-10 rounded-xl bg-rose-100 flex items-center justify-center text-rose-700 mb-3 font-bold">
-                <Flame className="size-5" />
-              </div>
-              <h4 className="text-sm font-bold text-slate-900">
-                {lang === 'en' ? 'Limited Time Launch Pricing' : 'أسعار مخفضة لفترة محدودة'}
-              </h4>
-              <p className="mt-1 text-xs text-slate-600 leading-relaxed">
-                {lang === 'en' ? PRICING_RULES.limitedTime.en : PRICING_RULES.limitedTime.ar}
-              </p>
-            </div>
-
             <div className="rounded-2xl border border-slate-200 p-5 bg-slate-50/50 hover:bg-white hover:shadow-xs transition">
               <div className="size-10 rounded-xl bg-blue-100 flex items-center justify-center text-[#0f2c59] mb-3 font-bold">
                 <Sparkles className="size-5" />

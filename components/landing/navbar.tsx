@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Sparkles, Menu, X, Globe, ArrowRight, UserCheck } from 'lucide-react'
+import { Menu, X, Globe, ArrowRight, UserCheck } from 'lucide-react'
 import { ClassioLogo } from '@/components/ui/classio-logo'
 
 interface NavbarProps {
@@ -53,18 +53,6 @@ export function LandingNavbar({ lang, onToggleLang }: NavbarProps) {
       className="fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs"
       dir={isRtl ? 'rtl' : 'ltr'}
     >
-      {/* Limited-time Launch Offer Banner */}
-      <div className="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 text-white text-[11px] sm:text-xs font-black py-1.5 px-4 text-center shadow-inner flex items-center justify-center gap-2">
-        <Sparkles className="w-3.5 h-3.5 text-amber-300 fill-amber-300 animate-pulse" />
-        <span>
-          {lang === 'en'
-            ? '⚡ Limited Time Launch Pricing: Lock in introductory rates today!'
-            : '⚡ أسعار مخفضة لفترة محدودة بمناسبة انطلاق العام الدراسي: ثبّت باقتك المخفضة الآن!'}
-        </span>
-        <Link href="/pricing" className="underline ms-1 text-amber-200 hover:text-white transition">
-          {lang === 'en' ? 'Explore Plans →' : 'تفاصيل الباقات ←'}
-        </Link>
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
