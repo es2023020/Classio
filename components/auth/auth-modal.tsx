@@ -100,7 +100,7 @@ export function AuthModal({
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
-            <div className="flex size-11 items-center justify-center rounded-2xl bg-[#0f2c59] text-white shadow-md">
+            <div className="flex size-11 items-center justify-center rounded-2xl bg-[#7047EB] text-white shadow-md">
               <Lock className="size-5 text-amber-300" />
             </div>
             <div>
@@ -151,7 +151,7 @@ export function AuthModal({
               </Button>
               <Button
                 onClick={onClose}
-                className="w-full rounded-xl bg-[#0f2c59] text-xs font-bold text-white cursor-pointer"
+                className="w-full rounded-xl bg-[#7047EB] text-xs font-bold text-white cursor-pointer"
               >
                 {lang === 'en' ? 'Continue Working' : 'متابعة العمل'}
               </Button>
@@ -177,7 +177,7 @@ export function AuthModal({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   dir="ltr"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/70 p-2.5 text-slate-800 outline-none focus:border-[#0f2c59] focus:bg-white"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/70 p-2.5 text-slate-800 outline-none focus:border-[#7047EB] focus:bg-white"
                 />
               </div>
             </div>
@@ -192,14 +192,14 @@ export function AuthModal({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 dir="ltr"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/70 p-2.5 text-slate-800 outline-none focus:border-[#0f2c59] focus:bg-white font-mono"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/70 p-2.5 text-slate-800 outline-none focus:border-[#7047EB] focus:bg-white font-mono"
               />
             </div>
 
             <Button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-[#0f2c59] py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#1a3d6d] cursor-pointer"
+              className="w-full rounded-xl bg-[#7047EB] py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#5D35D5] cursor-pointer"
             >
               {loading
                 ? (lang === 'en' ? 'Processing...' : 'جاري المعالجة...')
@@ -212,7 +212,7 @@ export function AuthModal({
               <button
                 type="button"
                 onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
-                className="text-xs text-[#0f2c59] hover:underline font-bold cursor-pointer"
+                className="text-xs text-[#7047EB] hover:underline font-bold cursor-pointer"
               >
                 {mode === 'signin'
                   ? (lang === 'en' ? "Don't have an account? Sign up" : 'ليس لديك حساب؟ سجل حساب جديد')

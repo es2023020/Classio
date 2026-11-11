@@ -198,7 +198,7 @@ export function CloudBackupModal({
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-[#0f2c59]">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-[#EEE8FF] text-[#7047EB]">
               <Cloud className="size-5" />
             </div>
             <div>
@@ -242,7 +242,7 @@ export function CloudBackupModal({
             size="sm"
             onClick={handleSyncCloud}
             disabled={syncingCloud}
-            className="gap-1.5 rounded-xl text-xs font-bold bg-[#0f2c59] text-white hover:bg-[#1a3d6d]"
+            className="gap-1.5 rounded-xl text-xs font-bold bg-[#7047EB] text-white hover:bg-[#5D35D5]"
           >
             <RefreshCw className={`size-3.5 ${syncingCloud ? 'animate-spin' : ''}`} />
             {syncingCloud ? (lang === 'ar' ? 'جاري المزامنة...' : 'Syncing...') : (lang === 'ar' ? 'مزامنة الآن' : 'Sync Now')}
@@ -251,9 +251,9 @@ export function CloudBackupModal({
 
         {/* 1. Download Backup */}
         <div className="space-y-4">
-          <div className="rounded-2xl border border-slate-200 p-4 transition hover:border-[#0f2c59]/40 bg-white">
+          <div className="rounded-2xl border border-slate-200 p-4 transition hover:border-[#7047EB]/40 bg-white">
             <div className="flex items-start gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-[#0f2c59]">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#EEE8FF] text-[#7047EB]">
                 <Download className="size-4" />
               </div>
               <div className="flex-1">
@@ -281,7 +281,7 @@ export function CloudBackupModal({
           </div>
 
           {/* 2. Restore from Backup */}
-          <div className="rounded-2xl border border-slate-200 p-4 transition hover:border-[#0f2c59]/40 bg-white">
+          <div className="rounded-2xl border border-slate-200 p-4 transition hover:border-[#7047EB]/40 bg-white">
             <div className="flex items-start gap-3">
               <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800">
                 <Upload className="size-4" />

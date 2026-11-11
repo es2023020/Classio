@@ -92,7 +92,7 @@ export function LandingFooter({ lang }: FooterProps) {
   const isRtl = lang === 'ar'
 
   return (
-    <footer className="bg-[#0b192c] text-white border-t border-slate-800" dir={isRtl ? 'rtl' : 'ltr'}>
+    <footer className="bg-[#30245C] text-white border-t border-[#46357d]" dir={isRtl ? 'rtl' : 'ltr'}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Brand Col */}

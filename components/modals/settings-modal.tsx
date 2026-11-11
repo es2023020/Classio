@@ -157,7 +157,7 @@ export function SettingsModal({
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-sm text-slate-800 outline-none transition focus:border-[#0f2c59] focus:bg-white"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-sm text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white"
               />
             </div>
 
@@ -166,7 +166,7 @@ export function SettingsModal({
               <input
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-sm text-slate-800 outline-none transition focus:border-[#0f2c59] focus:bg-white"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-sm text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white"
               />
             </div>
 
@@ -176,7 +176,7 @@ export function SettingsModal({
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 dir="ltr"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-end text-sm text-slate-800 outline-none transition focus:border-[#0f2c59] focus:bg-white"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2 text-end text-sm text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white"
               />
             </div>
 
@@ -217,7 +217,7 @@ export function SettingsModal({
                 onClick={() => {
                   storage.exportBackup()
                 }}
-                className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-[#0f2c59] hover:bg-slate-50 cursor-pointer"
+                className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-[#7047EB] hover:bg-slate-50 cursor-pointer"
               >
                 <Copy className="size-3.5" />
                 {t.settings.backup}
@@ -263,7 +263,7 @@ export function SettingsModal({
               <Button type="button" variant="outline" onClick={onClose} className="rounded-xl px-4 text-xs cursor-pointer">
                 {t.common.cancel}
               </Button>
-              <Button type="submit" className="rounded-xl bg-[#0f2c59] px-5 text-xs font-bold text-white hover:bg-[#1e3a8a] cursor-pointer">
+              <Button type="submit" className="rounded-xl bg-[#7047EB] px-5 text-xs font-bold text-white hover:bg-[#5D35D5] cursor-pointer">
                 {t.settings.save}
               </Button>
             </div>

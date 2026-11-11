@@ -186,16 +186,16 @@ export default function PricingPage() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8 text-xs font-bold text-slate-600">
-            <Link href="/" className="hover:text-[#0f2c59] transition">
+            <Link href="/" className="hover:text-[#30245C] transition">
               {lang === 'en' ? 'Overview' : 'الرئيسية'}
             </Link>
-            <Link href="/pricing" className="text-[#0f2c59] border-b-2 border-[#0f2c59] pb-1">
+            <Link href="/pricing" className="text-[#30245C] border-b-2 border-[#30245C] pb-1">
               {lang === 'en' ? 'Pricing Plans' : 'خطط الأسعار'}
             </Link>
-            <Link href="/partnerships" className="hover:text-[#0f2c59] transition">
+            <Link href="/partnerships" className="hover:text-[#30245C] transition">
               {lang === 'en' ? 'Partnerships' : 'الشراكات'}
             </Link>
-            <Link href="/login" className="hover:text-[#0f2c59] transition">
+            <Link href="/login" className="hover:text-[#30245C] transition">
               {lang === 'en' ? 'Sign In' : 'تسجيل الدخول'}
             </Link>
           </nav>
@@ -205,7 +205,7 @@ export default function PricingPage() {
               onClick={toggleLang}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition cursor-pointer"
             >
-              <Globe className="size-3.5 text-[#0f2c59]" />
+              <Globe className="size-3.5 text-[#30245C]" />
               <span>{lang === 'en' ? 'عربي' : 'English'}</span>
             </button>
 
@@ -216,7 +216,7 @@ export default function PricingPage() {
             </Link>
 
             <Link href="/login?mode=signup&plan=growth&billing=monthly">
-              <Button className="bg-[#0f2c59] hover:bg-[#1a3d6d] text-white text-xs font-black rounded-xl px-4 cursor-pointer shadow-sm">
+              <Button className="bg-[#30245C] hover:bg-[#5D35D5] text-white text-xs font-black rounded-xl px-4 cursor-pointer shadow-sm">
                 {lang === 'en' ? 'Try Free for 3 Days' : 'جرب مجاناً لمدة 3 أيام'}
               </Button>
             </Link>
@@ -240,14 +240,14 @@ export default function PricingPage() {
             {lang === 'en' ? (
               <>
                 Simple, Transparent Plans Built for{' '}
-                <span className="text-[#0f2c59] underline decoration-amber-400 decoration-wavy decoration-2">
+                <span className="text-[#30245C] underline decoration-amber-400 decoration-wavy decoration-2">
                   Private Tutors
                 </span>
               </>
             ) : (
               <>
                 خطط اشتراك شفافة ومدروسة مصممة خصيصاً{' '}
-                <span className="text-[#0f2c59] underline decoration-amber-400 decoration-wavy decoration-2">
+                <span className="text-[#30245C] underline decoration-amber-400 decoration-wavy decoration-2">
                   للمعلم الخصوصي في مصر
                 </span>
               </>
@@ -277,7 +277,7 @@ export default function PricingPage() {
               onClick={() => setBilling('annual')}
               className={`relative px-5 py-2 text-xs font-black rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
                 billing === 'annual'
-                  ? 'bg-[#0f2c59] text-white shadow-sm'
+                  ? 'bg-[#30245C] text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -298,11 +298,11 @@ export default function PricingPage() {
 
       {/* Interactive Student Slider / Plan Finder */}
       <section className="max-w-4xl mx-auto w-full px-4 sm:px-6 -mt-4 mb-8 z-10 relative">
-        <div className="rounded-3xl bg-white border-2 border-[#0f2c59]/20 p-5 sm:p-6 shadow-md">
+        <div className="rounded-3xl bg-white border-2 border-[#30245C]/20 p-5 sm:p-6 shadow-md">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <Sliders className="size-4 text-[#0f2c59]" />
+                <Sliders className="size-4 text-[#30245C]" />
                 <h3 className="text-sm font-black text-slate-900">
                   {lang === 'en' ? 'Interactive Plan Finder:' : 'مكتشف الخطة المثالية لعدد طلابك:'}
                 </h3>
@@ -315,7 +315,7 @@ export default function PricingPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="font-price text-3xl font-black text-[#0f2c59]">{studentCount > 500 ? '+500' : studentCount}</span>
+              <span className="font-price text-3xl font-black text-[#30245C]">{studentCount > 500 ? '+500' : studentCount}</span>
               <span className="text-xs font-bold text-slate-500">{lang === 'en' ? 'Students' : 'طالباً'}</span>
             </div>
           </div>
@@ -327,7 +327,7 @@ export default function PricingPage() {
               max="550"
               value={studentCount}
               onChange={(e) => setStudentCount(Number(e.target.value))}
-              className="w-full accent-[#0f2c59] cursor-pointer h-2 bg-slate-200 rounded-lg"
+              className="w-full accent-[#30245C] cursor-pointer h-2 bg-slate-200 rounded-lg"
             />
             <div className="flex justify-between text-[11px] font-bold text-slate-400 mt-1">
               <span>1–10 (Free)</span>
@@ -342,14 +342,14 @@ export default function PricingPage() {
           <div className="mt-3 flex items-center justify-between text-xs font-bold border-t border-slate-100 pt-3">
             <span className="text-slate-600">
               {lang === 'en' ? 'Recommended Tier for You:' : 'الخطة المقترحة لك:'}{' '}
-              <span className="text-[#0f2c59] font-black uppercase underline">
+              <span className="text-[#30245C] font-black uppercase underline">
                 {lang === 'en' ? recommendedPlanId : PRICING_PLANS.find((p) => p.id === recommendedPlanId)?.nameAr}
               </span>
             </span>
 
             <Link
               href={`/login?mode=signup&plan=${recommendedPlanId}&billing=${billing}`}
-              className="inline-flex items-center gap-1 text-[#0f2c59] font-black hover:underline cursor-pointer"
+              className="inline-flex items-center gap-1 text-[#30245C] font-black hover:underline cursor-pointer"
             >
               <span>{lang === 'en' ? 'Select This Plan' : 'اختيار هذه الخطة'}</span>
               <ArrowIcon className="size-3.5" />
@@ -379,7 +379,7 @@ export default function PricingPage() {
                 key={plan.id}
                 className={`relative flex flex-col rounded-3xl p-6 transition-all duration-300 ${
                   isPopular
-                    ? 'bg-gradient-to-b from-[#0f2c59] to-[#0a1e3f] text-white shadow-2xl ring-4 ring-[#0f2c59]/25 scale-[1.02] z-10'
+                    ? 'bg-gradient-to-b from-[#30245C] to-[#0a1e3f] text-white shadow-2xl ring-4 ring-[#30245C]/25 scale-[1.02] z-10'
                     : isRecommended
                     ? 'bg-white border-2 border-emerald-500 shadow-lg ring-2 ring-emerald-500/20'
                     : isEnterprise
@@ -533,7 +533,7 @@ export default function PricingPage() {
                           ? 'bg-purple-800 hover:bg-purple-700 text-white font-black'
                           : isFree
                           ? 'bg-emerald-600 hover:bg-emerald-700 text-white font-bold'
-                          : 'bg-[#0f2c59] hover:bg-[#1a3d6d] text-white font-bold'
+                          : 'bg-[#30245C] hover:bg-[#5D35D5] text-white font-bold'
                       }`}
                     >
                       {isEnterprise
@@ -569,7 +569,7 @@ export default function PricingPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             <div className="rounded-2xl border border-slate-200 p-5 bg-slate-50/50 hover:bg-white hover:shadow-xs transition">
-              <div className="size-10 rounded-xl bg-blue-100 flex items-center justify-center text-[#0f2c59] mb-3 font-bold">
+              <div className="size-10 rounded-xl bg-blue-100 flex items-center justify-center text-[#30245C] mb-3 font-bold">
                 <Sparkles className="size-5" />
               </div>
               <h4 className="text-sm font-bold text-slate-900">
@@ -676,7 +676,7 @@ export default function PricingPage() {
                           <span className="text-slate-300 font-bold">—</span>
                         )
                       ) : (
-                        <span className="font-price font-bold text-[#0f2c59]">{val}</span>
+                        <span className="font-price font-bold text-[#30245C]">{val}</span>
                       )}
                     </td>
                   ))}
@@ -729,7 +729,7 @@ export default function PricingPage() {
       </section>
 
       {/* Bottom CTA Banner */}
-      <section className="bg-gradient-to-r from-[#0b192c] via-[#0f2c59] to-[#1e3e62] py-14 text-white text-center">
+      <section className="bg-gradient-to-r from-[#1e143f] via-[#30245C] to-[#1e3e62] py-14 text-white text-center">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
             {lang === 'en' ? 'Ready to Elevate Your Tutoring Practice?' : 'جاهز لتنظيم وإدارة حصصك واشتراكاتك باحترافية؟'}
@@ -759,7 +759,7 @@ export default function PricingPage() {
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <ClassioLogo size="sm" />
           <p>© {new Date().getFullYear()} Classio. {lang === 'en' ? 'All rights reserved.' : 'جميع الحقوق محفوظة للمعلم المصري.'}</p>
-          <div className="flex items-center gap-4 font-bold text-[#0f2c59]">
+          <div className="flex items-center gap-4 font-bold text-[#30245C]">
             <Link href="/pricing">{lang === 'en' ? 'Pricing' : 'الأسعار'}</Link>
             <Link href="/login">{lang === 'en' ? 'Sign In' : 'تسجيل الدخول'}</Link>
             <Link href="/dashboard">{lang === 'en' ? 'Dashboard' : 'لوحة التحكم'}</Link>

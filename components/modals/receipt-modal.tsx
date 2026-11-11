@@ -71,7 +71,7 @@ export function ReceiptModal({ isOpen, onClose, payment, student, tutor }: Recei
           {/* Header */}
           <div className="flex items-center justify-between border-b border-slate-200 pb-3 text-start">
             <div>
-              <h3 className="font-bold text-[#0f2c59]">{tutor.name}</h3>
+              <h3 className="font-bold text-[#7047EB]">{tutor.name}</h3>
               <p className="text-[11px] text-slate-500">{tutor.subject}</p>
             </div>
             <div className="text-end">
@@ -85,7 +85,7 @@ export function ReceiptModal({ isOpen, onClose, payment, student, tutor }: Recei
           {/* Amount Showcase */}
           <div className="my-4 rounded-xl bg-white p-4 text-center shadow-xs">
             <p className="text-xs text-slate-500">{lang === 'en' ? 'Amount Received' : 'المبلغ المستلم'}</p>
-            <p className="mt-1 text-3xl font-extrabold text-[#0f2c59]">{formatPrice(payment.amount, lang)}</p>
+            <p className="mt-1 text-3xl font-extrabold text-[#7047EB]">{formatPrice(payment.amount, lang)}</p>
             <p className="mt-1 text-xs font-semibold text-emerald-600">
               {payment.status === 'paid'
                 ? (lang === 'en' ? 'Paid in Full ✓' : 'تم السداد بالكامل ✓')

@@ -88,7 +88,7 @@ export function ScanModal({
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
-            <div className="flex size-11 items-center justify-center rounded-2xl bg-blue-50 text-[#0f2c59]">
+            <div className="flex size-11 items-center justify-center rounded-2xl bg-[#EEE8FF] text-[#7047EB]">
               <QrCode className="size-6" />
             </div>
             <div>
@@ -119,7 +119,7 @@ export function ScanModal({
               ref={inputRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className={`w-full rounded-2xl border-2 border-slate-200 bg-slate-50/70 py-3 ${isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-sm font-bold text-slate-800 outline-none transition focus:border-[#0f2c59] focus:bg-white focus:shadow-md`}
+              className={`w-full rounded-2xl border-2 border-slate-200 bg-slate-50/70 py-3 ${isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-sm font-bold text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white focus:shadow-md`}
             />
           </div>
 
@@ -128,7 +128,7 @@ export function ScanModal({
             <div className="rounded-2xl border-2 border-blue-100 bg-blue-50/30 p-5 animate-in fade-in duration-200">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex size-12 items-center justify-center rounded-2xl bg-[#0f2c59] text-base font-bold text-white shadow-sm">
+                  <div className="flex size-12 items-center justify-center rounded-2xl bg-[#7047EB] text-base font-bold text-white shadow-sm">
                     {matchedStudent.name[0]}
                   </div>
                   <div>

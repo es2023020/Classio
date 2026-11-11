@@ -99,7 +99,7 @@ export function FeatureLockedModal({
           </div>
 
           <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-200/60">
-            <span className="font-bold text-[#0f2c59] flex items-center gap-1">
+            <span className="font-bold text-[#7047EB] flex items-center gap-1">
               <span>{lang === 'ar' ? 'الباقة المطلوبة:' : 'Required Tier:'}</span>
             </span>
             <span className="font-price font-black text-emerald-700 bg-emerald-100/70 px-2.5 py-0.5 rounded border border-emerald-300">
@@ -135,7 +135,7 @@ export function FeatureLockedModal({
           <button
             type="button"
             onClick={handleGoToUpgrade}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#0f2c59] to-[#1a3d6d] hover:from-[#1a3d6d] hover:to-[#0f2c59] text-white text-xs font-bold shadow-lg flex items-center justify-center gap-1.5 transition"
+            className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#7047EB] to-[#5D35D5] hover:from-[#5D35D5] hover:to-[#7047EB] text-white text-xs font-bold shadow-lg flex items-center justify-center gap-1.5 transition"
           >
             <Zap className="w-4 h-4 text-amber-400" />
             <span>{lang === 'ar' ? 'ترقية الباقة الآن' : 'Upgrade Plan'}</span>

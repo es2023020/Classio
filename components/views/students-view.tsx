@@ -170,7 +170,7 @@ export function StudentsView({
             onClick={onOpenScanModal}
             className="gap-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
           >
-            <QrCode className="size-4 text-[#0f2c59]" />
+            <QrCode className="size-4 text-[#7047EB]" />
             {lang === 'en' ? 'Scan Code / Barcode' : 'مسح كود / باركود'}
           </Button>
 
@@ -194,7 +194,7 @@ export function StudentsView({
 
           <Button
             onClick={onAddStudent}
-            className="rounded-xl bg-[#0f2c59] px-4 text-xs font-bold text-white hover:bg-[#1a3d6d] cursor-pointer"
+            className="rounded-xl bg-[#7047EB] px-4 text-xs font-bold text-white hover:bg-[#5D35D5] cursor-pointer shadow-xs"
           >
             <UserPlus className="size-4" />
             {t.students.addStudent}
@@ -204,7 +204,7 @@ export function StudentsView({
 
       {/* Filter and Search Bar */}
       <div className="card-glass flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-1 items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-2.5 transition focus-within:border-[#0f2c59] focus-within:bg-white">
+        <div className="flex flex-1 items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-2.5 transition focus-within:border-[#7047EB] focus-within:bg-white">
           <Search className="size-4 text-slate-400" />
           <input
             value={search}
@@ -237,7 +237,7 @@ export function StudentsView({
             <button
               onClick={() => setPaymentFilter('all')}
               className={`rounded-lg px-2.5 py-1 text-xs font-bold transition cursor-pointer ${
-                paymentFilter === 'all' ? 'bg-white shadow-2xs text-[#0f2c59]' : 'text-slate-500'
+                paymentFilter === 'all' ? 'bg-white shadow-2xs text-[#7047EB]' : 'text-slate-500'
               }`}
             >
               {t.students.allStudents} ({students.length})
@@ -293,11 +293,11 @@ export function StudentsView({
                         href={`/students/${s.id}`}
                         className="flex cursor-pointer items-center gap-3 group"
                       >
-                        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-blue-100 font-bold text-[#0f2c59] group-hover:bg-[#0f2c59] group-hover:text-white transition">
+                        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#EEE8FF] font-bold text-[#7047EB] group-hover:bg-[#7047EB] group-hover:text-white transition">
                           {s.name[0]}
                         </div>
                         <div>
-                          <p className="font-bold text-slate-800 group-hover:text-blue-700 transition">
+                          <p className="font-bold text-slate-800 group-hover:text-[#7047EB] transition">
                             {s.name}
                           </p>
                           <div className="flex items-center gap-2 mt-0.5">

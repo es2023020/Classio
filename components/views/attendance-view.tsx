@@ -288,7 +288,7 @@ export function AttendanceView({
                 onClick={() => setSelectedDate(getTodayString())}
                 className={`px-2.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
                   selectedDate === getTodayString()
-                    ? 'bg-[#0f2c59] text-white shadow-xs'
+                    ? 'bg-[#7047EB] text-white shadow-xs'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
@@ -299,7 +299,7 @@ export function AttendanceView({
                 onClick={() => setSelectedDate(getYesterdayString())}
                 className={`px-2.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
                   selectedDate === getYesterdayString()
-                    ? 'bg-[#0f2c59] text-white shadow-xs'
+                    ? 'bg-[#7047EB] text-white shadow-xs'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
@@ -386,7 +386,7 @@ export function AttendanceView({
                       {/* Student info */}
                       <td className="p-3.5">
                         <div className="flex items-center gap-3">
-                          <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-blue-100 font-bold text-[#0f2c59]">
+                          <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#EEE8FF] font-bold text-[#7047EB]">
                             {s.name[0]}
                           </div>
                           <div>
@@ -465,7 +465,7 @@ export function AttendanceView({
                             value={entry.quiz}
                             onChange={(e) => handleQuizChange(s.id, e.target.value)}
                             aria-label={t.attendance.quizScore}
-                            className="w-16 rounded-xl border border-slate-200 bg-white px-2 py-1 text-center font-bold text-slate-800 outline-none focus:border-[#0f2c59]"
+                            className="w-16 rounded-xl border border-slate-200 bg-white px-2 py-1 text-center font-bold text-slate-800 outline-none focus:border-[#7047EB]"
                           />
                         </div>
                       </td>

@@ -586,7 +586,7 @@ export function TutorDashboard() {
             </p>
             <Link
               href="/checkout"
-              className="inline-flex items-center justify-center gap-2 bg-[#0f2c59] text-white font-black px-6 py-3 rounded-2xl hover:bg-[#1a3d6d] transition w-full text-sm"
+              className="inline-flex items-center justify-center gap-2 bg-[#7047EB] text-white font-black px-6 py-3 rounded-2xl hover:bg-[#5D35D5] transition w-full text-sm shadow-md shadow-purple-600/20"
             >
               <Zap className="w-4 h-4 text-amber-400" />
               {lang === 'en' ? 'Renew Subscription' : 'تجديد الاشتراك الآن'}
@@ -725,12 +725,12 @@ export function TutorDashboard() {
                 }}
                 className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-start text-xs font-bold transition cursor-pointer ${
                   isActive
-                    ? 'bg-[#0f2c59] text-white shadow-xs font-black'
-                    : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'
+                    ? 'bg-[#EEE8FF] text-[#7047EB] shadow-xs font-black'
+                    : 'text-[#19172A] hover:bg-[#F3EEFF] hover:text-[#7047EB]'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className={`size-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                  <Icon className={`size-4 ${isActive ? 'text-[#7047EB]' : 'text-[#77758A]'}`} />
                   <span>{item.label}</span>
                 </div>
 
@@ -743,7 +743,7 @@ export function TutorDashboard() {
                 ) : item.count !== undefined ? (
                   <span
                     className={`rounded-md px-1.5 py-0.5 text-[10px] font-mono ${
-                      isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'
+                      isActive ? 'bg-[#7047EB] text-white' : 'bg-slate-100 text-slate-500'
                     }`}
                   >
                     {item.count}
@@ -755,10 +755,10 @@ export function TutorDashboard() {
         </nav>
 
         {/* Current Plan Card */}
-        <div className="mt-auto rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+        <div className="mt-auto rounded-2xl border border-[#EAE8F1] bg-[#F2EFFA]/60 p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-800">Classio Plan</span>
-            <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-black text-emerald-800">
+            <span className="rounded-full bg-[#EEE8FF] px-2 py-0.5 text-[10px] font-black text-[#7047EB]">
               {currentPlanName}
             </span>
           </div>
@@ -769,21 +769,21 @@ export function TutorDashboard() {
           </p>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
             <div
-              className="h-full rounded-full bg-emerald-600"
+              className="h-full rounded-full bg-[#7047EB]"
               style={{ width: `${Math.min(100, Math.round((students.length / currentPlanLimit) * 100))}%` }}
             />
           </div>
           <div className="mt-3 flex items-center justify-between">
             <button
               onClick={() => setSettingsModalOpen(true)}
-              className="text-[11px] font-bold text-[#0f2c59] hover:underline flex items-center gap-1 cursor-pointer"
+              className="text-[11px] font-bold text-[#7047EB] hover:underline flex items-center gap-1 cursor-pointer"
             >
               <Settings className="size-3.5" />
               <span>{t.header.settings}</span>
             </button>
             <Link
               href="/checkout"
-              className="text-[10px] font-black bg-[#0f2c59] text-white px-2 py-0.5 rounded-lg hover:bg-[#1a3d6d]"
+              className="text-[10px] font-black bg-[#7047EB] text-white px-2.5 py-1 rounded-lg hover:bg-[#5D35D5] transition shadow-xs"
             >
               {t.sidebar.upgradePlan}
             </Link>
@@ -824,13 +824,13 @@ export function TutorDashboard() {
             {/* Quick Barcode Scanner Search Bar */}
             <div
               onClick={() => setScanModalOpen(true)}
-              className="hidden md:flex cursor-pointer items-center gap-2.5 rounded-2xl border border-slate-200 bg-slate-50/80 px-3.5 py-2 text-xs text-slate-400 hover:border-slate-300 transition hover:bg-white"
+              className="hidden md:flex cursor-pointer items-center gap-2.5 rounded-2xl border border-[#EAE8F1] bg-[#F8F7FC] px-3.5 py-2 text-xs text-slate-400 hover:border-[#D8CCFF] transition hover:bg-white"
             >
-              <QrCode className="size-4 text-[#0f2c59]" />
+              <QrCode className="size-4 text-[#7047EB]" />
               <span className="w-56 text-start font-semibold text-slate-600">
                 {t.header.scanBarcode}
               </span>
-              <kbd className="rounded-md border bg-white px-2 py-0.5 text-[10px] font-mono text-slate-500 shadow-2xs">
+              <kbd className="rounded-md border border-[#EAE8F1] bg-white px-2 py-0.5 text-[10px] font-mono text-slate-500 shadow-2xs">
                 ⌘K
               </kbd>
             </div>
@@ -854,9 +854,9 @@ export function TutorDashboard() {
             <button
               onClick={() => setCloudBackupModalOpen(true)}
               aria-label={lang === 'ar' ? 'النسخ الاحتياطي والمزامنة السحابية' : 'Cloud Backup and Sync'}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-[11px] font-bold text-slate-700 shadow-xs cursor-pointer transition"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[#D8CCFF] bg-white hover:bg-[#F3EEFF] text-[11px] font-bold text-[#7047EB] shadow-xs cursor-pointer transition"
             >
-              <Cloud className="size-3.5 text-blue-600" />
+              <Cloud className="size-3.5 text-[#7047EB]" />
               <span className="hidden lg:inline">{lang === 'ar' ? 'نسخ احتياطي' : 'Backup'}</span>
             </button>
 
@@ -866,10 +866,10 @@ export function TutorDashboard() {
                 setWhatsAppSelectedStudent(null)
                 setWhatsAppModalOpen(true)
               }}
-              className="flex items-center gap-1.5 rounded-2xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 px-3 py-2 text-xs font-bold text-emerald-800 transition cursor-pointer shadow-xs"
+              className="flex items-center gap-1.5 rounded-2xl border border-emerald-300 bg-[#E5F6ED] hover:bg-emerald-100 px-3 py-2 text-xs font-bold text-[#16A36A] transition cursor-pointer shadow-xs"
               title={lang === 'ar' ? 'إرسال إشعارات وتقارير واتساب' : 'WhatsApp Dispatch'}
             >
-              <MessageCircle className="size-4 text-emerald-600" />
+              <MessageCircle className="size-4 text-[#16A36A]" />
               <span className="hidden sm:inline">{lang === 'ar' ? 'واتساب أولياء الأمور' : 'WhatsApp'}</span>
             </button>
 
@@ -877,7 +877,7 @@ export function TutorDashboard() {
             <div className="relative">
               <Button
                 onClick={() => setQuickAddOpen(!quickAddOpen)}
-                className="gap-1.5 rounded-2xl bg-[#0f2c59] px-4 text-xs font-bold text-white shadow-xs hover:bg-[#1a3d6d] cursor-pointer"
+                className="gap-1.5 rounded-2xl bg-[#7047EB] px-4 text-xs font-bold text-white shadow-xs hover:bg-[#5D35D5] cursor-pointer"
               >
                 <Plus className="size-4" />
                 <span className="hidden sm:inline">{t.header.quickAdd}</span>
@@ -934,17 +934,17 @@ export function TutorDashboard() {
             {/* Language Toggle Button */}
             <button
               onClick={toggleLang}
-              className="flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+              className="flex items-center gap-1.5 rounded-2xl border border-[#EAE8F1] bg-white px-3 py-2 text-xs font-bold text-slate-700 hover:bg-[#F3EEFF] transition cursor-pointer"
               title={lang === 'en' ? 'التحويل إلى العربية' : 'Switch to English'}
             >
-              <Globe className="size-4 text-[#0f2c59]" />
+              <Globe className="size-4 text-[#7047EB]" />
               <span className="hidden sm:inline">{lang === 'en' ? 'عربي' : 'English'}</span>
             </button>
 
             {/* External Landing Page Link */}
             <Link
               href="/"
-              className="hidden lg:flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-[#0f2c59] px-2 py-2"
+              className="hidden lg:flex items-center gap-1 text-xs font-bold text-[#77758A] hover:text-[#7047EB] px-2 py-2"
               title={lang === 'en' ? 'Public Landing Page' : 'صفحة الهبوط'}
             >
               <ExternalLink className="size-3.5" />
@@ -953,9 +953,9 @@ export function TutorDashboard() {
             {/* Tutor Profile Avatar */}
             <div
               onClick={() => setSettingsModalOpen(true)}
-              className="flex cursor-pointer items-center gap-2.5 rounded-2xl border border-slate-200 bg-white px-2.5 py-1.5 hover:bg-slate-50"
+              className="flex cursor-pointer items-center gap-2.5 rounded-2xl border border-[#EAE8F1] bg-white px-2.5 py-1.5 hover:bg-[#F3EEFF]"
             >
-              <div className="flex size-8 items-center justify-center rounded-xl bg-[#0f2c59] text-xs font-black text-amber-300 font-mono">
+              <div className="flex size-8 items-center justify-center rounded-xl bg-[#30245C] text-xs font-black text-[#EEE8FF] font-mono shadow-xs">
                 {profile.avatar_initials}
               </div>
               <div className="hidden text-start sm:block">
@@ -1114,7 +1114,7 @@ export function TutorDashboard() {
       {toastMessage && (
         <div
           role="status"
-          className="fixed bottom-6 start-6 z-50 flex items-center gap-2.5 rounded-2xl bg-[#0f2c59] px-4 py-3 text-xs font-bold text-white shadow-2xl animate-in fade-in slide-in-from-bottom-3"
+          className="fixed bottom-6 start-6 z-50 flex items-center gap-2.5 rounded-2xl bg-[#30245C] px-4 py-3 text-xs font-bold text-white shadow-2xl animate-in fade-in slide-in-from-bottom-3 border border-[#7047EB]/30"
         >
           <Check className="size-4 text-emerald-400" />
           <span>{toastMessage}</span>

@@ -255,7 +255,7 @@ export function ImportModal({
         {/* Action Bar: Download Sample */}
         <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-blue-100 bg-blue-50/40 p-4">
           <div className="text-xs text-slate-700">
-            <span className="font-bold text-[#0f2c59] block">
+            <span className="font-bold text-[#7047EB] block">
               {lang === 'en' ? 'Need a ready-made template file?' : 'هل تحتاج لنموذج جاهز لتعبئة بياناتك؟'}
             </span>
             <span>
@@ -270,7 +270,7 @@ export function ImportModal({
             variant="outline"
             size="sm"
             onClick={handleDownloadSample}
-            className="gap-1.5 rounded-xl border-blue-200 bg-white text-xs font-bold text-[#0f2c59] hover:bg-blue-50 shrink-0 cursor-pointer"
+            className="gap-1.5 rounded-xl border-blue-200 bg-white text-xs font-bold text-[#7047EB] hover:bg-blue-50 shrink-0 cursor-pointer"
           >
             <Download className="size-3.5" />
             {lang === 'en' ? 'Download Excel Template (.csv)' : 'تحميل نموذج الإكسيل (.csv)'}
@@ -279,7 +279,7 @@ export function ImportModal({
 
         {/* Upload Zone */}
         <div className="mt-4 space-y-3">
-          <label className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50/70 p-6 text-center cursor-pointer hover:border-[#0f2c59] hover:bg-white transition">
+          <label className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50/70 p-6 text-center cursor-pointer hover:border-[#7047EB] hover:bg-white transition">
             <Upload className="size-8 text-slate-400 mb-2" />
             <span className="text-xs font-bold text-slate-700">
               {lang === 'en'

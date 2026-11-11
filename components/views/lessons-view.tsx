@@ -135,7 +135,7 @@ export function LessonsView({
         <div className="flex flex-wrap items-center gap-2.5">
           <Button
             onClick={openCreateModal}
-            className="rounded-xl bg-[#0f2c59] px-4 text-xs font-bold text-white hover:bg-[#1a3d6d] cursor-pointer"
+            className="rounded-xl bg-[#7047EB] px-4 text-xs font-bold text-white hover:bg-[#5D35D5] cursor-pointer"
           >
             <Plus className="size-4" />
             {t.lessons.addLesson}
@@ -165,7 +165,7 @@ export function LessonsView({
 
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1.5 font-bold text-slate-700">
-            <BookOpen className="size-4 text-[#0f2c59]" />
+            <BookOpen className="size-4 text-[#7047EB]" />
             <span>
               {lang === 'en'
                 ? `Total Recorded Lessons: ${filteredLessons.length}`
@@ -192,7 +192,7 @@ export function LessonsView({
                 {/* Header row */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="rounded-md bg-blue-50 px-2 py-0.5 text-xs font-bold text-[#0f2c59]">
+                    <span className="rounded-md bg-blue-50 px-2 py-0.5 text-xs font-bold text-[#7047EB]">
                       {lesson.unit_name}
                     </span>
                     <span className="font-semibold text-xs text-slate-600">
@@ -279,7 +279,7 @@ export function LessonsView({
           <div className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl transition-all max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-[#0f2c59]">
+                <div className="flex size-10 items-center justify-center rounded-xl bg-[#EEE8FF] text-[#7047EB]">
                   <BookOpen className="size-5" />
                 </div>
                 <div>
@@ -417,7 +417,7 @@ export function LessonsView({
                 <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)} className="rounded-xl px-4 cursor-pointer">
                   {lang === 'en' ? 'Cancel' : 'إلغاء'}
                 </Button>
-                <Button type="submit" className="rounded-xl bg-[#0f2c59] px-6 font-bold text-white cursor-pointer hover:bg-[#1a3d6d]">
+                <Button type="submit" className="rounded-xl bg-[#7047EB] px-6 font-bold text-white cursor-pointer hover:bg-[#5D35D5]">
                   {editingLesson ? (lang === 'en' ? 'Save Changes' : 'حفظ التعديلات') : (lang === 'en' ? 'Save & Assign' : 'تسجيل ونشر الحصة')}
                 </Button>
               </div>

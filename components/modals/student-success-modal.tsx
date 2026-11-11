@@ -145,7 +145,7 @@ export function StudentSuccessModal({
         {/* Top Header */}
         <div className="flex items-start justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3.5">
-            <div className="flex size-14 items-center justify-center rounded-2xl bg-[#0f2c59] text-xl font-black text-amber-300 shadow-md">
+            <div className="flex size-14 items-center justify-center rounded-2xl bg-[#7047EB] text-xl font-black text-amber-300 shadow-md">
               {student.name[0]}
             </div>
             <div>
@@ -182,7 +182,7 @@ export function StudentSuccessModal({
             onClick={() => setActiveTab('success')}
             className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
               activeTab === 'success'
-                ? 'bg-[#0f2c59] text-white shadow-xs'
+                ? 'bg-[#7047EB] text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
@@ -194,7 +194,7 @@ export function StudentSuccessModal({
             onClick={() => setActiveTab('financial')}
             className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
               activeTab === 'financial'
-                ? 'bg-[#0f2c59] text-white shadow-xs'
+                ? 'bg-[#7047EB] text-white shadow-xs'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
@@ -257,13 +257,13 @@ export function StudentSuccessModal({
             <div className="rounded-2xl border border-slate-200 bg-white p-5">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div className="flex items-center gap-2">
-                  <BookOpen className="size-4 text-[#0f2c59]" />
+                  <BookOpen className="size-4 text-[#7047EB]" />
                   <h3 className="text-sm font-bold text-slate-800">{t.successModal.topicMastery}</h3>
                 </div>
 
                 <button
                   onClick={() => setIsEditingTopics(!isEditingTopics)}
-                  className="flex items-center gap-1 text-xs font-bold text-[#0f2c59] hover:underline cursor-pointer"
+                  className="flex items-center gap-1 text-xs font-bold text-[#7047EB] hover:underline cursor-pointer"
                 >
                   <Edit2 className="size-3" />
                   {isEditingTopics ? t.common.cancel : t.successModal.editTopics}
@@ -328,7 +328,7 @@ export function StudentSuccessModal({
                         type="button"
                         size="sm"
                         onClick={handleAddTopic}
-                        className="rounded-xl bg-[#0f2c59] text-xs font-bold text-white px-4 cursor-pointer"
+                        className="rounded-xl bg-[#7047EB] text-xs font-bold text-white px-4 cursor-pointer"
                       >
                         <Plus className="size-3.5" /> {t.common.add}
                       </Button>
@@ -366,7 +366,7 @@ export function StudentSuccessModal({
               <div className="flex justify-end gap-2 pt-2">
                 <Button
                   onClick={handleSavePedagogyChanges}
-                  className="rounded-xl bg-[#0f2c59] text-xs font-bold text-white px-5 cursor-pointer"
+                  className="rounded-xl bg-[#7047EB] text-xs font-bold text-white px-5 cursor-pointer"
                 >
                   {t.successModal.saveChanges}
                 </Button>
@@ -448,7 +448,7 @@ export function StudentSuccessModal({
                           onClose()
                           onViewReceipt(p)
                         }}
-                        className="rounded-lg border bg-white px-2.5 py-1 text-[11px] font-bold text-[#0f2c59] hover:bg-slate-50 cursor-pointer"
+                        className="rounded-lg border bg-white px-2.5 py-1 text-[11px] font-bold text-[#7047EB] hover:bg-slate-50 cursor-pointer"
                       >
                         {lang === 'en' ? 'View Receipt' : 'عرض الإيصال'}
                       </button>

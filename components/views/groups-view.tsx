@@ -52,7 +52,7 @@ export function GroupsView({
 
         <Button
           onClick={onAddGroup}
-          className="rounded-xl bg-[#0f2c59] px-4 text-xs font-bold text-white hover:bg-[#1a3d6d] cursor-pointer"
+          className="rounded-xl bg-[#7047EB] px-4 text-xs font-bold text-white hover:bg-[#5D35D5] cursor-pointer"
         >
           <Plus className="size-4" />
           {t.groups.addGroup}
@@ -80,7 +80,7 @@ export function GroupsView({
                 <div>
                   {/* Top Row */}
                   <div className="flex items-start justify-between">
-                    <span className="rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-[#0f2c59]">
+                    <span className="rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-[#7047EB]">
                       {group.stage_label}
                     </span>
                     <div className="flex items-center gap-1">
@@ -164,7 +164,7 @@ export function GroupsView({
                 {/* Bottom Card Action */}
                 <button
                   onClick={() => onSelectGroupStudents(group.id)}
-                  className="mt-4 flex w-full items-center justify-center gap-1 rounded-xl border border-slate-200 bg-white py-2 text-xs font-bold text-[#0f2c59] transition hover:bg-slate-50 cursor-pointer"
+                  className="mt-4 flex w-full items-center justify-center gap-1 rounded-xl border border-slate-200 bg-white py-2 text-xs font-bold text-[#7047EB] transition hover:bg-slate-50 cursor-pointer"
                 >
                   {t.groups.viewStudents} ({studentCount}) <ArrowIcon className="size-3.5" />
                 </button>

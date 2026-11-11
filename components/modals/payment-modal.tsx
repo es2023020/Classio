@@ -260,7 +260,7 @@ export function PaymentModal({
               type="checkbox"
               checked={showReceiptAfter}
               onChange={(e) => setShowReceiptAfter(e.target.checked)}
-              className="size-4 rounded accent-[#0f2c59]"
+              className="size-4 rounded accent-[#7047EB]"
             />
             {t.paymentModal.printReceipt}
           </label>

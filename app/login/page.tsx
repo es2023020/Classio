@@ -447,7 +447,7 @@ function LoginForm() {
         <div className="flex items-center gap-3">
           <Link
             href="/pricing"
-            className="text-xs font-bold text-slate-600 hover:text-[#0f2c59] px-3 py-1.5 hidden sm:inline-block"
+            className="text-xs font-bold text-slate-600 hover:text-[#7047EB] px-3 py-1.5 hidden sm:inline-block"
           >
             {lang === 'en' ? 'View Pricing' : 'خطط الأسعار'}
           </Link>
@@ -456,7 +456,7 @@ function LoginForm() {
             onClick={toggleLang}
             className="flex items-center gap-1.5 text-xs font-bold text-slate-700 bg-white border border-slate-200 px-3 py-1.5 rounded-xl hover:bg-slate-50 transition shadow-2xs cursor-pointer"
           >
-            <Globe className="w-3.5 h-3.5 text-[#0f2c59]" />
+            <Globe className="w-3.5 h-3.5 text-[#7047EB]" />
             <span>{lang === 'en' ? 'عربي' : 'English'}</span>
           </button>
         </div>
@@ -500,7 +500,7 @@ function LoginForm() {
                 setSuccessMsg('')
               }}
               className={`flex-1 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                mode === 'signin' ? 'bg-white text-[#0f2c59] shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                mode === 'signin' ? 'bg-white text-[#7047EB] shadow-xs' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               {lang === 'en' ? 'Sign In' : 'تسجيل الدخول'}
@@ -519,7 +519,7 @@ function LoginForm() {
                 setSubject('')
               }}
               className={`flex-1 py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
-                mode === 'signup' ? 'bg-white text-[#0f2c59] shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                mode === 'signup' ? 'bg-white text-[#7047EB] shadow-xs' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               {lang === 'en' ? 'Create Account' : 'حساب جديد'}
@@ -570,7 +570,7 @@ function LoginForm() {
                       Classio {selectedPlanObj.name} ({selectedPlanObj.studentsLabel})
                     </span>
                   </div>
-                  <span className="text-xs font-price font-bold text-[#0f2c59] bg-white px-2.5 py-1 rounded-xl border border-slate-200 shadow-2xs">
+                  <span className="text-xs font-price font-bold text-[#7047EB] bg-white px-2.5 py-1 rounded-xl border border-slate-200 shadow-2xs">
                     {selectedPlanObj.id === 'free'
                       ? (lang === 'en' ? 'Free Forever' : 'مجاناً للأبد')
                       : selectedPlanObj.isCustomMeeting
@@ -591,7 +591,7 @@ function LoginForm() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder={lang === 'en' ? 'e.g. Mr. Mohamed Hassan' : 'مثال: أ. محمد حسن'}
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 ps-10 pe-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-[#0f2c59] focus:outline-none transition"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 ps-10 pe-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-[#7047EB] focus:outline-none transition"
                     />
                   </div>
                 </div>
@@ -608,7 +608,7 @@ function LoginForm() {
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
                         placeholder={lang === 'en' ? 'e.g. Physics, Math' : 'مثال: فيزياء، رياضيات'}
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 ps-10 pe-3 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-[#0f2c59] focus:outline-none transition"
+                        className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 ps-10 pe-3 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-[#7047EB] focus:outline-none transition"
                       />
                     </div>
                   </div>
@@ -625,7 +625,7 @@ function LoginForm() {
                         onChange={(e) => setPhone(e.target.value)}
                         dir="ltr"
                         placeholder="010XXXXXXXX"
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 ps-10 pe-3 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-[#0f2c59] focus:outline-none transition"
+                        className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 ps-10 pe-3 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-[#7047EB] focus:outline-none transition"
                       />
                     </div>
                   </div>
@@ -635,7 +635,7 @@ function LoginForm() {
                 <div className="pt-2">
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="block text-xs font-black text-slate-800 flex items-center gap-1.5">
-                      <Layers className="w-3.5 h-3.5 text-[#0f2c59]" />
+                      <Layers className="w-3.5 h-3.5 text-[#7047EB]" />
                       <span>{lang === 'en' ? 'Change Desired Plan:' : 'تعديل الباقة المطلوبة:'}</span>
                     </label>
                     <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
@@ -655,7 +655,7 @@ function LoginForm() {
                           onClick={() => setSelectedPlan(p.id)}
                           className={`p-2.5 rounded-2xl border text-start transition cursor-pointer flex flex-col justify-between ${
                             isSelected
-                              ? 'border-[#0f2c59] bg-[#0f2c59] text-white shadow-sm ring-2 ring-[#0f2c59]/20'
+                              ? 'border-[#7047EB] bg-[#7047EB] text-white shadow-sm ring-2 ring-[#7047EB]/20'
                               : 'border-slate-200 bg-slate-50/80 hover:bg-slate-100 text-slate-800'
                           }`}
                         >
@@ -670,7 +670,7 @@ function LoginForm() {
                           <span className={`text-[10px] ${isSelected ? 'text-slate-200' : 'text-slate-500'}`}>
                             {p.studentsLabel}
                           </span>
-                          <span className={`text-xs font-price font-bold mt-1 ${isSelected ? 'text-amber-300' : 'text-[#0f2c59]'}`}>
+                          <span className={`text-xs font-price font-bold mt-1 ${isSelected ? 'text-amber-300' : 'text-[#7047EB]'}`}>
                             {p.id === 'free'
                               ? lang === 'en' ? 'EGP 0 Free' : 'مجاناً 0 ج.م'
                               : p.isCustomMeeting
@@ -698,7 +698,7 @@ function LoginForm() {
                   onChange={(e) => setEmail(e.target.value)}
                   dir="ltr"
                   placeholder="teacher@example.com"
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 ps-10 pe-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-[#0f2c59] focus:outline-none transition"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 ps-10 pe-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-[#7047EB] focus:outline-none transition"
                 />
               </div>
             </div>
@@ -716,7 +716,7 @@ function LoginForm() {
                   onChange={(e) => setPassword(e.target.value)}
                   dir="ltr"
                   placeholder="••••••••"
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 ps-10 pe-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-[#0f2c59] focus:outline-none transition"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 ps-10 pe-4 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-[#7047EB] focus:outline-none transition"
                 />
               </div>
             </div>
@@ -724,7 +724,7 @@ function LoginForm() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full mt-3 py-3.5 rounded-2xl bg-[#0f2c59] hover:bg-[#1a3d6d] text-white font-bold text-xs shadow-md transition cursor-pointer"
+              className="w-full mt-3 py-3.5 rounded-2xl bg-[#7047EB] hover:bg-[#5D35D5] text-white font-bold text-xs shadow-md transition cursor-pointer"
             >
               {loading
                 ? lang === 'en'

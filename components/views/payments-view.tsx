@@ -178,7 +178,7 @@ export function PaymentsView({
           onClick={() => setTab('records')}
           className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition cursor-pointer ${
             tab === 'records'
-              ? 'bg-[#0f2c59] text-white'
+              ? 'bg-[#7047EB] text-white'
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -252,7 +252,7 @@ export function PaymentsView({
                         <td className="p-3.5 text-end">
                           <button
                             onClick={() => onViewReceipt(p)}
-                            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-bold text-[#0f2c59] hover:bg-slate-50 cursor-pointer"
+                            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-bold text-[#7047EB] hover:bg-slate-50 cursor-pointer"
                           >
                             <Receipt className="size-3.5" />
                             {t.payments.viewReceipt}

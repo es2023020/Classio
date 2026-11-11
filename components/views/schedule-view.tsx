@@ -39,7 +39,7 @@ export function ScheduleView({ groups, onSelectGroup, onAddGroup }: ScheduleView
 
         <Button
           onClick={onAddGroup}
-          className="rounded-xl bg-[#0f2c59] px-4 text-xs font-bold text-white hover:bg-[#1a3d6d] cursor-pointer"
+          className="rounded-xl bg-[#7047EB] px-4 text-xs font-bold text-white hover:bg-[#5D35D5] cursor-pointer"
         >
           {t.schedule.addGroup}
         </Button>
@@ -60,7 +60,7 @@ export function ScheduleView({ groups, onSelectGroup, onAddGroup }: ScheduleView
             <div
               key={keyEn}
               className={`card-glass flex flex-col p-4 transition ${
-                isToday ? 'border-2 border-[#0f2c59] ring-2 ring-blue-100' : ''
+                isToday ? 'border-2 border-[#7047EB] ring-2 ring-blue-100' : ''
               }`}
             >
               {/* Day Header */}
@@ -68,7 +68,7 @@ export function ScheduleView({ groups, onSelectGroup, onAddGroup }: ScheduleView
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-bold text-slate-800">{label}</span>
                   {isToday && (
-                    <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-[#0f2c59]">
+                    <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-[#7047EB]">
                       {t.schedule.today}
                     </span>
                   )}
@@ -89,10 +89,10 @@ export function ScheduleView({ groups, onSelectGroup, onAddGroup }: ScheduleView
                     <div
                       key={g.id}
                       onClick={() => onSelectGroup(g.id)}
-                      className="group cursor-pointer rounded-xl border border-slate-100 bg-slate-50/70 p-3 transition hover:border-[#0f2c59]/30 hover:bg-white hover:shadow-xs"
+                      className="group cursor-pointer rounded-xl border border-slate-100 bg-slate-50/70 p-3 transition hover:border-[#7047EB]/30 hover:bg-white hover:shadow-xs"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-[#0f2c59]">
+                        <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-[#7047EB]">
                           {g.stage_label}
                         </span>
                         <span className="flex items-center gap-1 font-mono text-[11px] font-bold text-slate-700">
@@ -100,7 +100,7 @@ export function ScheduleView({ groups, onSelectGroup, onAddGroup }: ScheduleView
                         </span>
                       </div>
 
-                      <p className="mt-2 text-xs font-bold text-slate-800 group-hover:text-[#0f2c59]">
+                      <p className="mt-2 text-xs font-bold text-slate-800 group-hover:text-[#7047EB]">
                         {g.name}
                       </p>
 

@@ -217,7 +217,7 @@ export function GlobalAnnouncementBar({
     urgent: 'bg-red-600 text-white shadow-lg shadow-red-900/30',
     warning: 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-900/30',
     success: 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/30',
-    info: 'bg-[#0f2c59] text-white shadow-lg shadow-blue-950/30',
+    info: 'bg-[#30245C] text-white shadow-lg shadow-indigo-950/30 border border-[#7047EB]/30',
   }
 
   return (

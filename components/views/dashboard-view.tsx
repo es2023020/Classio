@@ -155,9 +155,9 @@ export function DashboardView({
   return (
     <div className="space-y-6">
       {/* ─── Hero Welcome Banner ─────────────────────────── */}
-      <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-[#08192e] via-[#0f2c59] to-[#163d7e] p-6 text-white shadow-xl md:p-8">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#1e143f] via-[#30245C] to-[#483387] p-6 text-white shadow-xl md:p-8">
         {/* Decorative orbs */}
-        <div className="pointer-events-none absolute -right-16 -top-16 size-72 rounded-full bg-blue-400/10 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 -top-16 size-72 rounded-full bg-purple-400/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-16 left-20 size-56 rounded-full bg-amber-400/10 blur-3xl" />
         <div className="pointer-events-none absolute bottom-0 right-1/3 size-32 rounded-full bg-emerald-400/8 blur-2xl" />
 
@@ -218,10 +218,10 @@ export function DashboardView({
           className="card-stat group cursor-pointer p-5 hover:border-blue-200"
         >
           <div className="flex items-start justify-between">
-            <div className="flex size-11 items-center justify-center rounded-2xl bg-blue-50 text-[#0f2c59] group-hover:bg-blue-100 transition">
+            <div className="flex size-11 items-center justify-center rounded-2xl bg-[#EEE8FF] text-[#7047EB] group-hover:bg-[#F3EEFF] transition">
               <UsersRound className="size-5" />
             </div>
-            <ArrowUpRight className="size-4 text-slate-300 group-hover:text-[#0f2c59] transition" />
+            <ArrowUpRight className="size-4 text-slate-300 group-hover:text-[#7047EB] transition" />
           </div>
           <div className="mt-3">
             <p className="text-3xl font-black text-slate-900">{stats.totalStudents}</p>
@@ -358,7 +358,7 @@ export function DashboardView({
                         onClick={() => setActiveGroupId(g.id)}
                         className={`relative rounded-xl px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
                           isSelected
-                            ? 'bg-[#0f2c59] text-white shadow-xs'
+                            ? 'bg-[#7047EB] text-white shadow-xs'
                             : 'border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'
                         }`}
                       >
@@ -381,7 +381,7 @@ export function DashboardView({
                     <h3 className="text-base font-black text-slate-900">{currentAgendaGroup.name}</h3>
                     <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-slate-500">
                       <span className="flex items-center gap-1.5 font-bold text-slate-700">
-                        <Clock className="size-3.5 text-[#0f2c59]" />
+                        <Clock className="size-3.5 text-[#7047EB]" />
                         {currentAgendaGroup.time_slot}
                       </span>
                       <span className="text-slate-300">|</span>
@@ -405,8 +405,8 @@ export function DashboardView({
 
                 {/* 3 micro-KPIs */}
                 <div className="mt-4 grid grid-cols-3 gap-3">
-                  <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-3.5 text-center">
-                    <p className="text-xl font-black text-[#0f2c59]">
+                  <div className="rounded-2xl border border-purple-100 bg-[#F2EFFA]/60 p-3.5 text-center">
+                    <p className="text-xl font-black text-[#7047EB]">
                       {agendaGroupStudents.length}
                       <span className="text-xs font-normal text-slate-400 ml-0.5">
                         / {currentAgendaGroup.max_students}
@@ -453,7 +453,7 @@ export function DashboardView({
                   </Button>
                   <Button
                     onClick={() => onRecordPayment()}
-                    className="gap-1.5 rounded-xl bg-[#0f2c59] hover:bg-[#1e3e62] text-xs font-bold text-white cursor-pointer"
+                    className="gap-1.5 rounded-xl bg-[#7047EB] hover:bg-[#5D35D5] text-xs font-bold text-white cursor-pointer"
                   >
                     <CircleDollarSign className="size-3.5 text-emerald-400" />
                     {lang === 'en' ? 'Collect Fees' : 'تحصيل'}
@@ -461,7 +461,7 @@ export function DashboardView({
                   <Button
                     variant="outline"
                     onClick={onOpenScanModal}
-                    className="gap-1.5 rounded-xl border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 cursor-pointer"
+                    className="gap-1.5 rounded-xl border-[#D8CCFF] bg-white hover:bg-[#F3EEFF] text-xs font-bold text-[#7047EB] cursor-pointer"
                   >
                     <QrCode className="size-3.5" />
                     {lang === 'en' ? 'Scan' : 'مسح'}
@@ -483,7 +483,7 @@ export function DashboardView({
                 </p>
                 <Button
                   onClick={() => onNavigate('groups')}
-                  className="mt-4 rounded-xl bg-[#0f2c59] text-xs font-bold text-white cursor-pointer"
+                  className="mt-4 rounded-xl bg-[#7047EB] hover:bg-[#5D35D5] text-xs font-bold text-white cursor-pointer"
                 >
                   {lang === 'en' ? 'Create First Group' : 'إنشاء أول مجموعة'}
                 </Button>
@@ -502,7 +502,7 @@ export function DashboardView({
                 variant="outline"
                 size="sm"
                 onClick={() => onNavigate('attendance')}
-                className="rounded-xl text-xs font-bold text-[#0f2c59] hover:bg-blue-50 cursor-pointer"
+                className="rounded-xl text-xs font-bold text-[#7047EB] hover:bg-[#F3EEFF] border-[#D8CCFF] cursor-pointer"
               >
                 {t.dashboard.openAttendance}
                 <ArrowIcon className="size-3.5 ml-1" />
@@ -529,11 +529,11 @@ export function DashboardView({
                         onClick={() => onSelectStudent(student)}
                         className="flex cursor-pointer items-center gap-3"
                       >
-                        <div className="flex size-8 items-center justify-center rounded-xl bg-[#0f2c59]/8 text-xs font-black text-[#0f2c59]">
+                        <div className="flex size-8 items-center justify-center rounded-xl bg-[#EEE8FF] text-xs font-black text-[#7047EB]">
                           {student.name[0]}
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-slate-800 hover:text-blue-700 transition">
+                          <p className="text-xs font-bold text-slate-800 hover:text-[#7047EB] transition">
                             {student.name}
                           </p>
                           <p className="text-[10px] font-mono text-slate-400">{student.student_code}</p>
@@ -577,7 +577,7 @@ export function DashboardView({
               <Button
                 onClick={() => onRecordPayment()}
                 size="sm"
-                className="gap-1.5 rounded-xl bg-[#0f2c59] text-xs font-bold text-white hover:bg-[#1a3d6d] cursor-pointer"
+                className="gap-1.5 rounded-xl bg-[#7047EB] text-xs font-bold text-white hover:bg-[#5D35D5] cursor-pointer shadow-xs"
               >
                 <Plus className="size-3.5" />
                 {t.dashboard.collectDuring}
@@ -647,7 +647,7 @@ export function DashboardView({
 
             <button
               onClick={() => onNavigate('payments')}
-              className="mt-4 w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 text-center text-xs font-bold text-[#0f2c59] hover:bg-slate-100 cursor-pointer transition"
+              className="mt-4 w-full rounded-xl border border-[#EAE8F1] bg-white py-2.5 text-center text-xs font-bold text-[#7047EB] hover:bg-[#F3EEFF] cursor-pointer transition shadow-xs"
             >
               {t.dashboard.viewPayments}
             </button>
@@ -656,7 +656,7 @@ export function DashboardView({
           {/* ── Quick Stats Summary ── */}
           <div className="card-glass p-5">
             <h2 className="mb-4 text-sm font-bold text-slate-800 flex items-center gap-2">
-              <TrendingUp className="size-4 text-[#0f2c59]" />
+              <TrendingUp className="size-4 text-[#7047EB]" />
               {lang === 'en' ? 'Quick Insights' : 'إحصائيات سريعة'}
             </h2>
 
@@ -736,16 +736,16 @@ export function DashboardView({
             <div className="mt-5 grid grid-cols-2 gap-2 border-t border-slate-100 pt-4">
               <button
                 onClick={() => onNavigate('reports')}
-                className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 py-2 text-xs font-bold text-slate-700 hover:bg-white cursor-pointer transition"
+                className="flex items-center justify-center gap-1.5 rounded-xl border border-[#D8CCFF] bg-white py-2 text-xs font-bold text-[#7047EB] hover:bg-[#F3EEFF] cursor-pointer transition shadow-xs"
               >
-                <TrendingUp className="size-3.5 text-[#0f2c59]" />
+                <TrendingUp className="size-3.5 text-[#7047EB]" />
                 {lang === 'en' ? 'Full Reports' : 'التقارير'}
               </button>
               <button
                 onClick={() => onNavigate('students')}
-                className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 py-2 text-xs font-bold text-slate-700 hover:bg-white cursor-pointer transition"
+                className="flex items-center justify-center gap-1.5 rounded-xl border border-[#D8CCFF] bg-white py-2 text-xs font-bold text-[#7047EB] hover:bg-[#F3EEFF] cursor-pointer transition shadow-xs"
               >
-                <UsersRound className="size-3.5 text-[#0f2c59]" />
+                <UsersRound className="size-3.5 text-[#7047EB]" />
                 {lang === 'en' ? 'All Students' : 'جميع الطلاب'}
               </button>
             </div>

@@ -67,7 +67,7 @@ export function LandingNavbar({ lang, onToggleLang }: NavbarProps) {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm font-semibold text-slate-600 hover:text-[#0f2c59] transition-colors"
+                className="text-sm font-semibold text-slate-600 hover:text-[#7047EB] transition-colors"
               >
                 {link.label}
               </a>
@@ -82,14 +82,14 @@ export function LandingNavbar({ lang, onToggleLang }: NavbarProps) {
               className="flex items-center gap-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-xl border border-slate-200 transition-all cursor-pointer"
               title={lang === 'en' ? 'التحويل إلى العربية' : 'Switch to English'}
             >
-              <Globe className="w-3.5 h-3.5 text-[#0f2c59]" />
+              <Globe className="w-3.5 h-3.5 text-[#7047EB]" />
               <span>{lang === 'en' ? 'عربي' : 'English'}</span>
             </button>
 
             {/* Login Link */}
             <Link
               href="/login"
-              className="text-xs font-bold text-slate-700 hover:text-[#0f2c59] px-3.5 py-2 rounded-xl hover:bg-slate-100 transition-colors"
+              className="text-xs font-bold text-slate-700 hover:text-[#7047EB] px-3.5 py-2 rounded-xl hover:bg-slate-100 transition-colors"
             >
               {t.login}
             </Link>
@@ -97,7 +97,7 @@ export function LandingNavbar({ lang, onToggleLang }: NavbarProps) {
             {/* Start Free CTA */}
             <Link
               href="/login?mode=signup"
-              className="flex items-center gap-2 text-xs font-bold bg-[#0f2c59] text-white px-4 py-2.5 rounded-xl hover:bg-[#1a3d6d] shadow-sm hover:shadow transition-all"
+              className="flex items-center gap-2 text-xs font-bold bg-[#7047EB] text-white px-4 py-2.5 rounded-xl hover:bg-[#5D35D5] shadow-sm hover:shadow transition-all"
             >
               <span>{t.cta}</span>
               <ArrowRight className={`w-3.5 h-3.5 ${isRtl ? 'rotate-180' : ''}`} />
@@ -131,7 +131,7 @@ export function LandingNavbar({ lang, onToggleLang }: NavbarProps) {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="block text-sm font-bold text-slate-700 hover:text-[#0f2c59] py-2"
+              className="block text-sm font-bold text-slate-700 hover:text-[#7047EB] py-2"
             >
               {link.label}
             </Link>
@@ -147,7 +147,7 @@ export function LandingNavbar({ lang, onToggleLang }: NavbarProps) {
             <Link
               href="/login?mode=signup"
               onClick={() => setMenuOpen(false)}
-              className="w-full text-center text-sm font-bold bg-[#0f2c59] text-white py-2.5 rounded-xl shadow-xs"
+              className="w-full text-center text-sm font-bold bg-[#7047EB] text-white py-2.5 rounded-xl shadow-xs"
             >
               {t.cta}
             </Link>

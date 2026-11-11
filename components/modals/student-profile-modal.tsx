@@ -85,7 +85,7 @@ export function StudentProfileModal({
         {/* Header */}
         <div className="flex items-start justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3.5">
-            <div className="flex size-14 items-center justify-center rounded-2xl bg-[#0f2c59] text-xl font-bold text-amber-300 shadow-sm">
+            <div className="flex size-14 items-center justify-center rounded-2xl bg-[#7047EB] text-xl font-bold text-amber-300 shadow-sm">
               {student.name[0]}
             </div>
             <div>
@@ -253,7 +253,7 @@ export function StudentProfileModal({
                         onClose()
                         onViewReceipt(p)
                       }}
-                      className="rounded-lg border bg-white px-2.5 py-1 text-[11px] font-bold text-[#0f2c59] hover:bg-slate-50 cursor-pointer"
+                      className="rounded-lg border bg-white px-2.5 py-1 text-[11px] font-bold text-[#7047EB] hover:bg-slate-50 cursor-pointer"
                     >
                       {lang === 'en' ? 'View Receipt' : 'عرض الإيصال'}
                     </button>

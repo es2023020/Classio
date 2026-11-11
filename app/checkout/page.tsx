@@ -279,7 +279,7 @@ function CheckoutContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-[#F8F7FC] flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
 
       {/* Header */}
       <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between border-b border-slate-200/60 bg-white">
@@ -290,7 +290,7 @@ function CheckoutContent() {
         <div className="flex items-center gap-3">
           <Link
             href="/pricing"
-            className="text-xs font-bold text-slate-600 hover:text-[#0f2c59] px-3 py-1.5"
+            className="text-xs font-bold text-slate-600 hover:text-[#7047EB] px-3 py-1.5"
           >
             {lang === 'en' ? '← All Plans' : '← كافة خطط الأسعار'}
           </Link>
@@ -299,13 +299,13 @@ function CheckoutContent() {
             onClick={toggleLang}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition cursor-pointer"
           >
-            <Globe className="size-3.5 text-[#0f2c59]" />
+            <Globe className="size-3.5 text-[#7047EB]" />
             <span>{lang === 'en' ? 'عربي' : 'English'}</span>
           </button>
 
           <Link
             href="/dashboard"
-            className="text-xs font-bold text-slate-600 hover:text-[#0f2c59] px-3 py-1.5"
+            className="text-xs font-bold text-slate-600 hover:text-[#7047EB] px-3 py-1.5"
           >
             {lang === 'en' ? 'Back to App' : 'العودة للتطبيق'}
           </Link>
@@ -369,7 +369,7 @@ function CheckoutContent() {
             <div className="space-y-3">
               <Button
                 onClick={() => router.push('/dashboard')}
-                className="w-full py-3.5 rounded-2xl bg-[#0f2c59] hover:bg-[#1a3d6d] text-white font-bold text-xs shadow-md cursor-pointer"
+                className="w-full py-3.5 rounded-2xl bg-[#7047EB] hover:bg-[#5D35D5] text-white font-bold text-xs shadow-md cursor-pointer"
               >
                 {lang === 'en' ? 'Enter My Dashboard Now' : 'دخول لوحة تحكم المدرس الآن'}
               </Button>
@@ -425,7 +425,7 @@ function CheckoutContent() {
                         value={enterpriseTutorName}
                         onChange={(e) => setEnterpriseTutorName(e.target.value)}
                         placeholder={lang === 'en' ? 'e.g. Prof. Ahmed - El-Rowad Center' : 'مثال: أ. أحمد محمود — سنتر الرواد'}
-                        className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                        className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                       />
                     </div>
 
@@ -441,7 +441,7 @@ function CheckoutContent() {
                           onChange={(e) => setEnterprisePhone(e.target.value)}
                           dir="ltr"
                           placeholder="01012345678"
-                          className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                          className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                         />
                       </div>
                       <div>
@@ -454,7 +454,7 @@ function CheckoutContent() {
                           value={enterpriseStudentsCount}
                           onChange={(e) => setEnterpriseStudentsCount(e.target.value)}
                           placeholder="600, 1000, 2500..."
-                          className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                          className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                         />
                       </div>
                     </div>
@@ -468,7 +468,7 @@ function CheckoutContent() {
                         value={enterpriseCenterNames}
                         onChange={(e) => setEnterpriseCenterNames(e.target.value)}
                         placeholder={lang === 'en' ? 'e.g. Nasr City, Tagamoa, Mohandessin' : 'مثال: سنتر الأوائل بمدينة نصر، سنتر النخبة بالتجمع'}
-                        className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                        className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                       />
                     </div>
 
@@ -481,7 +481,7 @@ function CheckoutContent() {
                         value={enterpriseNotes}
                         onChange={(e) => setEnterpriseNotes(e.target.value)}
                         placeholder={lang === 'en' ? 'Tell us about your team of assistants, attendance scanners, etc.' : 'أخبرنا عن فريق المساعدين، عدد السكرتارية، قارئات الباركود...'}
-                        className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                        className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                       />
                     </div>
 
@@ -537,7 +537,7 @@ function CheckoutContent() {
                             localStorage.removeItem('classio_auth_user')
                             router.push(`/login?mode=signup&plan=${planId}&billing=${billing}`)
                           }}
-                          className="text-[11px] font-bold text-[#0f2c59] hover:underline cursor-pointer"
+                          className="text-[11px] font-bold text-[#7047EB] hover:underline cursor-pointer"
                         >
                           {lang === 'en' ? 'Create for New Teacher' : 'إنشاء حساب لمدرس جديد'}
                         </button>
@@ -564,7 +564,7 @@ function CheckoutContent() {
                           value={tutorName}
                           onChange={(e) => setTutorName(e.target.value)}
                           placeholder={lang === 'en' ? 'e.g. Mr. Mohamed Hassan' : 'مثال: أ. محمد حسن'}
-                          className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                          className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                         />
                       </div>
 
@@ -580,7 +580,7 @@ function CheckoutContent() {
                             onChange={(e) => setTutorEmail(e.target.value)}
                             dir="ltr"
                             placeholder="teacher@example.com"
-                            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                           />
                         </div>
 
@@ -595,7 +595,7 @@ function CheckoutContent() {
                             onChange={(e) => setTutorPhone(e.target.value)}
                             dir="ltr"
                             placeholder="010XXXXXXXX"
-                            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                           />
                         </div>
                       </div>
@@ -609,7 +609,7 @@ function CheckoutContent() {
                           value={tutorSubject}
                           onChange={(e) => setTutorSubject(e.target.value)}
                           placeholder={lang === 'en' ? 'e.g. Mathematics, English, Physics' : 'مثال: الرياضيات، اللغة الإنجليزية، الفيزياء'}
-                          className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                          className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                         />
                       </div>
                     </div>
@@ -624,10 +624,10 @@ function CheckoutContent() {
                     {/* Method Selector Pills: InstaPay is active, Vodafone & Fawry coming soon, Bank Card removed */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       {/* InstaPay (Active) */}
-                      <div className="p-3.5 rounded-2xl border-2 border-[#0f2c59] bg-blue-50/70 ring-2 ring-[#0f2c59]/20 flex flex-col justify-between relative shadow-xs">
+                      <div className="p-3.5 rounded-2xl border-2 border-[#7047EB] bg-blue-50/70 ring-2 ring-[#7047EB]/20 flex flex-col justify-between relative shadow-xs">
                         <div className="flex items-center justify-between mb-1.5">
                           <div className="flex items-center gap-2">
-                            <Smartphone className="w-5 h-5 text-[#0f2c59]" />
+                            <Smartphone className="w-5 h-5 text-[#7047EB]" />
                             <span className="text-xs font-black text-slate-900">InstaPay</span>
                           </div>
                           <span className="text-[10px] font-black bg-emerald-600 text-white px-2 py-0.5 rounded-md">
@@ -678,7 +678,7 @@ function CheckoutContent() {
                     <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <QrCode className="w-4 h-4 text-[#0f2c59]" />
+                          <QrCode className="w-4 h-4 text-[#7047EB]" />
                           <span className="text-xs font-bold text-slate-800">
                             {lang === 'en' ? 'Official InstaPay Payment Details:' : 'بيانات الدفع المعتمدة عبر إنستاباي:'}
                           </span>
@@ -695,7 +695,7 @@ function CheckoutContent() {
                         <button
                           type="button"
                           onClick={() => copyToClipboard('sayed017@instapay', 'instapay_preview')}
-                          className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0f2c59] hover:underline cursor-pointer"
+                          className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7047EB] hover:underline cursor-pointer"
                         >
                           {copiedKey === 'instapay_preview' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                           <span>{copiedKey === 'instapay_preview' ? (lang === 'en' ? 'Copied!' : 'تم النسخ!') : (lang === 'en' ? 'Copy' : 'نسخ المعرف')}</span>
@@ -720,7 +720,7 @@ function CheckoutContent() {
                     <Button
                       type="button"
                       onClick={handleOpenInstaPayModal}
-                      className="w-full py-4 rounded-2xl bg-[#0f2c59] hover:bg-[#1a3d6d] text-white font-black text-xs sm:text-sm shadow-lg hover:shadow-xl transition flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full py-4 rounded-2xl bg-[#7047EB] hover:bg-[#5D35D5] text-white font-black text-xs sm:text-sm shadow-lg hover:shadow-xl transition flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <QrCode className="w-4 h-4 text-amber-300" />
                       <span>
@@ -759,12 +759,12 @@ function CheckoutContent() {
                           onClick={() => setPlanId(p.id)}
                           className={`p-2 rounded-xl border text-center transition cursor-pointer flex flex-col items-center justify-center ${
                             isSelected
-                              ? 'border-[#0f2c59] bg-[#0f2c59] text-white shadow-sm font-bold'
+                              ? 'border-[#7047EB] bg-[#7047EB] text-white shadow-sm font-bold'
                               : 'border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700'
                           }`}
                         >
                           <span className="text-[11px] font-black truncate w-full">{p.name}</span>
-                          <span className={`text-[10px] font-price font-bold ${isSelected ? 'text-amber-300' : 'text-[#0f2c59]'}`}>
+                          <span className={`text-[10px] font-price font-bold ${isSelected ? 'text-amber-300' : 'text-[#7047EB]'}`}>
                             {p.isCustomMeeting ? (lang === 'en' ? 'Meeting' : 'جلسة عمل') : `EGP ${billing === 'annual' ? Math.round(p.annualPrice / 12) : p.monthlyPrice}/mo`}
                           </span>
                         </button>
@@ -797,7 +797,7 @@ function CheckoutContent() {
                         onClick={() => setBilling('monthly')}
                         className={`py-2 text-xs font-bold rounded-xl transition cursor-pointer ${
                           billing === 'monthly'
-                            ? 'bg-white text-[#0f2c59] shadow-xs'
+                            ? 'bg-white text-[#7047EB] shadow-xs'
                             : 'text-slate-500 hover:text-slate-900'
                         }`}
                       >
@@ -808,7 +808,7 @@ function CheckoutContent() {
                         onClick={() => setBilling('annual')}
                         className={`py-2 text-xs font-bold rounded-xl transition cursor-pointer relative ${
                           billing === 'annual'
-                            ? 'bg-[#0f2c59] text-white shadow-xs'
+                            ? 'bg-[#7047EB] text-white shadow-xs'
                             : 'text-slate-500 hover:text-slate-900'
                         }`}
                       >
@@ -851,7 +851,7 @@ function CheckoutContent() {
 
                     <div className="flex justify-between font-black text-slate-900 text-sm pt-2">
                       <span>{lang === 'en' ? 'Total Due Today:' : 'المبلغ المطلوب:'}</span>
-                      <span className="font-price text-2xl font-black text-[#0f2c59]">
+                      <span className="font-price text-2xl font-black text-[#7047EB]">
                         {formatPrice(finalPrice, lang)}
                       </span>
                     </div>
@@ -927,7 +927,7 @@ function CheckoutContent() {
             {/* Modal Header */}
             <div className="text-center mb-5">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-900 text-xs font-bold mb-2">
-                <Smartphone className="w-3.5 h-3.5 text-[#0f2c59]" />
+                <Smartphone className="w-3.5 h-3.5 text-[#7047EB]" />
                 <span>InstaPay Official Gateway</span>
               </div>
               <h3 className="text-xl font-black text-slate-900">
@@ -950,7 +950,7 @@ function CheckoutContent() {
                   Classio {selectedPlan.name} ({billing === 'annual' ? (lang === 'en' ? 'Annual' : 'سنوي') : (lang === 'en' ? 'Monthly' : 'شهري')})
                 </span>
               </div>
-              <span className="font-price text-xl font-black text-[#0f2c59]">
+              <span className="font-price text-xl font-black text-[#7047EB]">
                 {formatPrice(finalPrice, lang)}
               </span>
             </div>
@@ -980,14 +980,14 @@ function CheckoutContent() {
                 <button
                   type="button"
                   onClick={() => copyToClipboard('sayed017@instapay', 'modal_handle')}
-                  className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0f2c59] hover:underline cursor-pointer"
+                  className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7047EB] hover:underline cursor-pointer"
                 >
                   {copiedKey === 'modal_handle' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedKey === 'modal_handle' ? (lang === 'en' ? 'Copied!' : 'تم النسخ!') : (lang === 'en' ? 'Copy Handle' : 'نسخ المعرف')}</span>
                 </button>
               </div>
 
-              <div className="bg-white rounded-xl p-2.5 border border-slate-200 font-mono text-center font-black text-sm text-[#0f2c59]">
+              <div className="bg-white rounded-xl p-2.5 border border-slate-200 font-mono text-center font-black text-sm text-[#7047EB]">
                 sayed017@instapay
               </div>
 
@@ -1009,7 +1009,7 @@ function CheckoutContent() {
                   value={senderRef}
                   onChange={(e) => setSenderRef(e.target.value)}
                   placeholder={lang === 'en' ? 'e.g. Ahmed Mahmoud / IPN-9988' : 'مثال: أ. أحمد محمود / رقم الحوالة'}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                 />
               </div>
 
@@ -1024,7 +1024,7 @@ function CheckoutContent() {
                   onChange={(e) => setSenderPhoneInput(e.target.value)}
                   dir="ltr"
                   placeholder="010XXXXXXXX"
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                 />
               </div>
 
@@ -1049,7 +1049,7 @@ function CheckoutContent() {
 
 export default function CheckoutPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#f8fafc] flex items-center justify-center font-bold text-xs text-slate-500">Loading Checkout...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#F8F7FC] flex items-center justify-center font-bold text-xs text-slate-500">Loading Checkout...</div>}>
       <CheckoutContent />
     </Suspense>
   )

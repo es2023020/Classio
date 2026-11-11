@@ -102,7 +102,7 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-[#0f2c59]">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-[#EEE8FF] text-[#7047EB]">
               <User className="size-5" />
             </div>
             <div>
@@ -135,7 +135,7 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0f2c59] focus:bg-white"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white"
                 />
               </div>
             </div>
@@ -148,7 +148,7 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
                 <input
                   value={studentCode}
                   onChange={(e) => setStudentCode(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0f2c59] focus:bg-white"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white"
                 />
               </div>
             </div>
@@ -158,7 +158,7 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
               <select
                 value={groupId}
                 onChange={(e) => handleGroupChange(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0f2c59] focus:bg-white"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white"
               >
                 {groups.map((g) => (
                   <option key={g.id} value={g.id}>
@@ -174,7 +174,7 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
                 value={studentPhone}
                 onChange={(e) => setStudentPhone(e.target.value)}
                 dir="ltr"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-end text-sm text-slate-800 outline-none transition focus:border-[#0f2c59] focus:bg-white"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-end text-sm text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white"
               />
             </div>
 
@@ -196,7 +196,7 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
                 value={parentPhone}
                 onChange={(e) => setParentPhone(e.target.value)}
                 dir="ltr"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-end text-sm text-slate-800 outline-none transition focus:border-[#0f2c59] focus:bg-white"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-end text-sm text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white"
               />
             </div>
 
@@ -207,7 +207,7 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
               <input
                 value={school}
                 onChange={(e) => setSchool(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0f2c59] focus:bg-white"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white"
               />
             </div>
 
@@ -217,7 +217,7 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
                 type="number"
                 value={monthlyFee}
                 onChange={(e) => setMonthlyFee(Number(e.target.value))}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0f2c59] focus:bg-white"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white"
               />
             </div>
 
@@ -255,7 +255,7 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
                       min="0"
                       value={discountAmount}
                       onChange={(e) => setDiscountAmount(Number(e.target.value))}
-                      className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-800 outline-none focus:border-[#0f2c59]"
+                      className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-800 outline-none focus:border-[#7047EB]"
                     />
                   </div>
                   <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2 text-center">
@@ -275,7 +275,7 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
               <input
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#0f2c59] focus:bg-white"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white"
               />
             </div>
           </div>
@@ -285,7 +285,7 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
             <Button type="button" variant="outline" onClick={onClose} className="rounded-xl px-5 text-sm cursor-pointer">
               {t.studentModal.cancel}
             </Button>
-            <Button type="submit" className="rounded-xl bg-[#0f2c59] px-6 text-sm font-bold text-white hover:bg-[#1e3a8a] cursor-pointer">
+            <Button type="submit" className="rounded-xl bg-[#7047EB] px-6 text-sm font-bold text-white hover:bg-[#5D35D5] cursor-pointer">
               {t.studentModal.save}
             </Button>
           </div>

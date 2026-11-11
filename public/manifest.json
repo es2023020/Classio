@@ -4,8 +4,8 @@
   "description": "The complete platform for private tutors to manage students, attendance, fees (InstaPay & Vodafone Cash), lesson notes, and student learning success.",
   "start_url": "/dashboard",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#0f2c59",
+  "background_color": "#F8F7FC",
+  "theme_color": "#7047EB",
   "dir": "ltr",
   "lang": "en",
   "icons": [

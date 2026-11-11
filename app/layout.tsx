@@ -46,7 +46,7 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
   colorScheme: 'light',
-  themeColor: '#0f2c59',
+  themeColor: '#7047EB',
 }
 
 export default function RootLayout({
@@ -58,7 +58,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
-      <body className="font-cairo antialiased bg-[#f8fafc] text-[#0f172a] selection:bg-[#0f2c59] selection:text-white">
+      <body className="font-cairo antialiased bg-[#F8F7FC] text-[#19172A] selection:bg-[#7047EB] selection:text-white">
         <LanguageProvider>
           {children}
         </LanguageProvider>

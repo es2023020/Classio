@@ -163,7 +163,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-800 overflow-x-hidden selection:bg-[#0f2c59] selection:text-white" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-[#F8F7FC] text-slate-800 overflow-x-hidden selection:bg-[#7047EB] selection:text-white" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Top Header */}
       <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6">
@@ -176,7 +176,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
               onClick={toggleLang}
               className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
             >
-              <Globe className="size-3.5 text-[#0f2c59]" />
+              <Globe className="size-3.5 text-[#7047EB]" />
               <span>{lang === 'en' ? 'العربية' : 'English'}</span>
             </button>
 
@@ -201,7 +201,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50 to-blue-50/20 py-12 sm:py-16 border-b border-slate-200/60">
         <div className="mx-auto max-w-5xl px-4 text-center sm:px-6">
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#0f2c59]/5 border border-[#0f2c59]/15 px-3.5 py-1.5 text-xs font-bold text-[#0f2c59] mb-4">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#7047EB]/5 border border-[#7047EB]/15 px-3.5 py-1.5 text-xs font-bold text-[#7047EB] mb-4">
             <Sparkles className="size-3.5 text-amber-500" />
             <span>
               {lang === 'en'
@@ -214,14 +214,14 @@ Direct Leadership Contact: Via official WhatsApp concierge`
             {lang === 'en' ? (
               <>
                 The Operating Platform for{' '}
-                <span className="text-[#0f2c59] underline decoration-amber-400 decoration-wavy decoration-2">
+                <span className="text-[#7047EB] underline decoration-amber-400 decoration-wavy decoration-2">
                   Private Tutors
                 </span>
               </>
             ) : (
               <>
                 منصة التشغيل الرقمية المتكاملة{' '}
-                <span className="text-[#0f2c59] underline decoration-amber-400 decoration-wavy decoration-2">
+                <span className="text-[#7047EB] underline decoration-amber-400 decoration-wavy decoration-2">
                   للمعلمين الخصوصيين في مصر
                 </span>
               </>
@@ -240,7 +240,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
               onClick={() => setActiveTab('executive_summary')}
               className={`flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-black transition cursor-pointer shadow-xs ${
                 activeTab === 'executive_summary'
-                  ? 'bg-[#0f2c59] text-white shadow-md'
+                  ? 'bg-[#7047EB] text-white shadow-md'
                   : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
               }`}
             >
@@ -253,7 +253,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
               disabled={isDownloading}
               className="flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition cursor-pointer shadow-xs"
             >
-              <Download className="size-4 text-[#0f2c59]" />
+              <Download className="size-4 text-[#7047EB]" />
               <span>
                 {isDownloading
                   ? (lang === 'en' ? 'Downloading...' : 'جارِ التحميل...')
@@ -282,7 +282,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
               <p className="text-[11px] font-black uppercase tracking-widest text-blue-700">
                 THE OPERATING PLATFORM FOR PRIVATE TUTORS
               </p>
-              <h2 className="text-3xl sm:text-4xl font-black text-[#0f2c59] tracking-tight mt-1">
+              <h2 className="text-3xl sm:text-4xl font-black text-[#7047EB] tracking-tight mt-1">
                 Classio
               </h2>
               <p className="text-sm font-semibold text-slate-600 mt-1">
@@ -320,7 +320,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="rounded-2xl border border-slate-200/90 bg-slate-50/70 p-5">
-                <h4 className="text-xs font-black uppercase tracking-wider text-[#0f2c59] mb-1.5">
+                <h4 className="text-xs font-black uppercase tracking-wider text-[#7047EB] mb-1.5">
                   STUDENT MANAGEMENT
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed font-medium">
@@ -329,7 +329,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
               </div>
 
               <div className="rounded-2xl border border-slate-200/90 bg-slate-50/70 p-5">
-                <h4 className="text-xs font-black uppercase tracking-wider text-[#0f2c59] mb-1.5">
+                <h4 className="text-xs font-black uppercase tracking-wider text-[#7047EB] mb-1.5">
                   DAILY OPERATIONS
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed font-medium">
@@ -338,7 +338,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
               </div>
 
               <div className="rounded-2xl border border-slate-200/90 bg-slate-50/70 p-5">
-                <h4 className="text-xs font-black uppercase tracking-wider text-[#0f2c59] mb-1.5">
+                <h4 className="text-xs font-black uppercase tracking-wider text-[#7047EB] mb-1.5">
                   PAYMENTS & VISIBILITY
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed font-medium">
@@ -347,7 +347,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
               </div>
 
               <div className="rounded-2xl border border-slate-200/90 bg-slate-50/70 p-5">
-                <h4 className="text-xs font-black uppercase tracking-wider text-[#0f2c59] mb-1.5">
+                <h4 className="text-xs font-black uppercase tracking-wider text-[#7047EB] mb-1.5">
                   LEARNING PROGRESS
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed font-medium">
@@ -392,10 +392,10 @@ Direct Leadership Contact: Via official WhatsApp concierge`
                   <tr className="hover:bg-slate-50/60 transition">
                     <td className="p-3.5 font-bold text-slate-900">Starter</td>
                     <td className="p-3.5 text-slate-600">11–30</td>
-                    <td className="p-3.5 text-end font-price font-black text-[#0f2c59] text-sm">EGP 99</td>
+                    <td className="p-3.5 text-end font-price font-black text-[#7047EB] text-sm">EGP 99</td>
                   </tr>
                   <tr className="bg-blue-50/40 hover:bg-blue-50/70 transition">
-                    <td className="p-3.5 font-black text-[#0f2c59] flex items-center gap-1.5">
+                    <td className="p-3.5 font-black text-[#7047EB] flex items-center gap-1.5">
                       <span>Growth</span>
                       <span className="text-[10px] bg-amber-400 text-slate-950 font-black px-1.5 py-0.2 rounded-full">Popular</span>
                     </td>
@@ -405,12 +405,12 @@ Direct Leadership Contact: Via official WhatsApp concierge`
                   <tr className="hover:bg-slate-50/60 transition">
                     <td className="p-3.5 font-bold text-slate-900">Pro</td>
                     <td className="p-3.5 text-slate-600">101–250</td>
-                    <td className="p-3.5 text-end font-price font-black text-[#0f2c59] text-sm">EGP 449</td>
+                    <td className="p-3.5 text-end font-price font-black text-[#7047EB] text-sm">EGP 449</td>
                   </tr>
                   <tr className="hover:bg-slate-50/60 transition">
                     <td className="p-3.5 font-bold text-slate-900">Power</td>
                     <td className="p-3.5 text-slate-600">251–500</td>
-                    <td className="p-3.5 text-end font-price font-black text-[#0f2c59] text-sm">EGP 799</td>
+                    <td className="p-3.5 text-end font-price font-black text-[#7047EB] text-sm">EGP 799</td>
                   </tr>
                   <tr className="bg-purple-50/40 hover:bg-purple-50/70 transition">
                     <td className="p-3.5 font-black text-purple-900">Enterprise / Custom</td>
@@ -470,7 +470,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
 
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">
                 <span className="text-[10px] font-black uppercase text-slate-400">COMMERCIAL STAGE</span>
-                <p className="text-base font-black text-[#0f2c59] mt-1">Pre-launch</p>
+                <p className="text-base font-black text-[#7047EB] mt-1">Pre-launch</p>
                 <p className="text-[11px] text-slate-500 mt-0.5">0 tutors onboarded at stated stage</p>
               </div>
 
@@ -562,7 +562,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                    className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                   />
                 </div>
 
@@ -575,7 +575,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
                     required
                     value={orgName}
                     onChange={(e) => setOrgName(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                    className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                   />
                 </div>
               </div>
@@ -591,7 +591,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     dir="ltr"
-                    className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                    className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                   />
                 </div>
 
@@ -605,7 +605,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     dir="ltr"
-                    className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                    className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                   />
                 </div>
               </div>
@@ -618,14 +618,14 @@ Direct Leadership Contact: Via official WhatsApp concierge`
                   rows={3}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#0f2c59]"
+                  className="w-full rounded-xl border border-slate-200 bg-white p-2.5 text-xs text-slate-900 focus:outline-none focus:border-[#7047EB]"
                 />
               </div>
 
               <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
                 <Button
                   type="submit"
-                  className="w-full sm:flex-1 py-3 rounded-xl bg-[#0f2c59] hover:bg-[#1a3d6d] text-white font-bold text-xs shadow-md transition cursor-pointer"
+                  className="w-full sm:flex-1 py-3 rounded-xl bg-[#7047EB] hover:bg-[#5D35D5] text-white font-bold text-xs shadow-md transition cursor-pointer"
                 >
                   <Send className="size-3.5" />
                   <span>{lang === 'en' ? 'Submit Inquiry' : 'إرسال الاستفسار'}</span>
@@ -650,7 +650,7 @@ Direct Leadership Contact: Via official WhatsApp concierge`
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <ClassioLogo size="sm" />
           <p>© {new Date().getFullYear()} Classio. All rights reserved.</p>
-          <div className="flex items-center gap-4 font-bold text-[#0f2c59]">
+          <div className="flex items-center gap-4 font-bold text-[#7047EB]">
             <Link href="/pricing">{lang === 'en' ? 'Pricing' : 'الأسعار'}</Link>
             <Link href="/partnerships">{lang === 'en' ? 'Executive Summary' : 'الملخص التنفيذي'}</Link>
             <Link href="/login">{lang === 'en' ? 'Sign In' : 'دخول المدرس'}</Link>

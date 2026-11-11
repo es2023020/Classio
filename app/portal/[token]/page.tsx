@@ -249,7 +249,7 @@ export default function ParentMagicPortalPage() {
               <button
                 type="submit"
                 disabled={enteredDigits.length < 4 || challengeLoading}
-                className="w-full py-3 px-4 rounded-2xl bg-[#0f2c59] hover:bg-[#1a3d6d] text-white font-bold text-xs shadow-lg disabled:opacity-50 transition"
+                className="w-full py-3 px-4 rounded-2xl bg-[#7047EB] hover:bg-[#5D35D5] text-white font-bold text-xs shadow-lg disabled:opacity-50 transition"
               >
                 {challengeLoading
                   ? lang === 'ar'
@@ -273,7 +273,7 @@ export default function ParentMagicPortalPage() {
           /* UNLOCKED FULL PARENT PORTAL */
           <div className="space-y-5 animate-fade-in">
             {/* Student Hero Header Card */}
-            <div className="bg-gradient-to-br from-[#0f2c59] via-[#1a3d6d] to-[#0a1c38] rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+            <div className="bg-gradient-to-br from-[#7047EB] via-[#5D35D5] to-[#0a1c38] rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
@@ -407,7 +407,7 @@ export default function ParentMagicPortalPage() {
                     onClick={() => setActiveTab(tab.id as any)}
                     className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold transition ${
                       isActive
-                        ? 'bg-[#0f2c59] text-white shadow-xs'
+                        ? 'bg-[#7047EB] text-white shadow-xs'
                         : 'text-slate-600 hover:bg-slate-50'
                     }`}
                   >
@@ -689,3 +689,4 @@ export default function ParentMagicPortalPage() {
     </div>
   )
 }
+

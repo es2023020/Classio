@@ -272,7 +272,7 @@ export function ReportsView({
               {lang === 'en' ? 'Student distribution by academic trajectory and recommended pedagogical actions' : 'توزيع الطلاب حسب مؤشر التقدم وتوصيات الدعم الدراسي'}
             </p>
           </div>
-          <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-[#0f2c59]">
+          <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-[#7047EB]">
             {lang === 'en' ? 'Continuous Assessment' : 'تقييم واقعي مستمر'}
           </span>
         </div>
@@ -335,7 +335,7 @@ export function ReportsView({
 
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4 transition hover:bg-white hover:shadow-xs">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-blue-100 text-[#0f2c59]">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-blue-100 text-[#7047EB]">
               <FileSpreadsheet className="size-5" />
             </div>
             <h4 className="mt-3 text-xs font-bold text-slate-800">{t.reports.exportStudents}</h4>

@@ -59,7 +59,7 @@ export default function LandingPage() {
           icon: Award,
           title: 'Student Success Profiles',
           desc: 'Track trajectory (improving, steady, needs attention), mastery matrix for individual topics, and recommended next actions.',
-          color: 'bg-blue-50 text-[#0f2c59]',
+          color: 'bg-[#EEE8FF] text-[#7047EB]',
         },
         {
           icon: CalendarCheck2,
@@ -161,7 +161,7 @@ export default function LandingPage() {
           icon: Award,
           title: 'ملفات نجاح الطلاب ومسار التعلم',
           desc: 'رصد مسار الطالب (في تحسن، مستقر، يحتاج متابعة)، ومصفوفة إتقان الدروس (قوي، يحتاج تدريب، إعادة شرح)، مع الإجراء الموصى به.',
-          color: 'bg-blue-50 text-[#0f2c59]',
+          color: 'bg-[#EEE8FF] text-[#7047EB]',
         },
         {
           icon: CalendarCheck2,
@@ -244,12 +244,12 @@ export default function LandingPage() {
   }[lang]
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-[#F8F7FC] text-slate-900 font-sans" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Navbar */}
       <LandingNavbar lang={lang} onToggleLang={toggleLang} />
 
       {/* ── 1. HERO SECTION ─────────────────────────────────────────────── */}
-      <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-b from-[#0b192c] via-[#0f2c59] to-[#122b52] text-white">
+      <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-b from-[#1e143f] via-[#30245C] to-[#483387] text-white">
         {/* Glow Gradients */}
         <div className="absolute top-0 start-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 end-1/4 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -303,7 +303,7 @@ export default function LandingPage() {
                   <ClassioLogo size="sm" showBadge={false} />
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-black text-sm text-[#0f2c59]">Student Success Profile</span>
+                      <span className="font-black text-sm text-[#7047EB]">Student Success Profile</span>
                       <span className="rounded bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 py-0.5">
                         {lang === 'en' ? 'Improving' : 'في تحسن'}
                       </span>
@@ -359,7 +359,7 @@ export default function LandingPage() {
                 </div>
 
                 <div className="rounded-2xl border border-blue-200/80 bg-blue-50/50 p-3.5 space-y-1.5">
-                  <div className="text-xs font-bold text-[#0f2c59] flex items-center gap-1.5">
+                  <div className="text-xs font-bold text-[#7047EB] flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                     <span>{lang === 'en' ? 'Next Recommended Tutor Action' : 'الإجراء الموصى به للمدرس'}</span>
                   </div>
@@ -381,7 +381,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
             {t.stats.map((s, i) => (
               <div key={i} className="p-3">
-                <div className="text-3xl sm:text-4xl font-black text-[#0f2c59] tracking-tight">{s.value}</div>
+                <div className="text-3xl sm:text-4xl font-black text-[#7047EB] tracking-tight">{s.value}</div>
                 <div className="text-xs sm:text-sm font-bold text-slate-500 mt-1">{s.label}</div>
               </div>
             ))}
@@ -390,7 +390,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── 3. FEATURES SHOWCASE ────────────────────────────────────────── */}
-      <section id="features" className="py-24 bg-[#f8fafc]">
+      <section id="features" className="py-24 bg-[#F8F7FC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-2xl sm:text-4xl font-black text-slate-900 mb-4 tracking-tight">
@@ -497,7 +497,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── 5. HOW IT WORKS ─────────────────────────────────────────────── */}
-      <section id="how-it-works" className="py-20 bg-[#f8fafc]">
+      <section id="how-it-works" className="py-20 bg-[#F8F7FC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-xl mx-auto mb-16">
             <h2 className="text-2xl sm:text-4xl font-black text-slate-900 mb-3 tracking-tight">
@@ -538,7 +538,7 @@ export default function LandingPage() {
               },
             ].map((s, idx) => (
               <div key={idx} className="rounded-3xl border border-slate-200/80 bg-white p-7 text-center shadow-xs">
-                <div className="w-12 h-12 rounded-2xl bg-[#0f2c59] text-white flex items-center justify-center text-sm font-black font-mono mx-auto mb-4">
+                <div className="w-12 h-12 rounded-2xl bg-[#7047EB] text-white flex items-center justify-center text-sm font-black font-mono mx-auto mb-4">
                   {s.step}
                 </div>
                 <h3 className="text-base font-black text-slate-900 mb-2">{s.title}</h3>
@@ -567,7 +567,7 @@ export default function LandingPage() {
                 onClick={() => setBilling('monthly')}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
                   billing === 'monthly'
-                    ? 'bg-white text-[#0f2c59] shadow-xs'
+                    ? 'bg-white text-[#7047EB] shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
@@ -578,7 +578,7 @@ export default function LandingPage() {
                 onClick={() => setBilling('annual')}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
                   billing === 'annual'
-                    ? 'bg-[#0f2c59] text-white shadow-xs'
+                    ? 'bg-[#7047EB] text-white shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
@@ -604,7 +604,7 @@ export default function LandingPage() {
                   key={plan.id}
                   className={`relative rounded-3xl border p-7 transition duration-200 flex flex-col justify-between ${
                     isPopular
-                      ? 'border-[#0f2c59] bg-[#0f2c59] text-white shadow-2xl ring-4 ring-[#0f2c59]/20'
+                      ? 'border-[#30245C] bg-[#30245C] text-white shadow-2xl ring-4 ring-[#7047EB]/25'
                       : isEnterprise
                       ? 'border-purple-300 bg-gradient-to-b from-purple-50/50 to-white shadow-md'
                       : 'border-slate-200 bg-white shadow-xs hover:shadow-md'
@@ -714,7 +714,7 @@ export default function LandingPage() {
                         ? 'bg-purple-800 hover:bg-purple-700 text-white'
                         : isFree
                         ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                        : 'bg-[#0f2c59] hover:bg-[#1a3d6d] text-white'
+                        : 'bg-[#7047EB] hover:bg-[#5D35D5] text-white'
                     }`}
                   >
                     {isEnterprise
@@ -730,7 +730,7 @@ export default function LandingPage() {
 
           {/* Pricing Rules Box */}
           <div className="mt-14 rounded-3xl border border-blue-200 bg-blue-50/70 p-6 sm:p-8">
-            <h3 className="text-sm font-black text-[#0f2c59] mb-4 flex items-center gap-2">
+            <h3 className="text-sm font-black text-[#7047EB] mb-4 flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-emerald-600" />
               <span>{t.pricingRulesTitle}</span>
             </h3>
@@ -757,7 +757,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── 7. FAQ ACCORDION ────────────────────────────────────────────── */}
-      <section id="faq" className="py-20 bg-[#f8fafc] border-t border-slate-200/80">
+      <section id="faq" className="py-20 bg-[#F8F7FC] border-t border-slate-200/80">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="text-2xl sm:text-4xl font-black text-slate-900 mb-3 tracking-tight">
@@ -777,12 +777,12 @@ export default function LandingPage() {
                   <button
                     type="button"
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className="w-full flex items-center justify-between p-5 text-start font-bold text-xs sm:text-sm text-slate-800 hover:text-[#0f2c59] cursor-pointer"
+                    className="w-full flex items-center justify-between p-5 text-start font-bold text-xs sm:text-sm text-slate-800 hover:text-[#7047EB] cursor-pointer"
                   >
                     <span>{faq.q}</span>
                     <ChevronDown
                       className={`w-4 h-4 text-slate-400 transition-transform ${
-                        isOpen ? 'rotate-180 text-[#0f2c59]' : ''
+                        isOpen ? 'rotate-180 text-[#7047EB]' : ''
                       }`}
                     />
                   </button>
@@ -799,7 +799,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── 8. PARTNERSHIPS & INVESTORS CTA ─────────────────────────────── */}
-      <section className="py-16 bg-gradient-to-br from-[#0b192c] via-[#0f2c59] to-[#163a6e] border-t border-blue-900/40">
+      <section className="py-16 bg-gradient-to-br from-[#1e143f] via-[#30245C] to-[#483387] border-t border-blue-900/40">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm p-8 sm:p-12 flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="text-center lg:text-start">
@@ -855,7 +855,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── 9. FINAL CALL TO ACTION ─────────────────────────────────────── */}
-      <section className="py-20 bg-gradient-to-r from-[#0b192c] via-[#0f2c59] to-[#122b52] text-white text-center">
+      <section className="py-20 bg-gradient-to-r from-[#1e143f] via-[#30245C] to-[#483387] text-white text-center">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-bold text-amber-300 mb-5">
             <Sparkles className="w-3.5 h-3.5" />

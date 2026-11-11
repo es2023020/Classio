@@ -403,7 +403,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-3">
-          <div className="size-10 animate-spin rounded-full border-4 border-[#0f2c59] border-t-transparent" />
+          <div className="size-10 animate-spin rounded-full border-4 border-[#7047EB] border-t-transparent" />
           <p className="text-xs font-bold text-slate-600">Loading student profile...</p>
         </div>
       </div>
@@ -422,7 +422,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
         </p>
         <Link
           href="/dashboard"
-          className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#0f2c59] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#1a3d6d]"
+          className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#7047EB] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#5D35D5]"
         >
           <ArrowLeft className="size-4" />
           Return to Dashboard
@@ -434,10 +434,10 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
   const initials = student.initials || student.name.split(' ').map((n) => n[0]).slice(0, 2).join('')
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-800" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-[#F8F7FC] text-slate-800" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Toast Notification */}
       {toastMsg && (
-        <div className="fixed bottom-6 end-6 z-50 flex items-center gap-2 rounded-2xl bg-[#0f2c59] px-4 py-3 text-xs font-bold text-white shadow-xl animate-in fade-in slide-in-from-bottom-3">
+        <div className="fixed bottom-6 end-6 z-50 flex items-center gap-2 rounded-2xl bg-[#30245C] px-4 py-3 text-xs font-bold text-white shadow-xl border border-[#7047EB]/30 animate-in fade-in slide-in-from-bottom-3">
           <Sparkles className="size-4 text-amber-400" />
           <span>{toastMsg}</span>
         </div>
@@ -450,7 +450,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
           <div className="flex items-center gap-2 text-xs font-bold">
             <Link
               href="/dashboard"
-              className="flex items-center gap-2 text-[#0f2c59] hover:opacity-80 transition"
+              className="flex items-center gap-2 text-[#7047EB] hover:opacity-80 transition"
             >
               <ClassioLogo className="size-5" />
               <span className="tracking-wider">CLASSIO</span>
@@ -463,7 +463,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
               {lang === 'en' ? 'STUDENTS' : 'الطلاب'}
             </Link>
             <span className="text-slate-300">/</span>
-            <span className="rounded-md bg-blue-50 px-2 py-0.5 font-bold text-[#0f2c59]">
+            <span className="rounded-md bg-[#EEE8FF] px-2 py-0.5 font-bold text-[#7047EB]">
               {lang === 'en' ? 'PROFILE' : 'الملف الشخصي'}
             </span>
           </div>
@@ -496,7 +496,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             {/* Left: Avatar & Identity */}
             <div className="flex items-start sm:items-center gap-4 sm:gap-5">
-              <div className="relative flex size-16 sm:size-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#0f2c59] to-[#1e4986] text-xl sm:text-2xl font-black text-amber-300 shadow-md">
+              <div className="relative flex size-16 sm:size-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#7047EB] to-[#30245C] text-xl sm:text-2xl font-black text-amber-300 shadow-md">
                 {initials}
                 <span
                   className={`absolute -bottom-1 -end-1 size-4 rounded-full border-2 border-white ${
@@ -540,7 +540,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                   {student.school && <span>{` · ${student.school}`}</span>}
                 </p>
 
-                <p className="text-xs font-bold text-[#0f2c59] flex items-center gap-1.5 pt-0.5">
+                <p className="text-xs font-bold text-[#7047EB] flex items-center gap-1.5 pt-0.5">
                   <Users className="size-3.5 text-blue-600" />
                   <span>{student.group_name}</span>
                 </p>
@@ -563,7 +563,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                 onClick={() => setIsChangeGroupModalOpen(true)}
                 className="gap-1.5 rounded-xl border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
               >
-                <Users className="size-3.5 text-[#0f2c59]" />
+                <Users className="size-3.5 text-[#7047EB]" />
                 {lang === 'en' ? 'Change Group' : 'تغيير المجموعة'}
               </Button>
 
@@ -764,11 +764,11 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                   onClick={() => setActiveTab(tab.id as ProfileTab)}
                   className={`flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-bold border-b-2 whitespace-nowrap transition cursor-pointer ${
                     isActive
-                      ? 'border-[#0f2c59] text-[#0f2c59] bg-white rounded-t-xl'
+                      ? 'border-[#7047EB] text-[#7047EB] bg-white rounded-t-xl'
                       : 'border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300'
                   }`}
                 >
-                  <Icon className={`size-4 ${isActive ? 'text-[#0f2c59]' : 'text-slate-400'}`} />
+                  <Icon className={`size-4 ${isActive ? 'text-[#7047EB]' : 'text-slate-400'}`} />
                   <span>{tab.label}</span>
                 </button>
               )
@@ -788,12 +788,12 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
               <div className="card-glass p-6">
                 <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                   <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <User className="size-4 text-[#0f2c59]" />
+                    <User className="size-4 text-[#7047EB]" />
                     {lang === 'en' ? 'Student information' : 'بيانات الطالب الأساسية'}
                   </h3>
                   <button
                     onClick={() => setIsEditModalOpen(true)}
-                    className="text-xs font-bold text-[#0f2c59] hover:underline flex items-center gap-1 cursor-pointer"
+                    className="text-xs font-bold text-[#7047EB] hover:underline flex items-center gap-1 cursor-pointer"
                   >
                     <Edit2 className="size-3" />
                     {lang === 'en' ? 'Edit' : 'تعديل'}
@@ -895,7 +895,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
 
                 {student.target_goal && (
                   <div className="mt-4 flex items-center gap-2 rounded-xl bg-white/80 p-3 border border-amber-100 text-xs">
-                    <Target className="size-4 text-[#0f2c59] shrink-0" />
+                    <Target className="size-4 text-[#7047EB] shrink-0" />
                     <span className="font-bold text-slate-800">
                       {lang === 'en' ? 'Target Goal:' : 'الهدف المنشود:'}{' '}
                       <span className="font-normal text-slate-600">{student.target_goal}</span>
@@ -907,7 +907,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
               {/* Upcoming Classes Card */}
               <div className="card-glass p-6">
                 <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-4">
-                  <CalendarDays className="size-4 text-[#0f2c59]" />
+                  <CalendarDays className="size-4 text-[#7047EB]" />
                   {lang === 'en' ? 'Upcoming classes & schedule' : 'مواعيد الحصص القادمة'}
                 </h3>
 
@@ -928,7 +928,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
 
                   <button
                     onClick={() => setIsAttendanceModalOpen(true)}
-                    className="rounded-xl bg-[#0f2c59] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#1a3d6d] cursor-pointer"
+                    className="rounded-xl bg-[#7047EB] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#5D35D5] cursor-pointer"
                   >
                     {lang === 'en' ? 'Record Attendance' : 'تسجيل حضور الحصة'}
                   </button>
@@ -941,7 +941,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
               <div className="card-glass p-6">
                 <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                   <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <Clock className="size-4 text-[#0f2c59]" />
+                    <Clock className="size-4 text-[#7047EB]" />
                     {lang === 'en' ? 'Recent activity' : 'النشاط الأخير'}
                   </h3>
                   <span className="text-[11px] font-bold text-slate-400">
@@ -1019,7 +1019,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
               <div className="flex items-center gap-2">
                 <Button
                   onClick={() => setIsAttendanceModalOpen(true)}
-                  className="gap-1.5 rounded-xl bg-[#0f2c59] text-xs font-bold text-white hover:bg-[#1a3d6d] cursor-pointer"
+                  className="gap-1.5 rounded-xl bg-[#7047EB] text-xs font-bold text-white hover:bg-[#5D35D5] cursor-pointer"
                 >
                   <Plus className="size-4" />
                   {lang === 'en' ? 'Mark Attendance' : 'تسجيل حضور جديد'}
@@ -1033,7 +1033,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                 onClick={() => setAttendanceFilter('all')}
                 className={`rounded-xl px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
                   attendanceFilter === 'all'
-                    ? 'bg-[#0f2c59] text-white shadow-xs'
+                    ? 'bg-[#7047EB] text-white shadow-xs'
                     : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                 }`}
               >
@@ -1237,7 +1237,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                     ) : (
                       payments.map((p) => (
                         <tr key={p.id} className="transition hover:bg-slate-50/70">
-                          <td className="p-3.5 font-mono font-bold text-[#0f2c59]">
+                          <td className="p-3.5 font-mono font-bold text-[#7047EB]">
                             {p.receipt_number}
                           </td>
                           <td className="p-3.5 font-bold text-slate-800">
@@ -1311,7 +1311,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
               <div className="flex items-center gap-2">
                 <Button
                   onClick={() => setIsAssessmentModalOpen(true)}
-                  className="gap-1.5 rounded-xl bg-[#0f2c59] text-xs font-bold text-white hover:bg-[#1a3d6d] cursor-pointer"
+                  className="gap-1.5 rounded-xl bg-[#7047EB] text-xs font-bold text-white hover:bg-[#5D35D5] cursor-pointer"
                 >
                   <Plus className="size-4" />
                   {lang === 'en' ? 'Add Assessment' : 'رصد اختبار / كويز'}
@@ -1376,7 +1376,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                 </h4>
                 <button
                   onClick={() => setIsHomeworkModalOpen(true)}
-                  className="text-xs font-bold text-[#0f2c59] hover:underline cursor-pointer"
+                  className="text-xs font-bold text-[#7047EB] hover:underline cursor-pointer"
                 >
                   + {lang === 'en' ? 'New Assignment' : 'تكليف جديد'}
                 </button>
@@ -1405,7 +1405,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                             setHomeworks((prev) => prev.map((h) => (h.id === hw.id ? updated : h)))
                             notify(lang === 'en' ? 'Homework updated!' : 'تم تحديث الواجب!')
                           }}
-                          className="mt-0.5 size-4 rounded accent-[#0f2c59] cursor-pointer"
+                          className="mt-0.5 size-4 rounded accent-[#7047EB] cursor-pointer"
                         />
                         <div>
                           <p className={`font-bold ${hw.completed ? 'text-slate-500 line-through' : 'text-slate-800'}`}>
@@ -1479,7 +1479,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
             <div className="card-glass p-6 space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <FileText className="size-4 text-[#0f2c59]" />
+                  <FileText className="size-4 text-[#7047EB]" />
                   {lang === 'en' ? 'Private tutor observations' : 'ملاحظات المدرس الخاصة'}
                 </h3>
                 <span className="rounded-full bg-purple-50 px-2 py-0.5 text-[10px] font-bold text-purple-700">
@@ -1498,12 +1498,12 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                       : 'سجل ملاحظة تربوية أو تعليمية خاصة حول أداء الطالب أو استجابته...'
                   }
                   rows={3}
-                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 p-3 text-xs text-slate-800 outline-none focus:border-[#0f2c59] focus:bg-white transition"
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 p-3 text-xs text-slate-800 outline-none focus:border-[#7047EB] focus:bg-white transition"
                 />
                 <Button
                   onClick={handleSaveNote}
                   disabled={!newNoteText.trim()}
-                  className="rounded-xl bg-[#0f2c59] px-4 py-2 text-xs font-bold text-white hover:bg-[#1a3d6d] cursor-pointer"
+                  className="rounded-xl bg-[#7047EB] px-4 py-2 text-xs font-bold text-white hover:bg-[#5D35D5] cursor-pointer"
                 >
                   <Plus className="size-3.5 me-1" />
                   {lang === 'en' ? 'Save Private Note' : 'حفظ الملاحظة'}
@@ -1622,7 +1622,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
               {/* Communication History Log */}
               <div className="card-glass p-6">
                 <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-4">
-                  <Phone className="size-4 text-[#0f2c59]" />
+                  <Phone className="size-4 text-[#7047EB]" />
                   {lang === 'en' ? 'Communication History Log' : 'سجل التواصل والمتابعات'}
                 </h3>
 
@@ -1737,7 +1737,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                   type="checkbox"
                   id="att_hw"
                   defaultChecked
-                  className="size-4 rounded accent-[#0f2c59]"
+                  className="size-4 rounded accent-[#7047EB]"
                 />
                 <label htmlFor="att_hw" className="font-bold text-slate-700 cursor-pointer">
                   {lang === 'en' ? 'Homework submitted complete' : 'تم تسليم الواجب كاملاً'}
@@ -1766,7 +1766,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                 </Button>
                 <Button
                   type="submit"
-                  className="rounded-xl bg-[#0f2c59] text-xs font-bold text-white hover:bg-[#1a3d6d]"
+                  className="rounded-xl bg-[#7047EB] text-xs font-bold text-white hover:bg-[#5D35D5]"
                 >
                   {lang === 'en' ? 'Save Record' : 'حفظ السجل'}
                 </Button>
@@ -2022,7 +2022,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                 </Button>
                 <Button
                   type="submit"
-                  className="rounded-xl bg-[#0f2c59] text-xs font-bold text-white hover:bg-[#1a3d6d]"
+                  className="rounded-xl bg-[#7047EB] text-xs font-bold text-white hover:bg-[#5D35D5]"
                 >
                   {lang === 'en' ? 'Save Result' : 'حفظ الدرجة'}
                 </Button>
@@ -2123,7 +2123,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                 </Button>
                 <Button
                   type="submit"
-                  className="rounded-xl bg-[#0f2c59] text-xs font-bold text-white hover:bg-[#1a3d6d]"
+                  className="rounded-xl bg-[#7047EB] text-xs font-bold text-white hover:bg-[#5D35D5]"
                 >
                   {lang === 'en' ? 'Assign' : 'تكليف'}
                 </Button>
@@ -2194,7 +2194,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                 </Button>
                 <Button
                   type="submit"
-                  className="rounded-xl bg-[#0f2c59] text-xs font-bold text-white hover:bg-[#1a3d6d]"
+                  className="rounded-xl bg-[#7047EB] text-xs font-bold text-white hover:bg-[#5D35D5]"
                 >
                   {lang === 'en' ? 'Save & Move' : 'تأكيد النقل'}
                 </Button>
@@ -2382,7 +2382,7 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                 </Button>
                 <Button
                   type="submit"
-                  className="rounded-xl bg-[#0f2c59] text-xs font-bold text-white hover:bg-[#1a3d6d]"
+                  className="rounded-xl bg-[#7047EB] text-xs font-bold text-white hover:bg-[#5D35D5]"
                 >
                   {lang === 'en' ? 'Save Changes' : 'حفظ التعديلات'}
                 </Button>

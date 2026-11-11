@@ -34,7 +34,7 @@ export function ClassioLogo({
     <div className={`inline-flex items-center gap-3 ${className}`}>
       {/* Official Classio Squircle Icon */}
       <div
-        className="relative flex-shrink-0 rounded-2xl overflow-hidden shadow-md shadow-blue-950/20 transition-transform hover:scale-105"
+        className="relative flex-shrink-0 rounded-2xl overflow-hidden shadow-md shadow-indigo-950/15 transition-transform hover:scale-105"
         style={{ width: dimensions.icon, height: dimensions.icon }}
       >
         <Image
@@ -52,7 +52,7 @@ export function ClassioLogo({
         <div className="flex items-center gap-1.5 leading-none">
           <span
             className={`font-black tracking-tight ${dimensions.text} ${
-              isDark ? 'text-white' : 'text-[#0f2c59]'
+              isDark ? 'text-white' : 'text-[#30245C]'
             }`}
           >
             Classio
@@ -62,7 +62,7 @@ export function ClassioLogo({
               className={`rounded-md font-black uppercase tracking-wider ${dimensions.badge} ${
                 isDark
                   ? 'bg-white/20 text-white'
-                  : 'bg-blue-100 text-[#0f2c59]'
+                  : 'bg-[#EEE8FF] text-[#7047EB]'
               }`}
             >
               {badgeText}
