@@ -34,11 +34,11 @@ export function ClassioLogo({
     <div className={`inline-flex items-center gap-3 ${className}`}>
       {/* Official Classio Squircle Icon */}
       <div
-        className="relative flex-shrink-0 rounded-2xl overflow-hidden shadow-md shadow-indigo-950/15 transition-transform hover:scale-105"
+        className="relative flex-shrink-0 rounded-2xl overflow-hidden shadow-md shadow-indigo-950/20 transition-transform duration-200 hover:scale-105"
         style={{ width: dimensions.icon, height: dimensions.icon }}
       >
         <Image
-          src="/classio-icon.png"
+          src="/icon.svg"
           alt="Classio Logo"
           width={dimensions.icon}
           height={dimensions.icon}

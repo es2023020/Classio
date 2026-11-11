@@ -20,7 +20,29 @@ const ADMIN_STORAGE_KEYS = {
 // Zero-template clean initial arrays — only real data
 export const initialSubscriptionRequests: SubscriptionRequest[] = []
 
-export const initialManagedTutors: ManagedTutor[] = []
+export const initialManagedTutors: ManagedTutor[] = [
+  {
+    id: 'elsayedshoeip70@gmail.com',
+    name: 'Elsayed Shoeip (Owner)',
+    name_ar: 'أ. السيد شعيب (المدير الأكاديمي)',
+    email: 'elsayedshoeip70@gmail.com',
+    phone: '01000000000',
+    subject: 'All Subjects / General',
+    title: 'Academic Director & Platform Owner',
+    centers: ['Main Campus', 'Classio VIP'],
+    subscription_plan: 'power',
+    subscription_cycle: 'annual',
+    status: 'active',
+    subscription_status: 'active',
+    created_at: new Date().toISOString(),
+    last_active_at: new Date().toISOString(),
+    student_count: 0,
+    max_students_limit: 10000,
+    instapay_handle: 'elsayedshoeip@instapay',
+    vodafone_cash_number: '01000000000',
+    notes_admin: 'Master administrator account with full platform permissions.',
+  },
+]
 
 export const initialSystemSettings: PlatformSystemSettings = {
   maintenance_mode: false,

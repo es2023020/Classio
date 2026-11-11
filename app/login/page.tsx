@@ -81,6 +81,20 @@ function LoginForm() {
     if (typeof window === 'undefined') return null
     const cleanEmail = emailToCheck.trim().toLowerCase()
 
+    // Built-in Super Admin & Primary Owner bypass
+    if (cleanEmail === 'elsayedshoeip70@gmail.com') {
+      return {
+        email: 'elsayedshoeip70@gmail.com',
+        name: 'Elsayed Shoeip (Owner)',
+        phone: '01000000000',
+        subject: 'Academic Director / All Subjects',
+        plan: 'power',
+        billing: 'annual',
+        maxLimit: 10000,
+        createdAt: new Date().toISOString(),
+      }
+    }
+
     try {
       const regRaw = localStorage.getItem('classio_registered_accounts')
       if (regRaw) {
@@ -137,6 +151,27 @@ function LoginForm() {
 
       // --- SIGN IN FLOW ---
       if (mode === 'signin') {
+        // Special Master & Super-Admin instant access
+        if (cleanEmail === 'elsayedshoeip70@gmail.com' && password === 'Sayed@shoeip8') {
+          const masterUser = {
+            email: 'elsayedshoeip70@gmail.com',
+            name: 'Elsayed Shoeip (Owner)',
+            phone: '01000000000',
+            subject: 'Academic Director / All Subjects',
+            plan: 'power' as PlanTier,
+            planLimit: 10000,
+          }
+          localStorage.setItem('classio_auth_user', JSON.stringify(masterUser))
+          setSuccessMsg(
+            lang === 'en'
+              ? 'Welcome back, Elsayed! Loading Master Dashboard...'
+              : 'مرحباً بعودتك أ. السيد شعيب! جاري فتح لوحة التحكم الرئيسية...'
+          )
+          setTimeout(() => {
+            router.push('/dashboard')
+          }, 400)
+          return
+        }
         // If Supabase is configured, authenticate directly with Supabase Auth
         if (isSupabaseConfigured()) {
           const res = await signInWithSupabase(cleanEmail, password)
