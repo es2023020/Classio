@@ -326,6 +326,27 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
   }, [attendance, attendanceFilter])
 
   // --- Handlers ---
+    // Save or update direct message for parent
+  const [parentNoteInput, setParentNoteInput] = useState(student?.parent_note || '')
+  
+  useEffect(() => {
+    if (student) {
+      setParentNoteInput(student.parent_note || '')
+    }
+  }, [student])
+
+  const handleSaveParentNote = async () => {
+    if (!student) return
+    const updated = await storage.saveStudent({
+      ...student,
+      parent_note: parentNoteInput.trim(),
+      parent_note_updated_at: new Date().toISOString()
+    })
+    if (updated) {
+      setStudent({ ...updated })
+      notify(lang === 'en' ? 'Parent message saved & published to portal!' : '?? ??? ?????? ????? ??? ????? ?????!')
+    }
+  }
   const handleSaveNote = async () => {
     if (!newNoteText.trim() || !student) return
     const updated = await storage.addStudentNote(student.id, newNoteText.trim(), tutor?.name || 'Ahmed Mahmoud')
@@ -1487,7 +1508,52 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
                 </span>
               </div>
 
-              {/* Add Note Input */}
+                            {/* Note / Message for Parent Box */}
+              <div className="card-glass p-6 border-2 border-[#EEE8FF]">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <div className="flex items-center gap-2">
+                    <span className="size-3 rounded-full bg-[#7047EB]" />
+                    <h3 className="text-sm font-bold text-slate-900">
+                      {lang === 'en' ? 'Direct Note & Message for Parent' : '????? ??????? ????? ???? ?????'}
+                    </h3>
+                  </div>
+                  <span className="rounded-full bg-[#EEE8FF] px-2.5 py-0.5 text-[11px] font-bold text-[#7047EB]">
+                    {lang === 'en' ? 'Live on Parent Portal' : '???? ?? ????? ??? ?????'}
+                  </span>
+                </div>
+                <p className="mt-2 text-xs text-slate-500">
+                  {lang === 'en'
+                    ? 'Write a direct pedagogical comment, homework feedback, or alert that the parent sees when accessing the student link.'
+                    : '???? ??????? ?? ?????? ?????? ???? ????? ?????? ??? ??? ???? ???????? ?????????? ????? ???????.'}
+                </p>
+                <textarea
+                  rows={3}
+                  value={parentNoteInput}
+                  onChange={(e) => setParentNoteInput(e.target.value)}
+                  placeholder={
+                    lang === 'en'
+                      ? 'Type note or message for parent here...'
+                      : '???? ??? ???????? ?? ??????? ???? ?????...'
+                  }
+                  className="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50/50 p-3.5 text-xs text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white focus:ring-1 focus:ring-[#7047EB]"
+                />
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="text-[10px] text-slate-400">
+                    {student.parent_note_updated_at ? (
+                      lang === 'en'
+                        ? `Last updated: ${new Date(student.parent_note_updated_at).toLocaleDateString()}`
+                        : `??? ?????: ${new Date(student.parent_note_updated_at).toLocaleDateString('ar-EG')}`
+                    ) : ''}
+                  </span>
+                  <Button
+                    onClick={handleSaveParentNote}
+                    className="rounded-xl bg-[#7047EB] px-4 py-2 text-xs font-bold text-white hover:bg-[#5D35D5] cursor-pointer"
+                  >
+                    {lang === 'en' ? 'Save & Publish to Parent' : '??? ???? ???? ?????'}
+                  </Button>
+                </div>
+              </div>
+                {/* Add Note Input */}
               <div className="space-y-2">
                 <textarea
                   value={newNoteText}
@@ -2407,3 +2473,5 @@ export function StudentProfileView({ studentId }: StudentProfileViewProps) {
     </div>
   )
 }
+
+

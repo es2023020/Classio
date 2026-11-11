@@ -154,8 +154,8 @@ export function LandingFooter({ lang }: FooterProps) {
           <div className="flex items-center gap-3">
             <p>{t.copyright}</p>
             <Link
-              href="/admin/gateway"
-              className="text-slate-600 hover:text-red-400 transition-colors p-1 rounded-md"
+              href="/sayed/gateway"
+              className="text-white/20 hover:text-[#7047EB] transition-colors p-1 rounded-md"
               title="Classio Master Root Gateway"
               aria-label="Admin Gateway"
             >

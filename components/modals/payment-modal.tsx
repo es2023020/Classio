@@ -41,7 +41,15 @@ export function PaymentModal({
     return list
   }, [lang])
 
-  const [monthYear, setMonthYear] = useState('')
+  const [monthYear, setMonthYear] = useState(months[2] || months[0] || '')
+
+  // Sync amount and month whenever selectedStudent or studentId changes
+  React.useEffect(() => {
+    if (selectedStudent) {
+      const effectiveFee = selectedStudent.monthly_fee ?? 500
+      setAmount(effectiveFee)
+    }
+  }, [selectedStudent])
 
   React.useEffect(() => {
     if (months.length > 0 && !monthYear) {

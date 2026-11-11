@@ -20,6 +20,8 @@ export interface SanitizedParentPortalData {
     target_goal?: string
     parent_relation?: string
     parent_phone_masked: string
+    parent_note?: string
+    parent_note_updated_at?: string
   }
   tutor: {
     name: string
@@ -148,6 +150,8 @@ export const portalTokenManager = {
         target_goal: student.target_goal || 'التفوق في الثانوية العامة',
         parent_relation: student.parent_relation || 'ولي الأمر',
         parent_phone_masked: maskedPhone,
+        parent_note: student.parent_note || '',
+        parent_note_updated_at: student.parent_note_updated_at,
       },
       tutor: {
         name: tutor.name,

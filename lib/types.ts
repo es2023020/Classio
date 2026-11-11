@@ -189,6 +189,8 @@ export interface Student {
   paid_amount?: number
   notes?: string
   notes_en?: string
+  parent_note?: string // Direct message / personal note from tutor to the student's parent
+  parent_note_updated_at?: string
   joined_date?: string // e.g. "September 2026"
   last_attendance?: AttendanceStatus
   last_quiz_score?: string

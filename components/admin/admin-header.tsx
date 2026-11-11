@@ -44,44 +44,44 @@ export function AdminHeader({ lang, toggleLang, onLockSession, settings }: Admin
   }, [lang])
 
   return (
-    <header className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-red-500/20 text-white px-4 lg:px-8 py-3 transition-colors">
+    <header className="sticky top-0 z-50 bg-[#30245C] border-b border-[#483387] text-white px-4 lg:px-8 py-3.5 transition-colors shadow-md">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         {/* Brand & Identity */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-600 via-rose-600 to-amber-600 p-0.5 shadow-lg shadow-red-950/50 flex items-center justify-center">
-            <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-              <ShieldAlert className="w-5 h-5 text-red-400 animate-pulse" />
+          <div className="w-10 h-10 rounded-2xl bg-[#7047EB] p-0.5 shadow-md shadow-indigo-950/30 flex items-center justify-center">
+            <div className="w-full h-full bg-[#30245C] rounded-[14px] flex items-center justify-center">
+              <ShieldAlert className="w-5 h-5 text-[#EEE8FF]" />
             </div>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="font-black text-sm lg:text-base tracking-wide uppercase bg-gradient-to-r from-red-400 via-rose-300 to-amber-300 bg-clip-text text-transparent">
+              <h1 className="font-extrabold text-sm lg:text-base tracking-tight text-white">
                 {lang === 'ar' ? 'غرفة العمليات المركزية — السوبر أدمن' : 'Classio Root Command Center'}
               </h1>
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-950/80 text-red-300 border border-red-700/50">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#EEE8FF] text-[#7047EB]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#16A36A] animate-ping" />
                 {lang === 'ar' ? 'محمي بالكامل' : 'ENCRYPTED ROOT'}
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 hidden sm:block">
+            <p className="text-[11px] text-[#A5A2B2] hidden sm:block">
               {lang === 'ar' ? 'التحكم الإداري الحصري والمطلق في المنصة والمدرسين' : 'Single Authorized Master Operator Console'}
             </p>
           </div>
         </div>
 
         {/* Status Indicators & Controls */}
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Cairo Live Time */}
-          <div className="hidden md:flex items-center gap-1.5 text-xs text-slate-300 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
-            <Clock className="w-3.5 h-3.5 text-amber-400" />
+          <div className="hidden md:flex items-center gap-1.5 text-xs text-[#EEE8FF] bg-[#1e143f] px-3 py-1.5 rounded-xl border border-[#483387]">
+            <Clock className="w-3.5 h-3.5 text-[#7047EB]" />
             <span className="font-mono">{cairoTime}</span>
-            <span className="text-[10px] text-slate-500">القاهرة</span>
+            <span className="text-[10px] text-[#A5A2B2]">{lang === 'ar' ? 'القاهرة' : 'Cairo'}</span>
           </div>
 
           {/* Maintenance Mode Alert if Active */}
           {settings.maintenance_mode && (
-            <div className="flex items-center gap-1.5 text-xs text-amber-300 bg-amber-950/60 px-2.5 py-1 rounded-lg border border-amber-600/50 animate-pulse">
-              <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+            <div className="flex items-center gap-1.5 text-xs text-[#EAA12C] bg-[#FFF4DE] px-2.5 py-1 rounded-xl border border-[#EAA12C]/40 animate-pulse">
+              <AlertTriangle className="w-3.5 h-3.5 text-[#EAA12C]" />
               <span className="text-[11px] font-medium hidden sm:inline">
                 {lang === 'ar' ? 'وضع الصيانة نشط' : 'Maintenance Active'}
               </span>
@@ -91,17 +91,17 @@ export function AdminHeader({ lang, toggleLang, onLockSession, settings }: Admin
           {/* Language Toggle */}
           <button
             onClick={toggleLang}
-            className="flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 transition-colors"
+            className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-xl bg-[#483387] hover:bg-[#5D35D5] border border-white/10 text-white transition-colors cursor-pointer"
             title="Switch Language"
           >
-            <Globe className="w-3.5 h-3.5 text-slate-400" />
+            <Globe className="w-3.5 h-3.5 text-[#EEE8FF]" />
             <span>{lang === 'ar' ? 'English' : 'عربي'}</span>
           </button>
 
           {/* Quick Screen Lock */}
           <button
             onClick={onLockSession}
-            className="flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-amber-300 transition-colors"
+            className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-xl bg-[#483387] hover:bg-[#5D35D5] border border-white/10 text-[#EEE8FF] transition-colors cursor-pointer"
             title={lang === 'ar' ? 'قفل الشاشة السريع' : 'Lock Screen (PIN)'}
           >
             <Lock className="w-3.5 h-3.5" />
@@ -115,7 +115,7 @@ export function AdminHeader({ lang, toggleLang, onLockSession, settings }: Admin
                 adminAuth.panicLockout()
               }
             }}
-            className="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-600/20 hover:bg-red-600/40 text-red-300 border border-red-500/40 transition-colors"
+            className="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-xl bg-[#E05252] hover:bg-[#c93f3f] text-white transition-colors cursor-pointer"
             title="Terminate Session"
           >
             <LogOut className="w-3.5 h-3.5" />

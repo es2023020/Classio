@@ -37,6 +37,7 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
   )
   const [discountAmount, setDiscountAmount] = useState<number>(editingStudent?.discount_amount || 0)
   const [notes, setNotes] = useState(editingStudent?.notes || '')
+  const [parentNote, setParentNote] = useState(editingStudent?.parent_note || '')
 
   // Accessibility: Close on Escape key
   React.useEffect(() => {
@@ -82,6 +83,8 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
       paid_this_month: editingStudent?.paid_this_month || false,
       paid_amount: editingStudent?.paid_amount || 0,
       notes: notes.trim(),
+      parent_note: parentNote.trim(),
+      parent_note_updated_at: parentNote.trim() ? new Date().toISOString() : undefined,
       initials: name.trim()[0] || 'S',
       created_at: editingStudent?.created_at || new Date().toISOString(),
     }
@@ -275,7 +278,32 @@ export function StudentModal({ isOpen, onClose, onSave, groups, editingStudent, 
               <input
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
+                placeholder={lang === 'en' ? 'Internal tutor notes (private)...' : 'ملاحظات المعلم الداخلية (خاصة)...'}
                 className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#7047EB] focus:bg-white"
+              />
+            </div>
+
+            {/* Note/Message for Parent (Visible on Parent Portal & WhatsApp) */}
+            <div className="space-y-1.5 sm:col-span-2 rounded-2xl bg-[#EEE8FF]/40 border border-[#D8CCFF] p-3.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-[#30245C] flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-[#7047EB]" />
+                  {lang === 'en' ? 'Message / Note for Parent' : 'رسالة وملاحظة موجهة لولي الأمر'}
+                </label>
+                <span className="text-[10px] font-semibold text-[#7047EB] bg-white px-2 py-0.5 rounded-full border border-[#D8CCFF]">
+                  {lang === 'en' ? 'Parent Visible' : 'يظهر لولي الأمر'}
+                </span>
+              </div>
+              <textarea
+                rows={2}
+                value={parentNote}
+                onChange={(e) => setParentNote(e.target.value)}
+                placeholder={
+                  lang === 'en'
+                    ? 'Leave a direct message or update for the parent regarding progress, behavior, or upcoming requirements...'
+                    : 'اكتب رسالة أو ملاحظة مباشرة لولي الأمر بخصوص مستوى الطالب، الواجبات، أو الملاحظات التربوية...'
+                }
+                className="w-full rounded-xl border border-[#D8CCFF] bg-white px-3.5 py-2 text-xs text-slate-800 outline-none transition focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB]"
               />
             </div>
           </div>

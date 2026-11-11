@@ -421,7 +421,26 @@ export default function ParentMagicPortalPage() {
             {/* TAB 1: ACADEMIC & QUIZZES */}
             {activeTab === 'academic' && (
               <div className="space-y-4">
-                {/* Target Goal Banner */}
+                                  {/* Tutor Message / Note for Parent */}
+                  {data.student.parent_note && (
+                    <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#EEE8FF] to-[#F2EFFA] border border-[#D8CCFF] text-xs shadow-xs">
+                      <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#D8CCFF]/60">
+                        <span className="font-extrabold text-[#7047EB] flex items-center gap-2">
+                          <span className="size-2 rounded-full bg-[#7047EB] animate-pulse" />
+                          {lang === 'ar' ? `????? ???? ?? ??????? ${data.tutor.name} ???? ?????:` : `Direct Message from Tutor ${data.tutor.name} to Parent:`}
+                        </span>
+                        {data.student.parent_note_updated_at && (
+                          <span className="text-[10px] text-[#77758A] font-mono">
+                            {new Date(data.student.parent_note_updated_at).toLocaleDateString(lang === 'ar' ? 'ar-EG' : 'en-US')}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[#19172A] font-medium leading-relaxed whitespace-pre-wrap">
+                        {data.student.parent_note}
+                      </p>
+                    </div>
+                  )}
+                  {/* Target Goal Banner */}
                 {data.student.target_goal && (
                   <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 text-amber-900 text-xs flex items-center gap-3">
                     <Sparkles className="w-5 h-5 text-amber-600 shrink-0" />
@@ -689,4 +708,5 @@ export default function ParentMagicPortalPage() {
     </div>
   )
 }
+
 
